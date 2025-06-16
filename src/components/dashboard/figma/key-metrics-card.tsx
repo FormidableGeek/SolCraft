@@ -20,7 +20,10 @@ export function KeyMetricsCard({ metrics, className }: KeyMetricsCardProps) {
               <metric.icon className="h-4 w-4 mr-2" />
               <span>{metric.label}</span>
             </div>
-            <span className={cn("font-semibold text-foreground", metric.valueClassName)}>
+            <span className={cn(
+              "font-semibold",
+              metric.valueClassName ? metric.valueClassName : "text-foreground"
+            )}>
               {metric.value}
             </span>
           </div>

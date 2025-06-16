@@ -2,25 +2,24 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Cryptocurrency } from "@/lib/types";
-import { TrendingUp, TrendingDown, CircleDollarSign, Bitcoin } from "lucide-react"; // Removed BarChart2 as it wasn't used
+import { TrendingUp, TrendingDown, CircleDollarSign } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button"; // Added missing import
-
-interface TopCryptocurrencyTableProps {
-  cryptocurrencies: Cryptocurrency[];
-  className?: string;
-}
+import { Button } from "@/components/ui/button"; 
+import { Bitcoin, Coins } from "lucide-react"; // Coins can represent ETH, CircleDollarSign for others
 
 const CryptoIcon = ({ ticker, iconUrl, name }: { ticker: string, iconUrl?: string, name: string }) => {
-  if (iconUrl && iconUrl.startsWith('https://placehold.co')) {
-     if (ticker === 'BTC') return <Bitcoin className="h-5 w-5 text-orange-400" />;
-     if (ticker === 'ETH') return <CircleDollarSign className="h-5 w-5 text-gray-400" />; 
-     if (ticker === 'SOL') return <CircleDollarSign className="h-5 w-5 text-purple-400" />;
+  // Prioritize specific icons for well-known cryptos
+  if (ticker === 'BTC') return <Bitcoin className="h-5 w-5 text-orange-400" />;
+  if (ticker === 'ETH') return <Coins className="h-5 w-5 text-gray-400" />; // Using Coins for ETH as a common crypto icon
+  if (ticker === 'SOL') return <CircleDollarSign className="h-5 w-5 text-purple-400" />; // Placeholder, can be more specific
+
+  // Fallback to image URL if specific icon isn't set and URL is not a generic placeholder
+  if (iconUrl && !iconUrl.startsWith('https://placehold.co')) {
+    return <Image src={iconUrl} alt={name} width={20} height={20} className="rounded-full" data-ai-hint={`${name} logo crypto coin`} />;
   }
-  if (iconUrl) {
-    return <Image src={iconUrl} alt={name} width={20} height={20} className="rounded-full" data-ai-hint={`${name} logo`} />;
-  }
+  
+  // Generic placeholder if no specific icon or valid image URL
   return <CircleDollarSign className="h-5 w-5 text-muted-foreground" />;
 };
 
@@ -57,7 +56,7 @@ export function TopCryptocurrencyTable({ cryptocurrencies, className }: TopCrypt
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="text-right text-foreground">${crypto.price.toLocaleString()}</TableCell>
+                <TableCell className="text-right text-foreground">${crypto.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: crypto.price < 1 ? 5 : 2})}</TableCell>
                 <TableCell className={cn(
                   "text-right",
                   crypto.change24h >= 0 ? "text-green-500" : "text-red-500"

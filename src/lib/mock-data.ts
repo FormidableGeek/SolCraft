@@ -1,5 +1,5 @@
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity } from './types';
-import { ShieldAlert, ShieldCheck, Shield, DollarSign, TrendingUp, CalendarDays, Users, BarChart, LineChart, PieChart, ListChecks, Fuel, Timer, Wifi, Copy, ExternalLink, CircleDollarSign, Bitcoin } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi } from 'lucide-react'; // Removed unused icons
 
 export const mockTournaments: Tournament[] = [
   {
@@ -121,10 +121,10 @@ export const mockInvestments: Investment[] = [
     id: 'inv2',
     tournamentId: '3',
     tournamentName: 'Weekly Wednesday Freeroll',
-    amountInvested: 0, // Freeroll might not be an investment in this context, or represent a "play"
+    amountInvested: 0, 
     investmentDate: new Date('2024-07-15').toISOString(),
     status: 'Cashed Out',
-    returnOnInvestment: 20, // Absolute gain
+    returnOnInvestment: 20, 
   },
   {
     id: 'inv3',
@@ -141,7 +141,7 @@ export const mockInvestments: Investment[] = [
 export const mockPortfolioData: PortfolioData = {
   totalValue: 18500,
   totalInvested: 15000,
-  overallReturn: 23.33, // (18500 - 15000) / 15000 * 100
+  overallReturn: 23.33,
   bestPerformingInvestment: mockInvestments[0],
   worstPerformingInvestment: mockInvestments[2],
 };
@@ -220,35 +220,37 @@ export const riskLevelColorMap = {
 
 export const pageSpinnerStyle = "h-8 w-8 animate-spin text-primary";
 
-// Mock data for the new dashboard UI
+// Mock data for the new dashboard UI (Figma design)
 export const mockPortfolioAllocation: PortfolioAllocationItem[] = [
-  { name: 'Bitcoin', value: 40, color: 'hsl(var(--chart-1))' }, // Purple-blue
-  { name: 'Tether', value: 20, color: 'hsl(var(--chart-2))' }, // Teal/Green
-  { name: 'Ethereum', value: 25, color: 'hsl(var(--chart-3))' }, // Lighter Purple
-  { name: 'Cardano', value: 10, color: 'hsl(var(--chart-4))' }, // Muted Blue
-  { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' }, // Muted Teal
+  { name: 'Bitcoin', value: 40, color: 'hsl(var(--chart-1))' }, 
+  { name: 'Tether', value: 20, color: 'hsl(var(--chart-2))' }, 
+  { name: 'Ethereum', value: 25, color: 'hsl(var(--chart-3))' }, 
+  { name: 'Cardano', value: 10, color: 'hsl(var(--chart-4))' }, 
+  { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' }, 
 ];
 
+const pillStyle = "bg-primary/70 text-primary-foreground px-2 py-0.5 rounded text-xs";
+
 export const mockKeyMetrics: KeyMetric[] = [
-  { id: '1', label: 'Staking APY:', value: '14.2%', icon: ListChecks, valueClassName: 'bg-primary/70 text-primary-foreground px-2 py-0.5 rounded' },
-  { id: '2', label: 'Gas Saved:', value: '$128.4', icon: Fuel, valueClassName: 'bg-primary/70 text-primary-foreground px-2 py-0.5 rounded' },
-  { id: '3', label: 'Bundle Status:', value: '2m 34s left', icon: Timer, valueClassName: 'bg-primary/70 text-primary-foreground px-2 py-0.5 rounded' },
+  { id: '1', label: 'Staking APY:', value: '14.2%', icon: ListChecks, valueClassName: pillStyle },
+  { id: '2', label: 'Gas Saved:', value: '$128.4', icon: Fuel, valueClassName: pillStyle },
+  { id: '3', label: 'Bundle Status:', value: '2m 34s left', icon: Timer, valueClassName: pillStyle },
   { id: '4', label: 'Network:', value: 'Solana Mainnet', icon: Wifi },
 ];
 
 export const mockBalance = {
   amount: 1000000,
   currency: 'USD',
-  walletAddress: 'sol...4x2z', // Example, keep it short
+  walletAddress: 'sol...4x2z',
 };
 
 export const mockTopCryptocurrencies: Cryptocurrency[] = [
-  { id: 'btc', rank: 1, name: 'Bitcoin', ticker: 'BTC', iconUrl: 'https://placehold.co/24x24/orange/white?text=B', price: 30344, change24h: -5.0, volume24h: 34040000, marketCap: 334940000000 },
-  { id: 'eth', rank: 2, name: 'Ethereum', ticker: 'ETH', iconUrl: 'https://placehold.co/24x24/grey/white?text=E', price: 1850, change24h: -3.2, volume24h: 15000000, marketCap: 220000000000 },
-  { id: 'sol', rank: 3, name: 'Solana', ticker: 'SOL', iconUrl: 'https://placehold.co/24x24/purple/white?text=S', price: 22.50, change24h: -1.5, volume24h: 50000000, marketCap: 9000000000 },
-  { id: 'ada', rank: 4, name: 'Cardano', ticker: 'ADA', iconUrl: 'https://placehold.co/24x24/blue/white?text=A', price: 0.28, change24h: -2.1, volume24h: 20000000, marketCap: 10000000000 },
-  { id: 'doge', rank: 5, name: 'Dogecoin', ticker: 'DOGE', iconUrl: 'https://placehold.co/24x24/yellow/black?text=D', price: 0.065, change24h: 0.5, volume24h: 100000000, marketCap: 9000000000 },
-  { id: 'usdt', rank: 6, name: 'Tether', ticker: 'USDT', iconUrl: 'https://placehold.co/24x24/green/white?text=T', price: 1.00, change24h: 0.0, volume24h: 45000000000, marketCap: 80000000000 },
+  { id: 'btc', rank: 1, name: 'Bitcoin', ticker: 'BTC', iconUrl: 'https://placehold.co/24x24/orange/white?text=B', price: 60344, change24h: -5.0, volume24h: 34040000000, marketCap: 1184940000000 },
+  { id: 'eth', rank: 2, name: 'Ethereum', ticker: 'ETH', iconUrl: 'https://placehold.co/24x24/grey/white?text=E', price: 3350, change24h: -3.2, volume24h: 15000000000, marketCap: 400000000000 },
+  { id: 'sol', rank: 3, name: 'Solana', ticker: 'SOL', iconUrl: 'https://placehold.co/24x24/purple/white?text=S', price: 135.50, change24h: 2.5, volume24h: 2500000000, marketCap: 60000000000 },
+  { id: 'usdt', rank: 4, name: 'Tether', ticker: 'USDT', iconUrl: 'https://placehold.co/24x24/green/white?text=T', price: 1.00, change24h: 0.0, volume24h: 45000000000, marketCap: 110000000000 },
+  { id: 'ada', rank: 5, name: 'Cardano', ticker: 'ADA', iconUrl: 'https://placehold.co/24x24/blue/white?text=A', price: 0.38, change24h: -1.1, volume24h: 300000000, marketCap: 13000000000 },
+  { id: 'doge', rank: 6, name: 'Dogecoin', ticker: 'DOGE', iconUrl: 'https://placehold.co/24x24/yellow/black?text=D', price: 0.125, change24h: 0.5, volume24h: 1000000000, marketCap: 18000000000 },
 ];
 
 export const mockRecentActivity: RecentActivity[] = [
@@ -259,7 +261,6 @@ export const mockRecentActivity: RecentActivity[] = [
   { id: 'act5', type: 'Payout', date: '05.20.2023', time: '09:00', tokenAmount: '$250.00', status: 'Completed', viewLink: '#' },
 ];
 
-// Data for the portfolio performance chart (green bars/area)
 export const mockFigmaPortfolioPerformance = [
   { name: 'Day 1', value: 300 },
   { name: 'Day 2', value: 450 },
@@ -268,4 +269,27 @@ export const mockFigmaPortfolioPerformance = [
   { name: 'Day 5', value: 400 },
   { name: 'Day 6', value: 750 },
   { name: 'Day 7', value: 500 },
+  { name: 'Day 8', value: 550 },
+  { name: 'Day 9', value: 620 },
+  { name: 'Day 10', value: 480 },
+  { name: 'Day 11', value: 700 },
+  { name: 'Day 12', value: 650 },
+  { name: 'Day 13', value: 800 },
+  { name: 'Day 14', value: 720 },
+  { name: 'Day 15', value: 600 },
+  { name: 'Day 16', value: 680 },
+  { name: 'Day 17', value: 750 },
+  { name: 'Day 18', value: 820 },
+  { name: 'Day 19', value: 780 },
+  { name: 'Day 20', value: 850 },
+  { name: 'Day 21', value: 900 },
+  { name: 'Day 22', value: 800 },
+  { name: 'Day 23', value: 880 },
+  { name: 'Day 24', value: 920 },
+  { name: 'Day 25', value: 850 },
+  { name: 'Day 26', value: 950 },
+  { name: 'Day 27', value: 1000 },
+  { name: 'Day 28', value: 930 },
+  { name: 'Day 29', value: 980 },
+  { name: 'Day 30', value: 1050 },
 ];

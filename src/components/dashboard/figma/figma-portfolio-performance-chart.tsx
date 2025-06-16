@@ -26,28 +26,32 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameT
 export function FigmaPortfolioPerformanceChart({ data: initialData, className }: FigmaPortfolioPerformanceChartProps) {
   const [timeframe, setTimeframe] = useState<'7D' | '30D' | 'AllTime'>('7D');
   
-  // Placeholder: In a real app, data would be fetched or filtered based on timeframe
-  const chartData = initialData.slice(0, timeframe === '7D' ? 7 : timeframe === '30D' ? 30 : initialData.length);
+  const chartData = timeframe === '7D' ? initialData.slice(-7) : 
+                    timeframe === '30D' ? initialData.slice(-30) : 
+                    initialData;
 
   return (
     <Card className={cn(className)}>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-sm font-medium uppercase text-muted-foreground">Portfolio Performance</CardTitle>
         <div className="flex items-center gap-1">
-          {(['7D', '30D', 'All Time'] as const).map((tf) => (
-            <Button
-              key={tf}
-              variant={timeframe === (tf === 'All Time' ? 'AllTime' : tf) ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setTimeframe(tf === 'All Time' ? 'AllTime' : tf)}
-              className={cn(
-                "px-2 py-1 h-7 text-xs",
-                timeframe === (tf === 'All Time' ? 'AllTime' : tf) ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/50"
-              )}
-            >
-              {tf}
-            </Button>
-          ))}
+          {(['7D', '30D', 'All Time'] as const).map((tfLabel) => {
+            const tfValue = tfLabel === 'All Time' ? 'AllTime' : tfLabel;
+            return (
+              <Button
+                key={tfValue}
+                variant={timeframe === tfValue ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setTimeframe(tfValue)}
+                className={cn(
+                  "px-2 py-1 h-7 text-xs",
+                  timeframe === tfValue ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted/50"
+                )}
+              >
+                {tfLabel}
+              </Button>
+            )
+          })}
         </div>
       </CardHeader>
       <CardContent>
@@ -55,7 +59,7 @@ export function FigmaPortfolioPerformanceChart({ data: initialData, className }:
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 5, right: 0, left: -30, bottom: 5 }}>
               <defs>
-                <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                <linearGradient id="colorValuePerformance" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="hsl(var(--accent))" stopOpacity={0.6}/>
                   <stop offset="95%" stopColor="hsl(var(--accent))" stopOpacity={0}/>
                 </linearGradient>
@@ -78,7 +82,7 @@ export function FigmaPortfolioPerformanceChart({ data: initialData, className }:
                 stroke="hsl(var(--muted-foreground))"
               />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "hsl(var(--accent) / 0.1)" }} />
-              <Area type="monotone" dataKey="value" stroke="hsl(var(--accent))" fillOpacity={1} fill="url(#colorValue)" strokeWidth={2} />
+              <Area type="monotone" dataKey="value" stroke="hsl(var(--accent))" fillOpacity={1} fill="url(#colorValuePerformance)" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
