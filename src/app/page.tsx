@@ -1,3 +1,4 @@
+
 import { PageHeader } from "@/components/shared/page-header";
 import { PortfolioOverviewCard } from "@/components/dashboard/portfolio-overview-card";
 import { InvestmentHistoryCard } from "@/components/dashboard/investment-history-card";
@@ -5,7 +6,7 @@ import { PerformanceChartCard } from "@/components/dashboard/performance-chart-c
 import { mockPortfolioData, mockInvestments, portfolioPerformanceData } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Flame } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockTournaments } from "@/lib/mock-data";
 import { TournamentCard } from "@/components/tournaments/tournament-card";
@@ -53,7 +54,10 @@ export default function DashboardPage() {
 
       {featuredTournaments.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-2xl font-headline font-semibold mb-4">Featured Tournaments</h2>
+          <div className="flex items-center mb-4">
+            <Flame className="h-6 w-6 mr-2 text-primary" />
+            <h2 className="text-2xl font-headline font-semibold">Spotlight: Hot Tournaments</h2>
+          </div>
           <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
             {featuredTournaments.map((tournament) => (
               <TournamentCard key={tournament.id} tournament={tournament} />
