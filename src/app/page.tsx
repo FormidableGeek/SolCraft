@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Coins, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile } from 'lucide-react';
+import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Coins, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile, Linkedin, Twitter } from 'lucide-react';
 import Image from 'next/image';
 
 interface RoadmapItemProps {
@@ -39,7 +39,7 @@ const TokenomicsChart = () => {
   const data = [
     { name: "Liquidity", value: 35, color: "hsl(var(--primary))" },
     { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },
-    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },
+    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" }, // Accent - Teal/Green
     { name: "Team", value: 15, color: "hsl(240,60%,65%)" },
     { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }
   ];
@@ -319,7 +319,7 @@ export default function LandingPage() {
                   {[
                     { name: "Liquidity", value: "35%", color: "bg-primary" },
                     { name: "Presale", value: "20%", color: "bg-purple-500" },
-                    { name: "Staking", value: "15%", color: "bg-teal-500" },
+                    { name: "Staking", value: "15%", color: "bg-teal-500" }, // Matches chart --chart-2
                     { name: "Team", value: "15%", color: "bg-blue-600" },
                     { name: "Marketing", value: "15%", color: "bg-sky-500" },
                   ].map(item => (
@@ -361,9 +361,36 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-gray-500 text-sm">
+      <footer className="py-12 bg-gray-900/50 text-gray-400 text-sm">
         <div className="container mx-auto px-4 md:px-6">
-          © {new Date().getFullYear()} SolCraft. All rights reserved.
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div>
+              <h5 className="font-semibold text-white mb-3 font-headline">SolCraft</h5>
+              <p className="text-xs">Trading Infrastructure for the Next Era of Solana. Supercharging Solana with an innovative Layer 2.</p>
+            </div>
+            <div>
+              <h5 className="font-semibold text-white mb-3 font-headline">Contact Us</h5>
+              <ul className="space-y-1 text-xs">
+                <li><a href="mailto:info@solcraftl2.com" className="hover:text-purple-400 transition-colors">info@solcraftl2.com</a></li>
+                <li><a href="mailto:marketing@solcraftl2.com" className="hover:text-purple-400 transition-colors">marketing@solcraftl2.com</a></li>
+                <li><a href="mailto:team@solcraftl2.com" className="hover:text-purple-400 transition-colors">team@solcraftl2.com</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-semibold text-white mb-3 font-headline">Follow Us</h5>
+              <div className="flex space-x-4">
+                <a href="https://x.com/solcraftlayer2" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="https://linkedin.com/company/solcraft" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 pt-8 text-center">
+            <p>&copy; {new Date().getFullYear()} SolCraft. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
