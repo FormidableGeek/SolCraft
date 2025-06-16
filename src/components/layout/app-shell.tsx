@@ -1,3 +1,4 @@
+
 import {
   SidebarProvider,
   Sidebar,
@@ -18,7 +19,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-headline font-semibold text-primary">SolCraft</h1>
+            <h1 className="text-2xl font-headline font-semibold">
+              <span className="bg-gradient-to-r from-[#E573A5] to-[#73D2E5] text-transparent bg-clip-text">
+                SolCraft
+              </span>
+            </h1>
           </div>
         </SidebarHeader>
         <SidebarContent>

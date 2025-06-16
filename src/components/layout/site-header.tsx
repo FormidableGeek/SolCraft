@@ -1,3 +1,4 @@
+
 "use client";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,11 @@ export function SiteHeader() {
         <div className="flex items-center">
           <SidebarTrigger className="md:hidden" />
           <Link href="/" className="hidden md:block">
-            <h1 className="text-xl font-headline font-semibold text-foreground">SolCraft</h1>
+            <h1 className="text-xl font-headline font-semibold">
+              <span className="bg-gradient-to-r from-[#E573A5] to-[#73D2E5] text-transparent bg-clip-text">
+                SolCraft
+              </span>
+            </h1>
           </Link>
         </div>
         

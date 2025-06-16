@@ -37,11 +37,11 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, is
 
 const TokenomicsChart = () => {
   const data = [
-    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" }, // Blue/Purple
-    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },   // Distinct Purple
-    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" }, // Teal/Green (accent)
-    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },    // Blue
-    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" } // Lighter Blue/Sky
+    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" },
+    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },
+    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },
+    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },
+    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }
   ];
 
   const radius = 70;
@@ -99,8 +99,10 @@ export default function LandingPage() {
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 py-4 md:py-6">
         <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-purple-400 font-headline">
-            SolCraft
+          <Link href="/" className="text-2xl font-bold font-headline">
+            <span className="bg-gradient-to-r from-[#E573A5] to-[#73D2E5] text-transparent bg-clip-text">
+              SolCraft
+            </span>
           </Link>
           <nav className="hidden md:flex items-center space-x-1 md:space-x-2 bg-gray-800/50 backdrop-blur-sm p-2 rounded-full">
             <Link href="#about-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
