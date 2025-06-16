@@ -523,14 +523,14 @@ const sidebarMenuButtonVariants = cva(
 )
 
 export interface SidebarMenuButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, // Or React.AnchorHTMLAttributes<HTMLAnchorElement> if Slot is an anchor
     VariantProps<typeof sidebarMenuButtonVariants> {
   asChild?: boolean;
   isActive?: boolean;
 }
 
 const SidebarMenuButton = React.forwardRef<
-  HTMLElement,
+  HTMLElement, // Use HTMLElement for polymorphism
   SidebarMenuButtonProps
 >(
   (
@@ -538,23 +538,23 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild = false, 
+      asChild = false, // Ensure asChild is destructured
       isActive = false,
       children,
-      ...props 
+      ...props // Remaining props (without asChild)
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"; 
+    const Comp = asChild ? Slot : "button"; // Determine component based on asChild
 
     return (
-      <Comp 
+      <Comp // Render the determined component
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
         ref={ref}
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...props} 
+        {...props} // Spread remaining props, asChild is NOT in props here
       >
         {children}
       </Comp>
@@ -729,6 +729,8 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  SheetTitle, 
+  SheetTitle,
   useSidebar,
 }
+
+    
