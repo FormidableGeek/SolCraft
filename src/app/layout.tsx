@@ -6,6 +6,9 @@ import { Toaster } from "@/components/ui/toaster";
 export const metadata: Metadata = {
   title: 'SolCraft',
   description: 'Invest in Poker Tournaments on Solana',
+  icons: {
+    icon: '/solcraft-logo.png', // Points to /public/solcraft-logo.png
+  },
 };
 
 export default function RootLayout({
