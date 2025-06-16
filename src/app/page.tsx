@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Brain, Coins, Gauge, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile } from 'lucide-react';
+import Image from 'next/image';
 
 interface RoadmapItemProps {
   quarter: string;
@@ -14,7 +15,6 @@ interface RoadmapItemProps {
 const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, isOffset, isLast }) => {
   return (
     <div className={`relative flex items-start ${isOffset ? 'md:ml-[calc(50%+2rem)]' : 'md:mr-[calc(50%+2rem)]'} md:w-[calc(50%-2rem)] mb-12`}>
-      {/* Connector lines and dots for md+ screens */}
       {!isLast && (
         <div className={`hidden md:block absolute top-5 ${isOffset ? 'right-full mr-4' : 'left-full ml-4'} w-16 h-px bg-purple-500/50`}></div>
       )}
@@ -37,11 +37,11 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, is
 
 const TokenomicsChart = () => {
   const data = [
-    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" }, // Main primary color
-    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },    // Distinct purple
-    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },    // Accent color (teal/green)
-    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },       // Blue
-    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }   // Lighter Blue/Sky
+    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" },
+    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },
+    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },
+    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },
+    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }
   ];
 
   const radius = 70;
@@ -72,7 +72,7 @@ const TokenomicsChart = () => {
         })}
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <PieChart className="w-12 h-12 text-purple-400" /> {/* Updated Icon */}
+        <PieChart className="w-12 h-12 text-purple-400" />
       </div>
     </div>
   );
@@ -99,15 +99,18 @@ export default function LandingPage() {
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 py-4 md:py-6">
         <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-          <div className="flex items-center space-x-1 md:space-x-2 bg-gray-800/50 backdrop-blur-sm p-2 rounded-full">
+          <Link href="/" className="text-2xl font-bold text-purple-400 font-headline">
+            SolCraft
+          </Link>
+          <nav className="hidden md:flex items-center space-x-1 md:space-x-2 bg-gray-800/50 backdrop-blur-sm p-2 rounded-full">
             <Link href="#about-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
               About
             </Link>
             <Link href="#features-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
               Features
             </Link>
-             <Link href="#optimized-swaps-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
-              Swaps
+             <Link href="#launchpad-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
+              Launchpad
             </Link>
             <Link href="#roadmap-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
               Roadmap
@@ -118,7 +121,7 @@ export default function LandingPage() {
             <Link href="#team-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
               Team
             </Link>
-          </div>
+          </nav>
           <Button variant="outline" className="text-white border-purple-500 hover:bg-purple-600 hover:text-white text-xs sm:text-sm" asChild>
             <Link href="/profile">Connect to Wallet</Link>
           </Button>
@@ -126,22 +129,35 @@ export default function LandingPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex flex-col justify-center">
+      <main className="flex-grow">
         {/* Hero Section */}
-        <section id="hero-section" className="container mx-auto px-4 md:px-6 py-20 md:py-32 text-center flex flex-col items-center">
-          <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
-            <span className="block text-purple-400">Trading Infrastructure</span>
-            <span className="block">for the Next Era of Solana</span>
-          </h1>
-          <p className="max-w-xl md:max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-300 mb-10">
-            Layer 2 speed, secure bridging, optimized swaps, and a launchpad—built for performance and protection.
-          </p>
-          <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-3 rounded-lg font-semibold" asChild>
-            <Link href="/dashboard">
-              Explore Features
-              <ChevronRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+        <section id="hero-section" className="container mx-auto px-4 md:px-6 py-20 md:py-32 flex flex-col md:flex-row items-start md:gap-12">
+          <div className="md:w-1/2 text-left">
+            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
+              <span className="block text-purple-400">The New Era of the</span>
+              <span className="block">Solana Blockchain Security and Scalability with Our Layer 2</span>
+            </h1>
+            <p className="max-w-xl text-base sm:text-lg md:text-xl text-gray-300 mb-10">
+              We're supercharging Solana with an innovative Layer 2, offering unprecedented scalability, a secure cross-chain bridge, optimized swaps, and a launchpad for the tokens of the future.
+            </p>
+            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-3 rounded-lg font-semibold" asChild>
+              <Link href="/dashboard">
+                Explore the features
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+          <div className="md:w-1/2 mt-12 md:mt-0 flex justify-center items-center">
+            {/* Placeholder for image */}
+            <Image 
+              src="https://placehold.co/600x400.png" 
+              alt="Solcraft Platform Visual" 
+              width={600} 
+              height={400} 
+              className="rounded-lg shadow-2xl"
+              data-ai-hint="blockchain technology abstract"
+            />
+          </div>
         </section>
 
         {/* About Us Section */}
@@ -159,10 +175,9 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features Section (Aggregating multiple parts from image) */}
+        {/* Features Section (Cross-chain) */}
         <section id="features-section" className="py-16 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
-            {/* Cross-Chain Transfers */}
             <div className="mb-16 md:mb-24">
               <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-4 text-center text-purple-400">Cross-Chain Transfers Made Easy</h2>
               <p className="text-center text-gray-400 max-w-3xl mx-auto mb-12">
@@ -186,41 +201,41 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Instant & Optimized Swaps Section */}
-        <section id="optimized-swaps-section" className="py-16 md:py-24 bg-gray-900/30">
+        {/* SolCraft Launchpad Section */}
+        <section id="launchpad-section" className="py-16 md:py-24 bg-gray-900/30">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-12 text-center text-purple-400">Instant &amp; Optimized Swaps on SolCraft</h2>
+            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-12 text-center text-purple-400">SolCraft Launchpad <br className="sm:hidden"/> Where Innovation Takes Flight</h2>
              <div className="grid md:grid-cols-3 gap-8">
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><BarChart className={featureCardIconClass} />Best Rate Execution</h3>
-                  <p className={featureCardDescriptionClass}>Our intelligent routing algorithms scan multiple Solana DEXs like Raydium, Orca, Jupiter to find the most advantageous swap path for your trade, maximizing your returns.</p>
+                  <p className={featureCardDescriptionClass}>Our intelligent routing algorithms scan multiple Solana DEXs to find the most advantageous swap path, maximizing your returns.</p>
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><Layers className={featureCardIconClass} />Deep Liquidity Access</h3>
-                  <p className={featureCardDescriptionClass}>Tap into aggregated liquidity pools across the Solana ecosystem. Swap even large amounts with minimal price impact, ensuring efficient trading at any scale.</p>
+                  <p className={featureCardDescriptionClass}>Tap into aggregated liquidity pools across Solana. Swap large amounts with minimal price impact, ensuring efficient trading.</p>
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><ShieldCheck className={featureCardIconClass} />Slippage Protection</h3>
-                  <p className={featureCardDescriptionClass}>Advanced settings and optimized routing help protect your trades from unexpected price movements during execution, ensuring you receive the expected amount of tokens.</p>
+                  <p className={featureCardDescriptionClass}>Advanced settings and optimized routing protect trades from unexpected price movements, ensuring you get expected token amounts.</p>
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><Zap className={featureCardIconClass} />Blazing-Fast Swaps</h3>
-                  <p className={featureCardDescriptionClass}>Leverage the incredible speed of our Solana Layer 2 infrastructure. Swaps are executed and confirmed in milliseconds.</p>
+                  <p className={featureCardDescriptionClass}>Leverage Solana Layer 2 speed. Swaps execute and confirm in milliseconds, not minutes.</p>
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><Coins className={featureCardIconClass} />Minimal Fees</h3>
-                  <p className={featureCardDescriptionClass}>Say goodbye to high gas costs. Transactions on our Layer 2 have negligible fees, making swapping more accessible and profitable.</p>
+                  <p className={featureCardDescriptionClass}>Goodbye high gas costs. Transactions on our Layer 2 have negligible fees, making swapping accessible and profitable.</p>
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><Smile className={featureCardIconClass} />User-Friendly Interface</h3>
-                  <p className={featureCardDescriptionClass}>Our clean and intuitive interface makes swapping tokens straightforward, even for beginners. Connect your wallet and trade seamlessly within the SolCraft platform.</p>
+                  <p className={featureCardDescriptionClass}>Our clean, intuitive interface makes token swapping straightforward, even for beginners. Connect and trade seamlessly.</p>
                 </div>
               </div>
           </div>
         </section>
         
-        {/* Launchpad Section */}
-        <section id="launchpad-section" className="py-16 md:py-24">
+        {/* Features (Launchpad specific - as per original request for this section name) */}
+        <section id="old-launchpad-features-section" className="py-16 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-12 text-center text-purple-400">Your Launchpad for Secure, Scalable Growth</h2>
             <div className="grid md:grid-cols-3 gap-8">
@@ -270,7 +285,6 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="relative">
-              {/* Central line for md+ screens */}
               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-purple-500/30 transform -translate-x-1/2"></div>
               {roadmapItems.map((item, index) => (
                 <RoadmapItem
@@ -302,11 +316,11 @@ export default function LandingPage() {
                 <TokenomicsChart />
                 <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4 text-sm max-w-md">
                   {[
-                    { name: "Liquidity", value: "35%", color: "bg-primary" }, // Matches chart --primary
-                    { name: "Presale", value: "20%", color: "bg-purple-500" }, // Matches chart distinct purple
-                    { name: "Staking", value: "15%", color: "bg-teal-500" }, // Matches chart --chart-2 (accent)
-                    { name: "Team", value: "15%", color: "bg-blue-600" }, // Matches chart blue
-                    { name: "Marketing", value: "15%", color: "bg-sky-500" }, // Matches chart lighter blue
+                    { name: "Liquidity", value: "35%", color: "bg-primary" },
+                    { name: "Presale", value: "20%", color: "bg-purple-500" },
+                    { name: "Staking", value: "15%", color: "bg-teal-500" }, // Using teal to match chart-2
+                    { name: "Team", value: "15%", color: "bg-blue-600" },
+                    { name: "Marketing", value: "15%", color: "bg-sky-500" },
                   ].map(item => (
                     <div key={item.name} className="flex items-center">
                       <span className={`w-3 h-3 rounded-full mr-2 ${item.color}`}></span>
@@ -354,3 +368,4 @@ export default function LandingPage() {
     </div>
   );
 }
+
