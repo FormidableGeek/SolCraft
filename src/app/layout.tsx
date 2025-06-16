@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { AppShell } from '@/components/layout/app-shell';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: 'SolCraft',
-  description: 'Invest in Poker Tournaments on Solana',
+  description: 'Trading Infrastructure for the Next Era of Solana',
   icons: {
-    icon: '/solcraft-logo.png', // Points to /public/solcraft-logo.png
+    icon: '/solcraft-logo.png',
   },
 };
 
@@ -25,7 +24,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <AppShell>{children}</AppShell>
+        {children}
         <Toaster />
       </body>
     </html>

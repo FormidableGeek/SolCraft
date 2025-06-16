@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 const navItems: NavItem[] = [
-  { title: "Home", href: "/", icon: Home },
+  { title: "Home", href: "/dashboard", icon: Home },
   { title: "My Portfolio", href: "/profile", icon: User },
   { title: "Swap", href: "/swap", icon: Replace },
   { title: "Deposit and Send", href: "/deposit-send", icon: ArrowRightLeft },
@@ -42,7 +42,7 @@ export function SidebarNav() {
         <SidebarMenuItem key={item.href}>
           <Link href={item.href} asChild>
             <SidebarMenuButton
-              isActive={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))}
+              isActive={pathname === item.href || (item.href !== "/dashboard" && item.href !== "/" && pathname.startsWith(item.href))}
               tooltip={item.title}
               disabled={item.disabled}
               className={cn(item.disabled && "cursor-not-allowed opacity-50")}
