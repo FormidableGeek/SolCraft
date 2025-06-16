@@ -19,7 +19,6 @@ import {
   MoreHorizontal, 
   HelpCircle, 
   Info,
-  Settings // Added Settings back as it was removed in a previous step but might be intended
 } from "lucide-react";
 
 const navItems: NavItem[] = [
@@ -32,8 +31,6 @@ const navItems: NavItem[] = [
   { title: "More", href: "/more", icon: MoreHorizontal },
   { title: "Support", href: "/support", icon: HelpCircle },
   { title: "About", href: "/about", icon: Info },
-  // Removed settings from here as it's in the top header
-  // { title: "Settings", href: "/settings", icon: Settings, disabled: false },
 ];
 
 export function SidebarNav() {
