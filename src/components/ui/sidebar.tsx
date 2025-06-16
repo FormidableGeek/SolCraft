@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet" // Added SheetTitle
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   TooltipProvider,
-} from "@/components/ui/tooltip" 
+} from "@/components/ui/tooltip"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -197,7 +197,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-            <SheetTitle className="sr-only">Main Navigation</SheetTitle> 
+            <SheetTitle className="sr-only">Main Navigation</SheetTitle>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -522,43 +522,47 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
+export interface SidebarMenuButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof sidebarMenuButtonVariants> {
+  asChild?: boolean;
+  isActive?: boolean;
+}
+
 const SidebarMenuButton = React.forwardRef<
-  HTMLElement, 
-  React.ComponentProps<"button"> & { 
-    asChild?: boolean
-    isActive?: boolean
-  } & VariantProps<typeof sidebarMenuButtonVariants>
+  HTMLElement,
+  SidebarMenuButtonProps
 >(
   (
     {
-      asChild: renderAsSlot = false, 
-      isActive = false,
-      variant = "default",
-      size = "default",
       className,
+      variant,
+      size,
+      asChild = false, // Destructure asChild, default to false
+      isActive = false,
       children,
-      ...restProps 
+      ...props // All other props (e.g., onClick, disabled, etc., but NOT asChild)
     },
     ref
   ) => {
-    const Comp = renderAsSlot ? Slot : "button"
-    const { asChild: _forwardedAsChild, ...elementProps } = restProps;
+    const Comp = asChild ? Slot : "button"; // Determine the component to render
 
     return (
       <Comp
+        className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
         ref={ref}
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
-        {...elementProps} 
+        {...props} // Spread the remaining props; `asChild` is not in `props` here
       >
         {children}
       </Comp>
-    )
+    );
   }
-)
-SidebarMenuButton.displayName = "SidebarMenuButton"
+);
+SidebarMenuButton.displayName = "SidebarMenuButton";
+
 
 const SidebarMenuAction = React.forwardRef<
   HTMLButtonElement,
@@ -725,6 +729,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  SheetTitle, // Export SheetTitle
+  SheetTitle, 
   useSidebar,
 }
