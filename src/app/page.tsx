@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Brain, Coins, Gauge, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile } from 'lucide-react';
+import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Coins, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile } from 'lucide-react';
 import Image from 'next/image';
 
 interface RoadmapItemProps {
@@ -37,11 +37,11 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, is
 
 const TokenomicsChart = () => {
   const data = [
-    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" },
-    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },
-    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },
-    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },
-    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }
+    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" }, // Blue/Purple
+    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },   // Distinct Purple
+    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" }, // Teal/Green (accent)
+    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },    // Blue
+    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" } // Lighter Blue/Sky
   ];
 
   const radius = 70;
@@ -148,7 +148,6 @@ export default function LandingPage() {
             </Button>
           </div>
           <div className="md:w-1/2 mt-12 md:mt-0 flex justify-center items-center">
-            {/* Placeholder for image */}
             <Image 
               src="https://placehold.co/600x400.png" 
               alt="Solcraft Platform Visual" 
@@ -164,7 +163,7 @@ export default function LandingPage() {
         <section id="about-section" className="py-16 md:py-24 bg-gray-900/30">
           <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-6 text-purple-400">About Us</h2>
+              <h2 className="font-headline text-3xl font-bold mb-6 text-purple-400">About Us</h2>
               <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
                 We are blockchain innovators dedicated to unlocking Solana's full potential through our cutting-edge Layer 2 solution. We deliver lightning-fast transactions, near-zero fees, and robust security, creating a superior experience for users and developers building dApps, games, and more on the Solana blockchain.
               </p>
@@ -212,7 +211,7 @@ export default function LandingPage() {
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><Layers className={featureCardIconClass} />Deep Liquidity Access</h3>
-                  <p className={featureCardDescriptionClass}>Tap into aggregated liquidity pools across Solana. Swap large amounts with minimal price impact, ensuring efficient trading.</p>
+                  <p className={featureCardDescriptionClass}>Tap into aggregated liquidity pools. Swap large amounts with minimal price impact, ensuring efficient trading.</p>
                 </div>
                 <div className={featureCardBaseClass}>
                   <h3 className={featureCardTitleClass}><ShieldCheck className={featureCardIconClass} />Slippage Protection</h3>
@@ -258,7 +257,7 @@ export default function LandingPage() {
         {/* BuyBot Section */}
         <section id="buybot-section" className="py-16 md:py-24 bg-gray-900/30">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-12 text-center text-purple-400">Trade Smarter, Not Harder with BuyBot</h2>
+            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-12 text-center text-purple-400">Trade Smarter, Not Harder Meet the Integrated Layer 2 BuyBot</h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className={featureCardBaseClass}>
                 <h3 className={featureCardTitleClass}><Bot className={featureCardIconClass} />Smart Automated Trading</h3>
@@ -270,7 +269,7 @@ export default function LandingPage() {
               </div>
               <div className={featureCardBaseClass}>
                 <h3 className={featureCardTitleClass}><FileScan className={featureCardIconClass} />Stay Protected with Anti-Rug Scoring</h3>
-                <p className={featureCardDescriptionClass}>Trade with peace of mind. BuyBot's anti-rug scoring system protects you from risky projects and helps you avoid potential losses.</p>
+                <p className={featureCardDescriptionClass}>Trade confidently. BuyBot's anti-rug scoring system helps identify risky projects, protecting your investments.</p>
               </div>
             </div>
           </div>
@@ -318,7 +317,7 @@ export default function LandingPage() {
                   {[
                     { name: "Liquidity", value: "35%", color: "bg-primary" },
                     { name: "Presale", value: "20%", color: "bg-purple-500" },
-                    { name: "Staking", value: "15%", color: "bg-teal-500" }, // Using teal to match chart-2
+                    { name: "Staking", value: "15%", color: "bg-teal-500" },
                     { name: "Team", value: "15%", color: "bg-blue-600" },
                     { name: "Marketing", value: "15%", color: "bg-sky-500" },
                   ].map(item => (
@@ -368,4 +367,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
