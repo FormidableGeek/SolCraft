@@ -46,40 +46,41 @@ body {
   }
 
   .dark {
-    --background: 0 0% 3.9%; /* Standard dark background */
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 207 70% 53%; /* Saturated blue #3498DB */
-    --primary-foreground: 0 0% 98%; /* White for contrast */
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 25 80% 51%; /* Soft orange #E67E22 */
-    --accent-foreground: 0 0% 98%; /* White for contrast */
-    --destructive: 0 62.8% 30.6%;
+    --background: 240 10% 4%;
+    --foreground: 0 0% 95%;
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 250 70% 65%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 10% 15%;
+    --secondary-foreground: 0 0% 80%;
+    --muted: 240 5% 20%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 160 70% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 207 70% 53%; /* Primary color for rings */
-    --chart-1: 207 70% 53%;
-    --chart-2: 25 80% 51%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 240 10% 12%;
+    --input: 240 10% 10%;
+    --ring: 250 70% 65%;
+    
+    --chart-1: 250 70% 65%; 
+    --chart-2: 160 70% 50%; 
+    --chart-3: 250 70% 75%; 
+    --chart-4: 160 70% 60%; 
+    --chart-5: 190 70% 60%; 
 
     /* Sidebar specific colors for dark mode */
-    --sidebar-background: 0 0% 7%; /* Slightly lighter than main dark background */
-    --sidebar-foreground: 0 0% 80%;
-    --sidebar-primary: 207 70% 53%; /* Primary color */
-    --sidebar-primary-foreground: 0 0% 98%; /* White for contrast */
-    --sidebar-accent: 0 0% 12%; /* Darker accent for sidebar */
-    --sidebar-accent-foreground: 207 70% 53%; /* Primary color for text on accent */
-    --sidebar-border: 0 0% 14.9%;
-    --sidebar-ring: 207 70% 53%;
+    --sidebar-background: var(--background); 
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent); 
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border); 
+    --sidebar-ring: var(--ring);
   }
 }
 
