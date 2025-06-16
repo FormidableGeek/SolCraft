@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Brain, Coins, Gauge, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, Target, PieChart, Users, GitFork } from 'lucide-react';
+import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Brain, Coins, Gauge, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork } from 'lucide-react';
 
 interface RoadmapItemProps {
   quarter: string;
@@ -14,10 +14,11 @@ interface RoadmapItemProps {
 const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, isOffset, isLast }) => {
   return (
     <div className={`relative flex items-start ${isOffset ? 'md:ml-[calc(50%+2rem)]' : 'md:mr-[calc(50%+2rem)]'} md:w-[calc(50%-2rem)] mb-12`}>
-      {!isLast && (
+      {/* Connector lines and dots for md+ screens */}
+      {!isLast && !isMobileTimelinePoint(quarter, year, roadmapItems) && ( // Prevent connector for last true item on mobile-like view
         <div className={`hidden md:block absolute top-5 ${isOffset ? 'right-full mr-4' : 'left-full ml-4'} w-16 h-px bg-purple-500/50`}></div>
       )}
-      <div className={`hidden md:block absolute top-5 ${isOffset ? 'right-[calc(100%+0.5rem)]' : 'left-[calc(100%+0.5rem)] transform -translate-x-1/2'} w-4 h-4 bg-purple-500 rounded-full border-2 border-black`}></div>
+      <div className={`hidden md:block absolute top-5 ${isOffset ? 'right-[calc(100%+0.5rem)]' : 'left-[calc(100%+0.5rem)]'} w-4 h-4 bg-purple-500 rounded-full border-2 border-black`}></div>
       
       <div className="bg-purple-600/10 backdrop-blur-sm p-6 rounded-lg shadow-xl w-full">
         <h4 className="text-xl font-semibold text-purple-400 mb-3">{quarter} {year}</h4>
@@ -34,13 +35,23 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, is
   );
 };
 
+// Helper to determine if a point is the last "true" item for mobile timeline rendering to avoid drawing extra lines
+const isMobileTimelinePoint = (currentQuarter: string, currentYear: string, allItems: RoadmapItemProps[]): boolean => {
+    const currentIndex = allItems.findIndex(item => item.quarter === currentQuarter && item.year === currentYear);
+    // This function is a bit simplistic for complex mobile timeline rendering,
+    // but for stopping the last line, it's okay.
+    // A more robust solution would involve knowing the exact mobile layout.
+    return currentIndex === allItems.length -1;
+};
+
+
 const TokenomicsChart = () => {
   const data = [
-    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" }, // Main purple
-    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },    // Lighter purple
-    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },    // Accent teal/green
-    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },       // Blue
-    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }   // Lighter blue
+    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" },
+    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },
+    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },
+    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },
+    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }
   ];
 
   const radius = 70;
@@ -77,6 +88,14 @@ const TokenomicsChart = () => {
   );
 };
 
+const roadmapItems: RoadmapItemProps[] = [
+  { quarter: 'Q2', year: '2025', milestones: ["Token Development + Deployment", "Cross Chain Bridge Launch", "Community Building", "Presale Launch"] },
+  { quarter: 'Q3', year: '2025', milestones: ["Strategic Partnerships", "Layer 2 Core Infrastructure Deployment", "Web3 Interface Release", "Developer Documentation", "Initial Liquidity"], isOffset: true },
+  { quarter: 'Q4', year: '2025', milestones: ["Anti-Rug System Display", "Bundle Engine Testnet", "Lock Liquidity Module (V1)", "Swap Optimizer Launch", "Security Dashboard"] },
+  { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
+  { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true } // Mark the very last item
+];
+
 
 export default function LandingPage() {
   const featureCardBaseClass = "bg-purple-600/10 backdrop-blur-sm p-6 rounded-lg shadow-xl h-full flex flex-col";
@@ -84,13 +103,6 @@ export default function LandingPage() {
   const featureCardIconClass = "mr-3 h-6 w-6 text-purple-400";
   const featureCardDescriptionClass = "text-sm text-gray-300 flex-grow";
 
-  const roadmapItems = [
-    { quarter: 'Q2', year: '2025', milestones: ["Token Development + Deployment", "Cross Chain Bridge Launch", "Community Building", "Presale Launch"] },
-    { quarter: 'Q3', year: '2025', milestones: ["Strategic Partnerships", "Layer 2 Core Infrastructure Deployment", "Web3 Interface Release", "Developer Documentation", "Initial Liquidity"], isOffset: true },
-    { quarter: 'Q4', year: '2025', milestones: ["Anti-Rug System Display", "Bundle Engine Testnet", "Lock Liquidity Module (V1)", "Swap Optimizer Launch", "Security Dashboard"] },
-    { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
-    { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"] }
-  ];
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col font-body">
@@ -149,6 +161,7 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="hidden md:flex justify-center items-center">
+              {/* Placeholder for image/graphic similar to image, using a simple gradient bar for now */}
               <div className="w-4 h-64 bg-gradient-to-b from-cyan-400 via-teal-500 to-purple-600 rounded-full shadow-2xl shadow-purple-500/30"></div>
             </div>
           </div>
@@ -252,7 +265,11 @@ export default function LandingPage() {
         {/* Roadmap Section */}
         <section id="roadmap-section" className="py-16 md:py-24 bg-gray-900/30">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-16 text-center text-purple-400">Roadmap</h2>
+            <div className="flex justify-center mb-16">
+              <div className="bg-black/50 backdrop-blur-sm px-8 py-4 rounded-lg shadow-xl border border-purple-500/30">
+                <h2 className="font-headline text-3xl sm:text-4xl font-bold text-center text-white">Roadmap</h2>
+              </div>
+            </div>
             <div className="relative">
               {/* Central line for md+ screens */}
               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-purple-500/30 transform -translate-x-1/2"></div>
@@ -262,8 +279,8 @@ export default function LandingPage() {
                   quarter={item.quarter}
                   year={item.year}
                   milestones={item.milestones}
-                  isOffset={(item.isOffset || (index % 2 !== 0 && index !== roadmapItems.length -1))} // Ensure last item isn't offset if odd number
-                  isLast={index === roadmapItems.length - 1}
+                  isOffset={item.isOffset}
+                  isLast={item.isLast}
                 />
               ))}
             </div>
@@ -284,7 +301,7 @@ export default function LandingPage() {
                   {[
                     { name: "Liquidity", value: "35%", color: "bg-primary" },
                     { name: "Presale", value: "20%", color: "bg-purple-400" },
-                    { name: "Staking", value: "15%", color: "bg-teal-500" }, // Using teal from chart-2
+                    { name: "Staking", value: "15%", color: "bg-teal-500" },
                     { name: "Team", value: "15%", color: "bg-blue-500" },
                     { name: "Marketing", value: "15%", color: "bg-sky-500" },
                   ].map(item => (
