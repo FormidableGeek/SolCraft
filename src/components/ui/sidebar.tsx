@@ -538,23 +538,23 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild = false, // Destructure asChild, default to false
+      asChild = false, 
       isActive = false,
       children,
-      ...props // All other props (e.g., onClick, disabled, etc., but NOT asChild)
+      ...props 
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"; // Determine the component to render
+    const Comp = asChild ? Slot : "button"; 
 
     return (
-      <Comp
+      <Comp 
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
         ref={ref}
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...props} // Spread the remaining props; `asChild` is not in `props` here
+        {...props} 
       >
         {children}
       </Comp>
