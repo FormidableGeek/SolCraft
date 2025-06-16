@@ -76,3 +76,40 @@ export interface SocialPlayer extends UserProfile {
   recentPerformance: string; // e.g. "Won 2 tournaments last month"
   isFollowed?: boolean;
 }
+
+// Types for the new dashboard UI
+export interface PortfolioAllocationItem {
+  name: string;
+  value: number;
+  color: string; // hex or css var
+}
+
+export interface KeyMetric {
+  id: string;
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  valueClassName?: string;
+}
+
+export interface Cryptocurrency {
+  id: string;
+  rank: number;
+  name: string;
+  ticker: string;
+  iconUrl?: string; // URL to a small icon
+  price: number;
+  change24h: number; // percentage
+  volume24h: number;
+  marketCap: number;
+}
+
+export interface RecentActivity {
+  id: string;
+  type: 'Swap' | 'Deposit' | 'Withdrawal' | 'Investment' | 'Payout';
+  date: string; // "MM.DD.YYYY"
+  time: string; // "HH:MM"
+  tokenAmount: string; // e.g., "0.453 BTC"
+  status: 'Completed' | 'In Progress' | 'Failed' | 'Pending';
+  viewLink?: string; // URL for viewing details
+}

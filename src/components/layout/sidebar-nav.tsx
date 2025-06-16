@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
   { title: "Tournaments", href: "/tournaments", icon: Trophy },
   { title: "Social", href: "/social", icon: Users },
   { title: "Profile", href: "/profile", icon: UserCircle },
-  { title: "Settings", href: "/settings", icon: Settings, disabled: true },
+  { title: "Settings", href: "/settings", icon: Settings, disabled: false },
 ];
 
 export function SidebarNav() {

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 @layer base {
@@ -46,34 +46,35 @@ body {
   }
 
   .dark {
-    --background: 240 10% 4%;
-    --foreground: 0 0% 95%;
-    --card: 240 10% 8%;
+    --background: 220 15% 5%; /* Very dark background from image */
+    --foreground: 0 0% 95%; /* Light text */
+    --card: 220 15% 12%; /* Slightly lighter card background */
     --card-foreground: 0 0% 95%;
-    --popover: 240 10% 8%;
+    --popover: 220 15% 12%;
     --popover-foreground: 0 0% 95%;
-    --primary: 250 70% 65%;
+    --primary: 260 70% 65%; /* Purple-blue primary from image */
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 10% 15%;
+    --secondary: 220 15% 25%; /* Darker secondary for less emphasis */
     --secondary-foreground: 0 0% 80%;
-    --muted: 240 5% 20%;
+    --muted: 220 15% 20%;
     --muted-foreground: 0 0% 60%;
-    --accent: 160 70% 50%;
+    --accent: 160 70% 50%; /* Teal/green accent from image */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 10% 12%;
-    --input: 240 10% 10%;
-    --ring: 250 70% 65%;
+    --border: 220 15% 25%; /* Border that fits dark theme */
+    --input: 220 15% 18%;
+    --ring: 260 70% 65%; /* Primary color for rings */
     
-    --chart-1: 250 70% 65%; 
-    --chart-2: 160 70% 50%; 
-    --chart-3: 250 70% 75%; 
-    --chart-4: 160 70% 60%; 
-    --chart-5: 190 70% 60%; 
+    /* Chart colors for dark theme based on image */
+    --chart-1: 260 70% 65%;  /* Primary - Purple-blue */
+    --chart-2: 160 70% 50%;  /* Accent - Teal/Green */
+    --chart-3: 280 60% 70%;  /* Lighter Purple */
+    --chart-4: 240 50% 60%;  /* Muted Blue */
+    --chart-5: 180 50% 55%;  /* Muted Teal */
 
     /* Sidebar specific colors for dark mode */
-    --sidebar-background: var(--background); 
+    --sidebar-background: var(--card); /* Use card color for sidebar bg */
     --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
@@ -90,5 +91,9 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
   }
 }

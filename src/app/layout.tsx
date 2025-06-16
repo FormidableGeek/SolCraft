@@ -4,7 +4,7 @@ import { AppShell } from '@/components/layout/app-shell';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Solcraft',
+  title: 'SolCraft',
   description: 'Invest in Poker Tournaments on Solana',
 };
 

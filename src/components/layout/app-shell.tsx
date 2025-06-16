@@ -11,7 +11,6 @@ import { SiteHeader } from "./site-header";
 import { SidebarNav } from "./sidebar-nav";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import Image from "next/image";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +18,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-headline font-semibold text-primary">Solcraft</h1>
+            <h1 className="text-2xl font-headline font-semibold text-primary">SolCraft</h1>
           </div>
         </SidebarHeader>
         <SidebarContent>

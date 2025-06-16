@@ -1,5 +1,5 @@
-import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer } from './types';
-import { ShieldAlert, ShieldCheck, Shield, DollarSign, TrendingUp, CalendarDays, Users, BarChart, LineChart, PieChart } from 'lucide-react';
+import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity } from './types';
+import { ShieldAlert, ShieldCheck, Shield, DollarSign, TrendingUp, CalendarDays, Users, BarChart, LineChart, PieChart, ListChecks, Fuel, Timer, Wifi, Copy, ExternalLink, CircleDollarSign, Bitcoin } from 'lucide-react';
 
 export const mockTournaments: Tournament[] = [
   {
@@ -205,11 +205,6 @@ export const portfolioPerformanceData = [
   { date: 'Jul', value: 15000 },
 ];
 
-export const assetAllocationData = [
-  { asset: 'Tournament Stakes', value: 60, fill: 'var(--color-chart-1)' },
-  { asset: 'Player Backing', value: 30, fill: 'var(--color-chart-2)' },
-  { asset: 'Liquid SOL', value: 10, fill: 'var(--color-chart-3)' },
-];
 
 export const riskLevelIconMap = {
   Low: ShieldCheck,
@@ -224,3 +219,53 @@ export const riskLevelColorMap = {
 };
 
 export const pageSpinnerStyle = "h-8 w-8 animate-spin text-primary";
+
+// Mock data for the new dashboard UI
+export const mockPortfolioAllocation: PortfolioAllocationItem[] = [
+  { name: 'Bitcoin', value: 40, color: 'hsl(var(--chart-1))' }, // Purple-blue
+  { name: 'Tether', value: 20, color: 'hsl(var(--chart-2))' }, // Teal/Green
+  { name: 'Ethereum', value: 25, color: 'hsl(var(--chart-3))' }, // Lighter Purple
+  { name: 'Cardano', value: 10, color: 'hsl(var(--chart-4))' }, // Muted Blue
+  { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' }, // Muted Teal
+];
+
+export const mockKeyMetrics: KeyMetric[] = [
+  { id: '1', label: 'Staking APY:', value: '14.2%', icon: ListChecks, valueClassName: 'bg-primary/70 text-primary-foreground px-2 py-0.5 rounded' },
+  { id: '2', label: 'Gas Saved:', value: '$128.4', icon: Fuel, valueClassName: 'bg-primary/70 text-primary-foreground px-2 py-0.5 rounded' },
+  { id: '3', label: 'Bundle Status:', value: '2m 34s left', icon: Timer, valueClassName: 'bg-primary/70 text-primary-foreground px-2 py-0.5 rounded' },
+  { id: '4', label: 'Network:', value: 'Solana Mainnet', icon: Wifi },
+];
+
+export const mockBalance = {
+  amount: 1000000,
+  currency: 'USD',
+  walletAddress: 'sol...4x2z', // Example, keep it short
+};
+
+export const mockTopCryptocurrencies: Cryptocurrency[] = [
+  { id: 'btc', rank: 1, name: 'Bitcoin', ticker: 'BTC', iconUrl: 'https://placehold.co/24x24/orange/white?text=B', price: 30344, change24h: -5.0, volume24h: 34040000, marketCap: 334940000000 },
+  { id: 'eth', rank: 2, name: 'Ethereum', ticker: 'ETH', iconUrl: 'https://placehold.co/24x24/grey/white?text=E', price: 1850, change24h: -3.2, volume24h: 15000000, marketCap: 220000000000 },
+  { id: 'sol', rank: 3, name: 'Solana', ticker: 'SOL', iconUrl: 'https://placehold.co/24x24/purple/white?text=S', price: 22.50, change24h: -1.5, volume24h: 50000000, marketCap: 9000000000 },
+  { id: 'ada', rank: 4, name: 'Cardano', ticker: 'ADA', iconUrl: 'https://placehold.co/24x24/blue/white?text=A', price: 0.28, change24h: -2.1, volume24h: 20000000, marketCap: 10000000000 },
+  { id: 'doge', rank: 5, name: 'Dogecoin', ticker: 'DOGE', iconUrl: 'https://placehold.co/24x24/yellow/black?text=D', price: 0.065, change24h: 0.5, volume24h: 100000000, marketCap: 9000000000 },
+  { id: 'usdt', rank: 6, name: 'Tether', ticker: 'USDT', iconUrl: 'https://placehold.co/24x24/green/white?text=T', price: 1.00, change24h: 0.0, volume24h: 45000000000, marketCap: 80000000000 },
+];
+
+export const mockRecentActivity: RecentActivity[] = [
+  { id: 'act1', type: 'Swap', date: '05.23.2023', time: '21:22', tokenAmount: '0.453 BTC', status: 'Completed', viewLink: '#' },
+  { id: 'act2', type: 'Deposit', date: '05.23.2023', time: '21:22', tokenAmount: '1.2 ETH', status: 'In Progress', viewLink: '#' },
+  { id: 'act3', type: 'Withdrawal', date: '05.22.2023', time: '10:05', tokenAmount: '1000 USDT', status: 'Failed', viewLink: '#' },
+  { id: 'act4', type: 'Investment', date: '05.21.2023', time: '15:30', tokenAmount: 'Solana Summer Showdown', status: 'Completed', viewLink: '#' },
+  { id: 'act5', type: 'Payout', date: '05.20.2023', time: '09:00', tokenAmount: '$250.00', status: 'Completed', viewLink: '#' },
+];
+
+// Data for the portfolio performance chart (green bars/area)
+export const mockFigmaPortfolioPerformance = [
+  { name: 'Day 1', value: 300 },
+  { name: 'Day 2', value: 450 },
+  { name: 'Day 3', value: 280 },
+  { name: 'Day 4', value: 600 },
+  { name: 'Day 5', value: 400 },
+  { name: 'Day 6', value: 750 },
+  { name: 'Day 7', value: 500 },
+];
