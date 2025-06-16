@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Coins, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile, Linkedin, Twitter } from 'lucide-react';
+import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Coins, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile, Linkedin, Twitter, LogIn } from 'lucide-react';
 import Image from 'next/image';
 
 interface RoadmapItemProps {
@@ -100,7 +100,7 @@ export default function LandingPage() {
       <header className="absolute top-0 left-0 right-0 z-50 py-4 md:py-6">
         <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold font-headline">
-            <span className="bg-gradient-to-r from-[#E573A5] to-[#73D2E5] text-transparent bg-clip-text">
+             <span className="bg-gradient-to-r from-[#E573A5] to-[#73D2E5] text-transparent bg-clip-text">
               SolCraft
             </span>
           </Link>
@@ -142,12 +142,20 @@ export default function LandingPage() {
             <p className="max-w-xl text-base sm:text-lg md:text-xl text-gray-300 mb-10">
               We're supercharging Solana with an innovative Layer 2, offering unprecedented scalability, a secure cross-chain bridge, optimized swaps, and a launchpad for the tokens of the future.
             </p>
-            <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-3 rounded-lg font-semibold" asChild>
-              <Link href="/dashboard">
-                Explore the features
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white text-lg px-8 py-3 rounded-lg font-semibold" asChild>
+                <Link href="/dashboard">
+                  Explore the features
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" className="text-white border-purple-500 hover:bg-purple-600 hover:text-white text-lg px-8 py-3 rounded-lg font-semibold" asChild>
+                <Link href="/dashboard">
+                  Launch App
+                  <LogIn className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
           </div>
           <div className="md:w-1/2 mt-12 md:mt-0 flex justify-center items-center">
             <Image 
