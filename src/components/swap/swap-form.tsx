@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Bitcoin, Coins, Diamond, ArrowUpDown, Settings2 } from "lucide-react";
+import { Bitcoin, Coins, Diamond, ArrowUpDown, Settings2, ArrowRightLeft } from "lucide-react";
 import { CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { SwapConfirmationDialog, type SwapConfirmationData } from "./swap-confirmation-dialog";
 
 interface Token {
   value: string;
@@ -21,7 +22,7 @@ interface Token {
 }
 
 const initialTokens: Token[] = [
-  { value: "btc", label: "Bitcoin", ticker: "BTC", icon: <Bitcoin className="h-5 w-5 mr-2 text-orange-400" />, balance: 0.587 },
+  { value: "btc", label: "Bitcoin", ticker: "BTC", icon: <Bitcoin className="h-5 w-5 mr-2 text-orange-400" />, balance: 1.45 }, // Updated to match image
   { value: "eth", label: "Ethereum", ticker: "ETH", icon: <Coins className="h-5 w-5 mr-2 text-gray-400" />, balance: 12.587 },
   { value: "sol", label: "Solana", ticker: "SOL", icon: <Diamond className="h-5 w-5 mr-2 text-purple-400" />, balance: 120.587 },
   { value: "usdt", label: "Tether", ticker: "USDT", icon: <Coins className="h-5 w-5 mr-2 text-green-500" />, balance: 1234.587 },
@@ -108,16 +109,19 @@ function TokenInputSection({
 }
 
 export function SwapForm() {
-  const [tokens, setTokens] = useState<Token[]>(initialTokens);
-  const [fromToken, setFromToken] = useState(initialTokens[0].value);
-  const [toToken, setToToken] = useState(initialTokens[1].value);
-  const [fromAmount, setFromAmount] = useState("");
-  const [toAmount, setToAmount] = useState("");
+  const [tokensState, setTokensState] = useState<Token[]>(initialTokens);
+  const [fromTokenValue, setFromTokenValue] = useState(initialTokens[0].value);
+  const [toTokenValue, setToTokenValue] = useState(initialTokens[1].value);
+  const [fromAmount, setFromAmount] = useState("1.45"); // Default to match image
+  const [toAmount, setToAmount] = useState("0.06"); // Default to match image
   const [useBundleEngine, setUseBundleEngine] = useState(true);
 
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [confirmationData, setConfirmationData] = useState<SwapConfirmationData | null>(null);
+
   // Dummy USD values for display
-  const fromUsdValue = (parseFloat(fromAmount || "0") * (123.45 / 0.587)).toFixed(2);
-  const toUsdValue = (parseFloat(toAmount || "0") * (123.45 / 0.587)).toFixed(2);
+  const fromUsdValue = (parseFloat(fromAmount || "0") * (123.45 / 0.587)).toFixed(2); // Example rate
+  const toUsdValue = (parseFloat(toAmount || "0") * (123.45 / 0.587) * 14.2).toFixed(2); // Example rate
 
 
   const handlePercentageClick = (
@@ -125,22 +129,56 @@ export function SwapForm() {
     tokenValue: string,
     setAmount: Dispatch<SetStateAction<string>>
   ) => {
-    const tokenDetails = tokens.find(t => t.value === tokenValue);
+    const tokenDetails = tokensState.find(t => t.value === tokenValue);
     if (tokenDetails) {
-      setAmount((tokenDetails.balance * percentage).toString());
+      const newAmount = (tokenDetails.balance * percentage).toString();
+      setAmount(newAmount);
+      // Simulate calculating the other amount
+      if (setAmount === setFromAmount) {
+        // If setting FROM amount, estimate TO amount (dummy logic)
+        setToAmount((parseFloat(newAmount) / 14.2).toFixed(5)); 
+      } else {
+        // If setting TO amount, estimate FROM amount (dummy logic)
+        setFromAmount((parseFloat(newAmount) * 14.2).toFixed(2));
+      }
     }
   };
   
-  const handleSwapTokens = () => {
-    const tempToken = fromToken;
-    setFromToken(toToken);
-    setToToken(tempToken);
+  const handleSwapTokenFields = () => {
+    const tempToken = fromTokenValue;
+    setFromTokenValue(toTokenValue);
+    setToTokenValue(tempToken);
 
     const tempAmount = fromAmount;
     setFromAmount(toAmount);
     setToAmount(tempAmount);
   };
 
+  const handleSwap = () => {
+    const fromTokenDetails = tokensState.find(t => t.value === fromTokenValue);
+    const toTokenDetails = tokensState.find(t => t.value === toTokenValue);
+
+    if (!fromTokenDetails || !toTokenDetails || !fromAmount || !toAmount) {
+      // Basic validation, can be expanded
+      alert("Please select tokens and enter amounts.");
+      return;
+    }
+
+    setConfirmationData({
+      fromAmount: parseFloat(fromAmount),
+      fromToken: { ...fromTokenDetails },
+      toAmount: parseFloat(toAmount),
+      toToken: { ...toTokenDetails },
+      exchangeRate: "1 BTC = 14.2 ETH",
+      priceSlippage: "0.5%",
+      transactionFee: "0.0032 BTC ($1.25)",
+      minReceived: "14.1 ETH",
+      useBundleEngine: useBundleEngine,
+      bundleCountdown: "Next in 17s",
+      transactionsInBundle: 3,
+    });
+    setIsConfirmDialogOpen(true);
+  };
 
   return (
     <>
@@ -155,29 +193,29 @@ export function SwapForm() {
       <CardContent className="space-y-4 px-4 md:px-6">
         <TokenInputSection
           label="FROM"
-          selectedTokenValue={fromToken}
-          onTokenChange={setFromToken}
+          selectedTokenValue={fromTokenValue}
+          onTokenChange={setFromTokenValue}
           amount={fromAmount}
           onAmountChange={setFromAmount}
-          tokens={tokens}
-          onPercentageClick={(p) => handlePercentageClick(p, fromToken, setFromAmount)}
+          tokens={tokensState}
+          onPercentageClick={(p) => handlePercentageClick(p, fromTokenValue, setFromAmount)}
           usdValue={fromUsdValue}
         />
 
         <div className="flex justify-center -my-3">
-          <Button variant="outline" size="icon" className="rounded-full border-2 bg-background hover:bg-muted z-10" onClick={handleSwapTokens}>
+          <Button variant="outline" size="icon" className="rounded-full border-2 bg-background hover:bg-muted z-10" onClick={handleSwapTokenFields}>
             <ArrowUpDown className="h-4 w-4 text-primary" />
           </Button>
         </div>
 
         <TokenInputSection
           label="TO"
-          selectedTokenValue={toToken}
-          onTokenChange={setToToken}
+          selectedTokenValue={toTokenValue}
+          onTokenChange={setToTokenValue}
           amount={toAmount}
           onAmountChange={setToAmount}
-          tokens={tokens}
-          onPercentageClick={(p) => handlePercentageClick(p, toToken, setToAmount)}
+          tokens={tokensState}
+          onPercentageClick={(p) => handlePercentageClick(p, toTokenValue, setToAmount)}
           usdValue={toUsdValue}
         />
 
@@ -186,7 +224,7 @@ export function SwapForm() {
         <div className="space-y-1 text-sm">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Exchange Rate</span>
-            <span>1 BTC ≈ 14.2 ETH</span>
+            <span>1 {tokensState.find(t=>t.value === fromTokenValue)?.ticker || 'TokenA'} ≈ {(parseFloat(toAmount || "0") / parseFloat(fromAmount || "1")).toFixed(2)} {tokensState.find(t=>t.value === toTokenValue)?.ticker || 'TokenB'}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Price Slippage</span>
@@ -194,11 +232,11 @@ export function SwapForm() {
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Transaction Fee</span>
-            <span>0.0032 BTC ($1.25)</span>
+            <span>0.0001 {tokensState.find(t=>t.value === fromTokenValue)?.ticker || 'TokenA'}</span>
           </div>
-          <div className="flex justify-between font-medium">
+           <div className="flex justify-between font-medium">
             <span className="text-muted-foreground">Min Received</span>
-            <span>14.1 ETH</span>
+            <span>{(parseFloat(toAmount || "0") * 0.995).toFixed(4)} {tokensState.find(t=>t.value === toTokenValue)?.ticker || 'TokenB'}</span>
           </div>
         </div>
 
@@ -222,10 +260,18 @@ export function SwapForm() {
         </div>
       </CardContent>
       <CardFooter className="px-4 md:px-6 pb-6 pt-4">
-        <Button size="lg" className="w-full h-12 text-base font-semibold">
-          Close
+        <Button size="lg" className="w-full h-12 text-base font-semibold" onClick={handleSwap}>
+          Swap
         </Button>
       </CardFooter>
+
+      {confirmationData && (
+        <SwapConfirmationDialog
+          open={isConfirmDialogOpen}
+          onOpenChange={setIsConfirmDialogOpen}
+          data={confirmationData}
+        />
+      )}
     </>
   );
 }
