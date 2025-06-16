@@ -1,3 +1,4 @@
+
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,14 +9,28 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, Trophy, Users, UserCircle, Settings } from "lucide-react";
+import { 
+  Home, 
+  User, 
+  Replace, 
+  ArrowRightLeft, 
+  Rocket, 
+  Database, 
+  MoreHorizontal, 
+  HelpCircle, 
+  Info 
+} from "lucide-react";
 
 const navItems: NavItem[] = [
-  { title: "Dashboard", href: "/", icon: LayoutDashboard },
-  { title: "Tournaments", href: "/tournaments", icon: Trophy },
-  { title: "Social", href: "/social", icon: Users },
-  { title: "Profile", href: "/profile", icon: UserCircle },
-  { title: "Settings", href: "/settings", icon: Settings, disabled: false },
+  { title: "Home", href: "/", icon: Home },
+  { title: "My Portfolio", href: "/profile", icon: User },
+  { title: "Swap", href: "/swap", icon: Replace },
+  { title: "Deposit and Send", href: "/deposit-send", icon: ArrowRightLeft },
+  { title: "Launchtoken", href: "/launchtoken", icon: Rocket },
+  { title: "Staking", href: "/staking", icon: Database },
+  { title: "More", href: "/more", icon: MoreHorizontal },
+  { title: "Support", href: "/support", icon: HelpCircle },
+  { title: "About", href: "/about", icon: Info },
 ];
 
 export function SidebarNav() {
@@ -25,7 +40,7 @@ export function SidebarNav() {
     <SidebarMenu>
       {navItems.map((item) => (
         <SidebarMenuItem key={item.href}>
-          <Link href={item.href} asChild>
+          <Link href={item.href} passHref asChild>
             <SidebarMenuButton
               asChild
               isActive={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))}
