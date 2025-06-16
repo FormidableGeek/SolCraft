@@ -8,7 +8,13 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar, // Import useSidebar
 } from "@/components/ui/sidebar";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { 
   Home, 
   User, 
@@ -35,22 +41,33 @@ const navItems: NavItem[] = [
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const { state: sidebarState, isMobile } = useSidebar(); // Get sidebar state and isMobile
 
   return (
     <SidebarMenu>
       {navItems.map((item) => (
         <SidebarMenuItem key={item.href}>
-          <Link href={item.href} asChild>
-            <SidebarMenuButton
-              isActive={pathname === item.href || (item.href !== "/dashboard" && item.href !== "/" && pathname.startsWith(item.href))}
-              tooltip={item.title}
-              disabled={item.disabled}
-              className={cn(item.disabled && "cursor-not-allowed opacity-50")}
-            >
-              <item.icon />
-              <span>{item.title}</span>
-            </SidebarMenuButton>
-          </Link>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href={item.href} asChild>
+                <SidebarMenuButton
+                  isActive={pathname === item.href || (item.href !== "/dashboard" && item.href !== "/" && pathname.startsWith(item.href))}
+                  disabled={item.disabled}
+                  className={cn(item.disabled && "cursor-not-allowed opacity-50")}
+                >
+                  <item.icon />
+                  {/* Conditionally render text based on sidebar state for non-mobile, or always on mobile */}
+                  { (sidebarState === "expanded" || isMobile) && <span>{item.title}</span> }
+                </SidebarMenuButton>
+              </Link>
+            </TooltipTrigger>
+            {/* Show tooltip only when sidebar is collapsed AND not on mobile */}
+            { sidebarState === "collapsed" && !isMobile && (
+              <TooltipContent side="right" align="center">
+                {item.title}
+              </TooltipContent>
+            )}
+          </Tooltip>
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
