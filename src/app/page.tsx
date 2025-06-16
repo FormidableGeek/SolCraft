@@ -1,13 +1,96 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Brain, Coins, Gauge, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan } from 'lucide-react';
+import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Brain, Coins, Gauge, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, Target, PieChart, Users, GitFork } from 'lucide-react';
+
+interface RoadmapItemProps {
+  quarter: string;
+  year: string;
+  milestones: string[];
+  isOffset?: boolean;
+  isLast?: boolean;
+}
+
+const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, isOffset, isLast }) => {
+  return (
+    <div className={`relative flex items-start ${isOffset ? 'md:ml-[calc(50%+2rem)]' : 'md:mr-[calc(50%+2rem)]'} md:w-[calc(50%-2rem)] mb-12`}>
+      {!isLast && (
+        <div className={`hidden md:block absolute top-5 ${isOffset ? 'right-full mr-4' : 'left-full ml-4'} w-16 h-px bg-purple-500/50`}></div>
+      )}
+      <div className={`hidden md:block absolute top-5 ${isOffset ? 'right-[calc(100%+0.5rem)]' : 'left-[calc(100%+0.5rem)] transform -translate-x-1/2'} w-4 h-4 bg-purple-500 rounded-full border-2 border-black`}></div>
+      
+      <div className="bg-purple-600/10 backdrop-blur-sm p-6 rounded-lg shadow-xl w-full">
+        <h4 className="text-xl font-semibold text-purple-400 mb-3">{quarter} {year}</h4>
+        <ul className="space-y-2">
+          {milestones.map((milestone, index) => (
+            <li key={index} className="text-sm text-gray-300 flex items-start">
+              <GitFork className="h-4 w-4 mr-2 mt-0.5 text-purple-400 shrink-0" />
+              {milestone}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+const TokenomicsChart = () => {
+  const data = [
+    { name: "Liquidity", value: 35, color: "hsl(var(--primary))" }, // Main purple
+    { name: "Presale", value: 20, color: "hsl(270,70%,60%)" },    // Lighter purple
+    { name: "Staking", value: 15, color: "hsl(var(--chart-2))" },    // Accent teal/green
+    { name: "Team", value: 15, color: "hsl(240,60%,65%)" },       // Blue
+    { name: "Marketing", value: 15, color: "hsl(220,60%,70%)" }   // Lighter blue
+  ];
+
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  let accumulatedOffset = 0;
+
+  return (
+    <div className="relative w-56 h-56 md:w-64 md:h-64">
+      <svg viewBox="0 0 160 160" className="transform -rotate-90 w-full h-full">
+        {data.map((item, index) => {
+          const strokeDashoffset = circumference - (item.value / 100) * circumference;
+          const rotation = (accumulatedOffset / 100) * 360;
+          accumulatedOffset += item.value;
+          return (
+            <circle
+              key={item.name}
+              cx="80"
+              cy="80"
+              r={radius}
+              fill="transparent"
+              stroke={item.color}
+              strokeWidth="20"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              transform={`rotate(${rotation} 80 80)`}
+            />
+          );
+        })}
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <PieChart className="w-12 h-12 text-purple-400" />
+      </div>
+    </div>
+  );
+};
+
 
 export default function LandingPage() {
   const featureCardBaseClass = "bg-purple-600/10 backdrop-blur-sm p-6 rounded-lg shadow-xl h-full flex flex-col";
   const featureCardTitleClass = "text-lg font-semibold mb-2 text-white flex items-center";
   const featureCardIconClass = "mr-3 h-6 w-6 text-purple-400";
   const featureCardDescriptionClass = "text-sm text-gray-300 flex-grow";
+
+  const roadmapItems = [
+    { quarter: 'Q2', year: '2025', milestones: ["Token Development + Deployment", "Cross Chain Bridge Launch", "Community Building", "Presale Launch"] },
+    { quarter: 'Q3', year: '2025', milestones: ["Strategic Partnerships", "Layer 2 Core Infrastructure Deployment", "Web3 Interface Release", "Developer Documentation", "Initial Liquidity"], isOffset: true },
+    { quarter: 'Q4', year: '2025', milestones: ["Anti-Rug System Display", "Bundle Engine Testnet", "Lock Liquidity Module (V1)", "Swap Optimizer Launch", "Security Dashboard"] },
+    { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
+    { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"] }
+  ];
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col font-body">
@@ -21,11 +104,14 @@ export default function LandingPage() {
             <Link href="#features-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
               Features
             </Link>
-            <Link href="#launchpad-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
-              Launchpad
+            <Link href="#roadmap-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
+              Roadmap
             </Link>
-            <Link href="#buybot-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
-              BuyBot
+            <Link href="#tokenomics-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
+              Tokenomics
+            </Link>
+            <Link href="#team-section" className="text-xs sm:text-sm hover:text-purple-400 transition-colors px-2 py-1 sm:px-3">
+              Team
             </Link>
           </div>
           <Button variant="outline" className="text-white border-purple-500 hover:bg-purple-600 hover:text-white text-xs sm:text-sm" asChild>
@@ -94,7 +180,7 @@ export default function LandingPage() {
             </div>
 
             {/* Trade Fast, Pay Less */}
-            <div className="mb-16 md:mb-24">
+            <div id="trade-fast-section" className="mb-16 md:mb-24">
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="flex justify-center items-center">
                   <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-radial from-purple-700 via-purple-900 to-black rounded-full opacity-70 shadow-2xl shadow-purple-500/50"></div>
@@ -163,6 +249,76 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Roadmap Section */}
+        <section id="roadmap-section" className="py-16 md:py-24 bg-gray-900/30">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-16 text-center text-purple-400">Roadmap</h2>
+            <div className="relative">
+              {/* Central line for md+ screens */}
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-1 bg-purple-500/30 transform -translate-x-1/2"></div>
+              {roadmapItems.map((item, index) => (
+                <RoadmapItem
+                  key={index}
+                  quarter={item.quarter}
+                  year={item.year}
+                  milestones={item.milestones}
+                  isOffset={(item.isOffset || (index % 2 !== 0 && index !== roadmapItems.length -1))} // Ensure last item isn't offset if odd number
+                  isLast={index === roadmapItems.length - 1}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Tokenomics Section */}
+        <section id="tokenomics-section" className="py-16 md:py-24">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-16 text-center text-purple-400">Tokenomics</h2>
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="flex justify-center items-center">
+                <div className="w-64 h-64 md:w-80 md:h-80 bg-gradient-radial from-purple-600/50 via-purple-800/30 to-black rounded-full opacity-70 shadow-2xl shadow-purple-500/50 animate-pulse"></div>
+              </div>
+              <div className="flex flex-col items-center md:items-start">
+                <TokenomicsChart />
+                <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4 text-sm max-w-md">
+                  {[
+                    { name: "Liquidity", value: "35%", color: "bg-primary" },
+                    { name: "Presale", value: "20%", color: "bg-purple-400" },
+                    { name: "Staking", value: "15%", color: "bg-teal-500" }, // Using teal from chart-2
+                    { name: "Team", value: "15%", color: "bg-blue-500" },
+                    { name: "Marketing", value: "15%", color: "bg-sky-500" },
+                  ].map(item => (
+                    <div key={item.name} className="flex items-center">
+                      <span className={`w-3 h-3 rounded-full mr-2 ${item.color}`}></span>
+                      <span className="text-gray-300">{item.name}:</span>
+                      <span className="ml-1 font-semibold text-white">{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Team Section */}
+        <section id="team-section" className="py-16 md:py-24 bg-gray-900/30">
+          <div className="container mx-auto px-4 md:px-6 text-center">
+            <h2 className="font-headline text-3xl sm:text-4xl font-bold mb-12 text-purple-400">Team</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+              {["Founder", "Dev", "Marketing", "Operations"].map((role) => (
+                <div key={role} className={featureCardBaseClass}>
+                  <Users className={`${featureCardIconClass} mx-auto mb-3 !mr-0`} />
+                  <h3 className="text-xl font-semibold text-white mb-2">{role}</h3>
+                  <p className={featureCardDescriptionClass}>
+                    Dedicated professionals driving the SolCraft vision forward.
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-12 text-gray-400">More team details coming soon.</p>
+          </div>
+        </section>
+
       </main>
 
       {/* Footer */}
@@ -174,5 +330,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-    
