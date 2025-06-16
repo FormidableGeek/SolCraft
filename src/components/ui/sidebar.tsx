@@ -534,24 +534,24 @@ const SidebarMenuButton = React.forwardRef<
 >(
   (
     {
-      asChild: renderAsSlot = false, // Renamed for clarity for its own logic
+      asChild: renderAsSlot = false, 
       isActive = false,
       variant = "default",
       size = "default",
       tooltip,
       className,
       children,
-      ...restProps // All other props, potentially including 'asChild' from a parent like Link
+      ...restProps 
     },
     ref
   ) => {
     const { isMobile, state } = useSidebar()
     const Comp = renderAsSlot ? Slot : "button"
 
-    // Explicitly remove 'asChild' from restProps if it exists,
-    // to prevent spreading it onto the DOM element if Comp is 'button'.
-    // This handles the case where a parent (like Link) passes its own 'asChild' prop.
-    const { asChild: _forwardedAsChild, ...elementProps } = restProps
+    // Explicitly remove 'asChild' from restProps if it was passed by a parent (e.g., Link)
+    // This prevents it from being spread onto the underlying DOM element (button)
+    // if renderAsSlot is false.
+    const { asChild: _forwardedAsChild, ...elementProps } = restProps;
 
     const buttonElement = (
       <Comp
@@ -559,8 +559,8 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
-        {...elementProps} // Use the cleaned props
+        className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
+        {...elementProps} 
       >
         {children}
       </Comp>
@@ -578,7 +578,7 @@ const SidebarMenuButton = React.forwardRef<
         <TooltipContent
           side="right"
           align="center"
-          hidden={renderAsSlot || state !== "collapsed" || isMobile} // own asChild or collapsed state
+          hidden={renderAsSlot || state !== "collapsed" || isMobile} 
           {...tooltipContentProps}
         />
       </Tooltip>
