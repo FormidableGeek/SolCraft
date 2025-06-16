@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAnalytics, type Analytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -18,18 +19,25 @@ const firebaseConfig = {
 
 // Initialize Firebase
 let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
+let storage: FirebaseStorage;
 let analytics: Analytics | null = null;
 
-// Ensure Firebase is initialized only on the client side
+// Ensure Firebase is initialized only on the client side for services like Analytics
 if (typeof window !== 'undefined') {
   app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
   analytics = getAnalytics(app);
 } else {
-  // On the server side, initialize a minimal app instance if needed,
-  // or handle as appropriate for your SSR/SSG strategy.
-  // For now, we'll just initialize the app object for type consistency.
+  // On the server side, initialize app for other services if needed,
+  // but Analytics should only be on client.
   app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
 }
 
-
-export { app, analytics, firebaseConfig };
+export { app, auth, db, storage, analytics, firebaseConfig };
