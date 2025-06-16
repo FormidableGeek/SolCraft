@@ -1,25 +1,34 @@
-
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRightLeft } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DepositForm } from "@/components/deposit-send/deposit-form";
+import { SendForm } from "@/components/deposit-send/send-form";
 
 export default function DepositSendPage() {
   return (
     <>
       <PageHeader
         title="Deposit & Send"
-        description="Manage your funds by depositing and sending assets. This feature is currently under development."
+        description="Securely manage your crypto assets."
       />
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline">Deposit & Send Funds</CardTitle>
-          <CardDescription>
-            Secure and easy ways to manage your crypto assets are planned here!
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center h-64 text-muted-foreground">
-          <ArrowRightLeft className="w-16 h-16 mb-4" />
-          <p className="text-lg">Deposit & Send page coming soon!</p>
+      <Card className="max-w-3xl mx-auto shadow-xl">
+        <CardContent className="p-0">
+          <Tabs defaultValue="deposit" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 rounded-t-lg rounded-b-none h-14">
+              <TabsTrigger value="deposit" className="text-base py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-tl-md rounded-tr-none rounded-bl-none rounded-br-none">
+                Deposit
+              </TabsTrigger>
+              <TabsTrigger value="send" className="text-base py-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-tr-md rounded-tl-none rounded-br-none rounded-bl-none">
+                Send
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="deposit" className="p-6 md:p-8">
+              <DepositForm />
+            </TabsContent>
+            <TabsContent value="send" className="p-6 md:p-8">
+              <SendForm />
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </>
