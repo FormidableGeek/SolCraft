@@ -1,4 +1,3 @@
-
 "use client";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between max-w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
-          <SidebarTrigger /> {/* Removed md:hidden class */}
-          <Link href="/" className="hidden md:block ml-4"> {/* Added ml-4 for spacing */}
+          <SidebarTrigger /> {/* Ensures no md:hidden or similar class */}
+          <Link href="/" className="hidden md:block ml-4">
             <h1 className="text-xl font-headline font-semibold">
               <span className="bg-gradient-to-r from-[#E573A5] to-[#73D2E5] text-transparent bg-clip-text">
                 SolCraft
