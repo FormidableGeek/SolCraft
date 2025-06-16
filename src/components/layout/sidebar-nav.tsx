@@ -18,7 +18,8 @@ import {
   Database, 
   MoreHorizontal, 
   HelpCircle, 
-  Info 
+  Info,
+  Settings // Added Settings back as it was removed in a previous step but might be intended
 } from "lucide-react";
 
 const navItems: NavItem[] = [
@@ -31,6 +32,8 @@ const navItems: NavItem[] = [
   { title: "More", href: "/more", icon: MoreHorizontal },
   { title: "Support", href: "/support", icon: HelpCircle },
   { title: "About", href: "/about", icon: Info },
+  // Removed settings from here as it's in the top header
+  // { title: "Settings", href: "/settings", icon: Settings, disabled: false },
 ];
 
 export function SidebarNav() {
@@ -40,19 +43,15 @@ export function SidebarNav() {
     <SidebarMenu>
       {navItems.map((item) => (
         <SidebarMenuItem key={item.href}>
-          <Link href={item.href} passHref asChild>
+          <Link href={item.href} asChild>
             <SidebarMenuButton
-              asChild
               isActive={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))}
               tooltip={item.title}
               disabled={item.disabled}
-              aria-disabled={item.disabled}
               className={cn(item.disabled && "cursor-not-allowed opacity-50")}
             >
-              <a>
-                <item.icon />
-                <span>{item.title}</span>
-              </a>
+              <item.icon />
+              <span>{item.title}</span>
             </SidebarMenuButton>
           </Link>
         </SidebarMenuItem>
