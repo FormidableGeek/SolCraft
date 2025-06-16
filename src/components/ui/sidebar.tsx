@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet" // Added SheetTitle
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   TooltipProvider,
-} from "@/components/ui/tooltip" // Tooltip related components are removed from direct use in SBB
+} from "@/components/ui/tooltip" 
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -197,6 +197,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            <SheetTitle className="sr-only">Main Navigation</SheetTitle> 
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -522,11 +523,10 @@ const sidebarMenuButtonVariants = cva(
 )
 
 const SidebarMenuButton = React.forwardRef<
-  HTMLElement, // Changed from HTMLButtonElement to HTMLElement
-  React.ComponentProps<"button"> & { // Still based on button props for API consistency
+  HTMLElement, 
+  React.ComponentProps<"button"> & { 
     asChild?: boolean
     isActive?: boolean
-    // tooltip prop removed
   } & VariantProps<typeof sidebarMenuButtonVariants>
 >(
   (
@@ -725,5 +725,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
+  SheetTitle, // Export SheetTitle
   useSidebar,
 }
