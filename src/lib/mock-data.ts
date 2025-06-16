@@ -1,5 +1,5 @@
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity } from './types';
-import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi } from 'lucide-react'; // Removed unused icons
+import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi } from 'lucide-react';
 
 export const mockTournaments: Tournament[] = [
   {
@@ -104,6 +104,8 @@ export const mockUserProfile: UserProfile = {
   totalInvested: 15000,
   overallReturn: 25.5, // percentage
   ranking: 42,
+  isWalletConnected: false,
+  walletAddress: '1aB2c3D4e5F6g7H8i9J0kLmWnO9PqRsTuVwXyZ', // Example, not real
 };
 
 export const mockInvestments: Investment[] = [

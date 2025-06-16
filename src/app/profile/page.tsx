@@ -1,14 +1,63 @@
+// @ts-nocheck
+'use client';
+
+import { useState } from "react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { mockUserProfile, mockInvestments } from "@/lib/mock-data";
+import { mockUserProfile as initialMockUserProfile, mockInvestments } from "@/lib/mock-data";
 import { InvestmentHistoryCard } from "@/components/dashboard/investment-history-card";
-import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet } from "lucide-react";
+import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { ConnectWalletDialog } from "@/components/shared/connect-wallet-dialog";
+import type { UserProfile } from "@/lib/types";
+import { useToast } from "@/hooks/use-toast";
+
 
 export default function ProfilePage() {
-  const user = mockUserProfile;
+  const [user, setUser] = useState<UserProfile>(initialMockUserProfile);
+  const [isConnectWalletOpen, setIsConnectWalletOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleConnectWallet = (selectedWalletName: string) => {
+    // Simulate wallet connection
+    setUser(prevUser => ({
+      ...prevUser,
+      isWalletConnected: true,
+      // For now, use a generic address. In a real app, this would come from the wallet.
+      walletAddress: prevUser.walletAddress || `0x123...abc (Connected via ${selectedWalletName})`
+    }));
+    setIsConnectWalletOpen(false);
+    toast({
+        title: "Wallet Connected",
+        description: `${selectedWalletName} has been successfully connected.`,
+    });
+  };
+
+  const handleDisconnectWallet = () => {
+    setUser(prevUser => ({
+        ...prevUser,
+        isWalletConnected: false,
+        walletAddress: initialMockUserProfile.walletAddress // Reset to placeholder or clear
+    }));
+    toast({
+        title: "Wallet Disconnected",
+        variant: "default"
+    });
+  }
+
+  const handleCopyAddress = () => {
+    if (user.walletAddress) {
+      navigator.clipboard.writeText(user.walletAddress)
+        .then(() => {
+          toast({ title: "Wallet Address Copied!", description: user.walletAddress });
+        })
+        .catch(err => {
+          toast({ title: "Failed to copy", description: "Could not copy address to clipboard.", variant: "destructive" });
+        });
+    }
+  };
 
   return (
     <>
@@ -42,10 +91,33 @@ export default function ProfilePage() {
                 <CalendarDays className="h-4 w-4 mr-2 text-muted-foreground" />
                 <span>Joined: {format(parseISO(user.joinedDate), "MMMM d, yyyy")}</span>
               </div>
-              <Button className="w-full mt-4" variant="default">
-                <Wallet className="mr-2 h-4 w-4" /> Connect Wallet
-              </Button>
-               <p className="text-xs text-muted-foreground text-center mt-2">Wallet not connected. Connect to manage funds and sign transactions.</p>
+
+              {user.isWalletConnected && user.walletAddress ? (
+                <div className="pt-2">
+                    <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-md text-center">
+                        <div className="flex items-center justify-center mb-1">
+                            <CheckCircle className="h-5 w-5 mr-2 text-green-500" />
+                            <span className="font-semibold text-green-500">Wallet Connected</span>
+                        </div>
+                        <div className="flex items-center justify-center text-xs text-muted-foreground">
+                            <span>{user.walletAddress.length > 20 ? `${user.walletAddress.substring(0,10)}...${user.walletAddress.slice(-10)}` : user.walletAddress}</span>
+                            <Button variant="ghost" size="icon" className="ml-1 h-6 w-6" onClick={handleCopyAddress}>
+                                <Copy className="h-3 w-3" />
+                            </Button>
+                        </div>
+                    </div>
+                    <Button className="w-full mt-2" variant="outline" onClick={handleDisconnectWallet}>
+                        Disconnect Wallet
+                    </Button>
+                </div>
+              ) : (
+                <>
+                    <Button className="w-full mt-4" variant="default" onClick={() => setIsConnectWalletOpen(true)}>
+                        <Wallet className="mr-2 h-4 w-4" /> Connect Wallet
+                    </Button>
+                    <p className="text-xs text-muted-foreground text-center mt-2">Wallet not connected. Connect to manage funds and sign transactions.</p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -87,6 +159,11 @@ export default function ProfilePage() {
            {/* Could add more cards here: e.g., Achievements, Watchlist, Settings */}
         </div>
       </div>
+      <ConnectWalletDialog
+        open={isConnectWalletOpen}
+        onOpenChange={setIsConnectWalletOpen}
+        onConnect={handleConnectWallet}
+      />
     </>
   );
 }

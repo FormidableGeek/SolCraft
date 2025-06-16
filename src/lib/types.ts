@@ -50,6 +50,8 @@ export interface UserProfile {
   totalInvested: number;
   overallReturn: number; // percentage or absolute
   ranking?: number;
+  isWalletConnected?: boolean;
+  walletAddress?: string;
 }
 
 export interface Investment {
