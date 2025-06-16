@@ -34,10 +34,12 @@ if (typeof window !== 'undefined') {
 } else {
   // On the server side, initialize app for other services if needed,
   // but Analytics should only be on client.
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
+  // Note: For server-side rendering or API routes, you might initialize app differently
+  // or use the Firebase Admin SDK. This setup is primarily for client-side usage.
+  app = initializeApp(firebaseConfig); // Initialize app for server contexts if needed
+  auth = getAuth(app); // Auth can be used on server for some operations
+  db = getFirestore(app); // Firestore can be used on server
+  storage = getStorage(app); // Storage can be used on server
 }
 
 export { app, auth, db, storage, analytics, firebaseConfig };
