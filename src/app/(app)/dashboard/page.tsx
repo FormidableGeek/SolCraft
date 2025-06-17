@@ -6,19 +6,30 @@ import { KeyMetricsCard } from "@/components/dashboard/figma/key-metrics-card";
 import { MyBalanceCard } from "@/components/dashboard/figma/my-balance-card";
 import { RecentActivityTable } from "@/components/dashboard/figma/recent-activity-table";
 import { FigmaPortfolioPerformanceChart } from "@/components/dashboard/figma/figma-portfolio-performance-chart";
-import { mockTournaments, mockRecentActivity, mockFigmaPortfolioPerformance, mockKeyMetrics as defaultMockKeyMetrics } from "@/lib/mock-data";
+import { PortfolioAllocationCard } from "@/components/dashboard/figma/portfolio-allocation-card"; // New
+import { TopCryptocurrencyTable } from "@/components/dashboard/figma/top-cryptocurrency-table"; // New
+
+import {
+  mockTournaments,
+  mockRecentActivity,
+  mockFigmaPortfolioPerformance,
+  mockKeyMetrics as defaultMockKeyMetrics,
+  mockPortfolioAllocation,      // New
+  mockTopCryptocurrencies,    // New
+  mockInvestments // Existing, used for calculations if profile data is missing
+} from "@/lib/mock-data";
 import { TournamentCard } from "@/components/tournaments/tournament-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore'; // collection, query, where, getDocs removed as not directly used for user investments
 import type { UserProfile, Investment, KeyMetric, Tournament } from '@/lib/types';
-import { Loader2, Activity, Award, TrendingUp, Crown } from 'lucide-react'; // Import icons for key metrics
+import { Loader2, Activity, Award, TrendingUp, Crown } from 'lucide-react';
 
 export default function DashboardPage() {
   const [authUser, setAuthUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [userInvestments, setUserInvestments] = useState<Investment[]>([]);
+  // const [userInvestments, setUserInvestments] = useState<Investment[]>([]); // Not directly used for display, calculations are from profile or mock
   const [dynamicKeyMetrics, setDynamicKeyMetrics] = useState<KeyMetric[]>(defaultMockKeyMetrics);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,23 +40,18 @@ export default function DashboardPage() {
       if (currentUser) {
         setAuthUser(currentUser);
         try {
-          // Fetch User Profile
           const userDocRef = doc(db, "users", currentUser.uid);
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const profileData = userDocSnap.data() as UserProfile;
             setUserProfile(profileData);
 
-            // Simulate fetching user investments (replace with actual Firestore query later)
-            // For now, we filter mockInvestments by mockUserProfile.id for demonstration.
-            // In a real app, you'd query the 'investments' collection where investorId === currentUser.uid
-            const simulatedInvestments = mockInvestments.filter(
-              (inv) => inv.investorId === profileData.uid // Assuming mockUserProfile.id is the logged-in user for mock data
-            );
-            setUserInvestments(simulatedInvestments);
-            
-            // Calculate dynamic key metrics
-            const activeInvestmentsCount = simulatedInvestments.filter(inv => inv.status === 'Active').length;
+            // Calculate dynamic key metrics based on profileData
+            // Note: mockInvestments is used below if profileData.totalInvested is not available for activeInvestmentsCount
+            // This behavior is kept from original code. For a real app, user investments would be fetched.
+            const activeInvestmentsCount = mockInvestments.filter(
+              (inv) => inv.investorId === profileData.uid && inv.status === 'Active'
+            ).length;
             
             const newKeyMetrics: KeyMetric[] = [
               { 
@@ -58,7 +64,7 @@ export default function DashboardPage() {
                 id: 'total-invested', 
                 label: 'Total Invested:', 
                 value: `$${(profileData.totalInvested ?? 0).toLocaleString()}`, 
-                icon: Award // Changed from DollarSign to Award as per mockKeyMetrics change
+                icon: Award 
               },
               { 
                 id: 'lifetime-roi', 
@@ -77,25 +83,25 @@ export default function DashboardPage() {
             setDynamicKeyMetrics(newKeyMetrics);
 
           } else {
-            setUserProfile(null); // Or handle profile not found case
-            setDynamicKeyMetrics(defaultMockKeyMetrics); // Fallback to default
+            setUserProfile(null); 
+            setDynamicKeyMetrics(defaultMockKeyMetrics); 
           }
         } catch (error) {
           console.error("Error fetching dashboard data:", error);
           setUserProfile(null);
-          setDynamicKeyMetrics(defaultMockKeyMetrics); // Fallback
+          setDynamicKeyMetrics(defaultMockKeyMetrics); 
         }
       } else {
         setAuthUser(null);
         setUserProfile(null);
-        setUserInvestments([]);
-        setDynamicKeyMetrics(defaultMockKeyMetrics); // Fallback
+        // setUserInvestments([]); // Not directly used
+        setDynamicKeyMetrics(defaultMockKeyMetrics); 
       }
       setIsLoading(false);
     });
 
     return () => unsubscribeAuth();
-  }, []); // Empty dependency array, runs once on mount
+  }, []); 
 
   if (isLoading) {
     return (
@@ -105,17 +111,18 @@ export default function DashboardPage() {
       </div>
     );
   }
-  
-  // If user is logged out or profile couldn't be loaded, you might want to show a message or redirect.
-  // For now, it will attempt to render with default/empty data if profile is null.
 
   return (
     <div className="space-y-6">
-      {/* Top Row */}
+      {/* Top Row: Portfolio Allocation, Key Metrics, My Balance */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <MyBalanceCard className="lg:col-span-1" />
-        <KeyMetricsCard metrics={dynamicKeyMetrics} className="lg:col-span-2" />
+        <PortfolioAllocationCard data={mockPortfolioAllocation} />
+        <KeyMetricsCard metrics={dynamicKeyMetrics} />
+        <MyBalanceCard />
       </div>
+
+      {/* Top Cryptocurrency Table */}
+      <TopCryptocurrencyTable cryptocurrencies={mockTopCryptocurrencies} />
 
       {/* Featured Tournaments Section */}
       {featuredTournaments.length > 0 && (
