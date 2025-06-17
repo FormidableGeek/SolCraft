@@ -75,6 +75,7 @@ export interface UserProfile {
     amount: number;
     currency: string;
   };
+  currentInvestmentTierName?: string;
 }
 
 export interface Investment {
@@ -82,7 +83,7 @@ export interface Investment {
   investorId: string;
   tournamentId: string;
   tournamentName: string;
-  tierName?: string;
+  tierName?: string; // Could be the name of the tier like "Gold Access"
   investmentValueUSD: number;
   tokenAmount: number;
   investmentDate: string; // ISO string

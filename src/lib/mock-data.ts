@@ -1,6 +1,6 @@
 
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
-import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem } from 'lucide-react'; // Added more icons
+import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity } from 'lucide-react'; // Added Crown, TierTrendingUp, Activity
 
 const defaultTokenPrice = 1; // Assuming $1 per token for easy calculation
 
@@ -44,10 +44,10 @@ export const mockTournaments: Tournament[] = [
     tokenizationDetails: {
       isTokenized: true,
       tokenTicker: 'CPM',
-      tokenPrice: defaultTokenPrice, 
+      tokenPrice: defaultTokenPrice,
       totalTokenSupply: 500 / defaultTokenPrice,
-      minInvestmentTokens: 50 / defaultTokenPrice, 
-      maxInvestmentTokens: 500 / defaultTokenPrice, 
+      minInvestmentTokens: 50 / defaultTokenPrice,
+      maxInvestmentTokens: 500 / defaultTokenPrice,
     },
     isCompleted: false,
   },
@@ -82,7 +82,7 @@ export const mockTournaments: Tournament[] = [
     averagePlayers: 100,
     historicalData: 'Turbo structures favor aggressive play. Player skill variance can be high.',
     tokenizationDetails: {
-      isTokenized: false, 
+      isTokenized: false,
       tokenTicker: 'NTC',
       tokenPrice: defaultTokenPrice,
       totalTokenSupply: 0,
@@ -93,7 +93,7 @@ export const mockTournaments: Tournament[] = [
   },
 ];
 
-const TOKEN_PRICE_FOR_MOCK_TIERS = 1; 
+const TOKEN_PRICE_FOR_MOCK_TIERS = 1;
 
 export const mockInvestmentTiers: InvestmentTier[] = [
   {
@@ -134,7 +134,7 @@ export const mockInvestmentTiers: InvestmentTier[] = [
     platformFeePercentage: 3,
     priorityDescription: 'Early access to select tournaments.',
     potentialReturn: 'Est. 1.5x - 3.0x',
-    riskLevel: 'Medium', 
+    riskLevel: 'Medium',
     description: 'Preferred access and better fee structure for serious investors.',
     benefits: ['Early notification for new tournaments', 'Improved fee rates', 'Higher investment caps'],
   },
@@ -142,7 +142,7 @@ export const mockInvestmentTiers: InvestmentTier[] = [
     id: 'tierPlatinum',
     name: 'Platinum Access',
     minInvestmentCurrency: 500,
-    maxInvestmentCurrency: 1000, 
+    maxInvestmentCurrency: 1000,
     minInvestmentTokens: 500 / TOKEN_PRICE_FOR_MOCK_TIERS,
     maxInvestmentTokens: 1000 / TOKEN_PRICE_FOR_MOCK_TIERS,
     platformFeePercentage: 2,
@@ -172,6 +172,7 @@ export const mockUserProfile: UserProfile = {
   isWalletConnected: true,
   walletAddress: 'sol...4x2z',
   balance: { amount: 12345.67, currency: 'USD' },
+  currentInvestmentTierName: 'Gold Access',
 };
 
 export const mockInvestments: Investment[] = [
@@ -192,11 +193,12 @@ export const mockInvestments: Investment[] = [
     investorId: mockUserProfile.id,
     tournamentId: '3',
     tournamentName: 'Weekly Wednesday Freeroll',
+    tierName: 'Bronze Access',
     investmentValueUSD: 0,
-    tokenAmount: 0, 
+    tokenAmount: 0,
     investmentDate: new Date('2024-07-15').toISOString(),
     status: 'Cashed Out',
-    returnOnInvestment: 20, 
+    returnOnInvestment: 20,
   },
   {
     id: 'inv3',
@@ -239,6 +241,7 @@ export const mockSocialPlayers: SocialPlayer[] = [
     recentPerformance: 'Won the Monthly Major ($50k prize)',
     isFollowed: true,
     balance: { amount: 250000, currency: 'USD' },
+    currentInvestmentTierName: 'Platinum Access',
   },
   {
     id: 'player2',
@@ -257,6 +260,7 @@ export const mockSocialPlayers: SocialPlayer[] = [
     recentPerformance: 'Final tabled 3 events this month',
     isFollowed: false,
     balance: { amount: 120000, currency: 'USD' },
+    currentInvestmentTierName: 'Gold Access',
   },
   {
     id: 'player3',
@@ -275,6 +279,7 @@ export const mockSocialPlayers: SocialPlayer[] = [
     recentPerformance: 'Consistently in the money',
     isFollowed: true,
     balance: { amount: 80000, currency: 'USD' },
+    currentInvestmentTierName: 'Silver Access',
   },
 ];
 
@@ -312,11 +317,11 @@ export const pageSpinnerStyle = "h-8 w-8 animate-spin text-primary";
 
 // Mock data for the new dashboard UI (Figma design)
 export const mockPortfolioAllocation: PortfolioAllocationItem[] = [
-  { name: 'Bitcoin', value: 40, color: 'hsl(var(--chart-1))' }, 
-  { name: 'Tether', value: 20, color: 'hsl(var(--chart-2))' }, 
-  { name: 'Ethereum', value: 25, color: 'hsl(var(--chart-3))' }, 
-  { name: 'Cardano', value: 10, color: 'hsl(var(--chart-4))' }, 
-  { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' }, 
+  { name: 'Bitcoin', value: 40, color: 'hsl(var(--chart-1))' },
+  { name: 'Tether', value: 20, color: 'hsl(var(--chart-2))' },
+  { name: 'Ethereum', value: 25, color: 'hsl(var(--chart-3))' },
+  { name: 'Cardano', value: 10, color: 'hsl(var(--chart-4))' },
+  { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' },
 ];
 
 const pillStyle = "bg-primary/70 text-primary-foreground px-2 py-0.5 rounded text-xs";
@@ -386,4 +391,3 @@ export const roadmapItems: RoadmapItemProps[] = [
   { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
   { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true }
 ];
-
