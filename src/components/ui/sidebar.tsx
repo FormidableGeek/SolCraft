@@ -524,16 +524,17 @@ const sidebarMenuButtonVariants = cva(
 
 export interface SidebarMenuButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    React.AnchorHTMLAttributes<HTMLAnchorElement>,
+    React.AnchorHTMLAttributes<HTMLAnchorElement>, // Add AnchorHTMLAttributes
     VariantProps<typeof sidebarMenuButtonVariants> {
   asChild?: boolean;
   isActive?: boolean;
 }
 
 const SidebarMenuButton = React.forwardRef<HTMLElement, SidebarMenuButtonProps>(
-  ({ className, variant, size, asChild = false, isActive = false, children, ...rest }, ref) => {
+  ({ className, variant, size, asChild = false, isActive = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-    const buttonTypeProps = Comp === "button" && !rest.type ? { type: "button" as "button" } : {};
+    // Remove asChild from props passed to Comp to prevent the warning
+    const { asChild: _asChild, ...restProps } = props as any; 
 
     return (
       <Comp
@@ -542,8 +543,7 @@ const SidebarMenuButton = React.forwardRef<HTMLElement, SidebarMenuButtonProps>(
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...buttonTypeProps}
-        {...rest}
+        {...restProps} // Pass the rest of the props without asChild
       >
         {children}
       </Comp>
