@@ -18,7 +18,7 @@ const firebaseConfig = {
   measurementId: "G-97SYRDPN33"
 };
 
-// Initialize Firebase App
+// Initialize Firebase App robustly
 let app: FirebaseApp;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
@@ -34,9 +34,6 @@ const storage: FirebaseStorage = getStorage(app);
 // Analytics is client-side only
 let analytics: Analytics | null = null;
 if (typeof window !== 'undefined') {
-  // Check if Analytics is already initialized for this app instance
-  // This check might be more complex depending on specific Firebase SDK patterns for Analytics re-initialization
-  // For simplicity, we assume getAnalytics can be called if window is defined.
   try {
     analytics = getAnalytics(app);
   } catch (error) {
