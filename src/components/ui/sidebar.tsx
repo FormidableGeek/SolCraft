@@ -539,14 +539,22 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild = false, 
+      asChild: localAsChild, // Renamed to avoid conflict with potential asChild in props
       isActive = false,
       children,
-      ...props 
+      ...props // These are the props from the parent (e.g., Link or TooltipTrigger)
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"; 
+    // Determine if the component should render as a Slot based on its *own* asChild prop
+    // or one passed through `...props` if `localAsChild` wasn't explicitly defined.
+    const renderAsSlot = localAsChild ?? (props as any).asChild ?? false;
+    const Comp = renderAsSlot ? Slot : "button";
+
+    // Create a new props object to spread, explicitly removing `asChild`
+    // to prevent it from reaching the Slot primitive or DOM element if it was in `props`.
+    const { asChild: _, ...restProps } = props as { asChild?: boolean } & Record<string, any>;
+
     return (
       <Comp
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
@@ -554,7 +562,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...props} 
+        {...restProps} // Spread the cleaned props
       >
         {children}
       </Comp>
