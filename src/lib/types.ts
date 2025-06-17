@@ -8,6 +8,15 @@ export interface NavItem {
   disabled?: boolean;
 }
 
+export interface TournamentTokenizationDetails {
+  isTokenized: boolean;
+  tokenTicker: string; // e.g., "TRNT"
+  tokenPrice: number; // e.g., 1 (representing $1 per token)
+  totalTokenSupply: number; // Derived from buyInAmount / tokenPrice
+  minInvestmentTokens: number;
+  maxInvestmentTokens: number; // Could be equal to totalTokenSupply for full backing
+}
+
 export interface Tournament {
   id: string;
   name: string;
@@ -25,6 +34,7 @@ export interface Tournament {
   averagePlayers?: number; // For AI input
   historicalData?: string; // For AI input, can be a longer text
   aiRiskAssessment?: TournamentRiskAssessmentOutput; // Store pre-computed or on-demand
+  tokenizationDetails?: TournamentTokenizationDetails;
 }
 
 export interface InvestmentTier {

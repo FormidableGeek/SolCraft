@@ -1,5 +1,7 @@
-import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps } from './types';
+import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
 import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi } from 'lucide-react';
+
+const defaultTokenPrice = 1; // Assuming $1 per token for easy calculation
 
 export const mockTournaments: Tournament[] = [
   {
@@ -15,6 +17,14 @@ export const mockTournaments: Tournament[] = [
     platform: 'Solana Poker Club',
     averagePlayers: 150,
     historicalData: 'Previous similar tournaments had an average ROI of 25% for top 10% players. Payout structure is typically top 15% get paid.',
+    tokenizationDetails: {
+      isTokenized: true,
+      tokenTicker: 'SSS',
+      tokenPrice: defaultTokenPrice,
+      totalTokenSupply: 100 / defaultTokenPrice, // 100 tokens
+      minInvestmentTokens: 10, // $10
+      maxInvestmentTokens: 100 / defaultTokenPrice, // $100 (full backing)
+    }
   },
   {
     id: '2',
@@ -29,6 +39,14 @@ export const mockTournaments: Tournament[] = [
     platform: 'Decentralized Poker Arena',
     averagePlayers: 80,
     historicalData: 'This is a new high-roller tournament. Similar buy-in events show high variance but potential for large payouts.',
+    tokenizationDetails: {
+      isTokenized: true,
+      tokenTicker: 'CPM',
+      tokenPrice: defaultTokenPrice,
+      totalTokenSupply: 500 / defaultTokenPrice,
+      minInvestmentTokens: 50, // $50
+      maxInvestmentTokens: 500 / defaultTokenPrice, // $500 (full backing)
+    }
   },
   {
     id: '3',
@@ -43,6 +61,7 @@ export const mockTournaments: Tournament[] = [
     platform: 'Community Poker Platform',
     averagePlayers: 250,
     historicalData: 'Freerolls attract a wide range of skill levels. Payouts are small but frequent for top finishers.',
+    // No tokenization for freeroll
   },
   {
     id: '4',
@@ -57,6 +76,14 @@ export const mockTournaments: Tournament[] = [
     platform: 'Speed Poker Online',
     averagePlayers: 100,
     historicalData: 'Turbo structures favor aggressive play. Player skill variance can be high.',
+    tokenizationDetails: {
+      isTokenized: false, // Example of a non-tokenized tournament
+      tokenTicker: 'NTC',
+      tokenPrice: defaultTokenPrice,
+      totalTokenSupply: 0,
+      minInvestmentTokens: 0,
+      maxInvestmentTokens: 0,
+    }
   },
 ];
 

@@ -4,22 +4,15 @@ import { InvestmentTierCard } from "@/components/tournaments/investment-tier-car
 import { AiRiskAssessmentSection } from "@/components/tournaments/ai-risk-assessment-section";
 import { mockTournaments, mockInvestmentTiers } from "@/lib/mock-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Trophy, Info, DollarSign, MessageCircle } from "lucide-react";
+import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle } from "lucide-react"; // Added Layers3 for Tokenization
 import { Separator } from "@/components/ui/separator";
+import type { Tournament } from "@/lib/types";
 
 // This function would typically fetch data from a DB or API
 async function getTournamentData(id: string) {
   const tournament = mockTournaments.find((t) => t.id === id);
-  // Simulate fetching AI assessment if not already on tournament object
-  if (tournament && !tournament.aiRiskAssessment) {
-    // For demo, let's assign a mock assessment to one tournament
-    if (tournament.id === '1') {
-        // This is just placeholder, actual call will be in AiRiskAssessmentSection client component
-        // or pre-fetched here if criteria are met.
-    }
-  }
   return tournament;
 }
 
@@ -43,9 +36,10 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
       <TournamentDetailHeader tournament={tournament} />
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 mb-6">
           <TabsTrigger value="overview"><Info className="mr-2 h-4 w-4 sm:inline hidden"/>Overview</TabsTrigger>
           <TabsTrigger value="invest"><DollarSign className="mr-2 h-4 w-4 sm:inline hidden"/>Invest</TabsTrigger>
+          <TabsTrigger value="tokenization"><Layers3 className="mr-2 h-4 w-4 sm:inline hidden"/>Tokenization</TabsTrigger>
           <TabsTrigger value="ai-risk"><Trophy className="mr-2 h-4 w-4 sm:inline hidden"/>AI Risk</TabsTrigger>
           <TabsTrigger value="community"><MessageCircle className="mr-2 h-4 w-4 sm:inline hidden"/>Community</TabsTrigger>
         </TabsList>
@@ -74,7 +68,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
           <Card>
             <CardHeader>
               <CardTitle className="font-headline">Investment Tiers</CardTitle>
-              <p className="text-muted-foreground">Choose an investment level that matches your risk appetite and goals.</p>
+              <CardDescription>Choose an investment level that matches your risk appetite and goals.</CardDescription>
             </CardHeader>
             <CardContent>
               {mockInvestmentTiers.length > 0 ? (
@@ -90,6 +84,85 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
           </Card>
         </TabsContent>
 
+        <TabsContent value="tokenization">
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-headline flex items-center">
+                <Layers3 className="mr-2 h-6 w-6 text-primary" />
+                Tournament Tokenization
+              </CardTitle>
+              <CardDescription>
+                Details about how this tournament's buy-in is tokenized for investment.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {tournament.tokenizationDetails?.isTokenized ? (
+                <>
+                  <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-md">
+                    <h3 className="font-semibold text-green-700 dark:text-green-400">This tournament is tokenized!</h3>
+                    <p className="text-sm text-green-600 dark:text-green-300 mt-1">
+                      You can invest in fractions of the player's buy-in by purchasing tournament tokens.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Token Ticker:</p>
+                      <p className="font-semibold text-foreground">{tournament.tokenizationDetails.tokenTicker}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Token Price:</p>
+                      <p className="font-semibold text-foreground">${tournament.tokenizationDetails.tokenPrice.toFixed(2)} per token</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Total Token Supply:</p>
+                      <p className="font-semibold text-foreground">{tournament.tokenizationDetails.totalTokenSupply.toLocaleString()} tokens</p>
+                    </div>
+                     <div className="space-y-1">
+                      <p className="text-muted-foreground">Equivalent Total Buy-in:</p>
+                      <p className="font-semibold text-foreground">${(tournament.tokenizationDetails.totalTokenSupply * tournament.tokenizationDetails.tokenPrice).toLocaleString()}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Minimum Investment:</p>
+                      <p className="font-semibold text-foreground">
+                        {tournament.tokenizationDetails.minInvestmentTokens.toLocaleString()} tokens 
+                        (${(tournament.tokenizationDetails.minInvestmentTokens * tournament.tokenizationDetails.tokenPrice).toLocaleString()})
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-muted-foreground">Maximum Investment (per investor):</p>
+                      <p className="font-semibold text-foreground">
+                        {tournament.tokenizationDetails.maxInvestmentTokens.toLocaleString()} tokens 
+                        (${(tournament.tokenizationDetails.maxInvestmentTokens * tournament.tokenizationDetails.tokenPrice).toLocaleString()})
+                      </p>
+                    </div>
+                  </div>
+                  <Separator />
+                   <div>
+                    <h4 className="font-semibold text-md mb-2">How it works:</h4>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                        <li>Each tournament buy-in can be represented by a set number of tokens.</li>
+                        <li>Investors purchase these tokens to collectively fund a player's entry.</li>
+                        <li>If the player wins, profits (after platform fees) are distributed proportionally to token holders.</li>
+                        <li>If the tournament is not fully funded via tokens, investments may be refunded (logic TBD).</li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-md flex items-start space-x-3">
+                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-amber-700 dark:text-amber-400">Not Tokenized</h3>
+                    <p className="text-sm text-amber-600 dark:text-amber-300 mt-1">
+                      This tournament is not currently set up for tokenized investment.
+                      You may be able to invest through traditional staking or backing methods if available.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="ai-risk">
           <AiRiskAssessmentSection tournament={tournament} initialAssessment={tournament.aiRiskAssessment} />
         </TabsContent>
@@ -98,7 +171,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
            <Card>
             <CardHeader>
               <CardTitle className="font-headline">Community Discussion</CardTitle>
-               <p className="text-muted-foreground">See what others are saying about this tournament.</p>
+               <CardDescription>See what others are saying about this tournament.</CardDescription>
             </CardHeader>
             <CardContent className="text-center py-12">
               <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground" />
