@@ -1,7 +1,7 @@
 
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info } from "lucide-react";
+import Image from "next/image"; // Import next/image
 
 export default function AboutPage() {
   return (
@@ -17,9 +17,19 @@ export default function AboutPage() {
             Discover the story behind SolCraft and our vision for decentralized finance.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col items-center justify-center h-64 text-muted-foreground">
-          <Info className="w-16 h-16 mb-4" />
-          <p className="text-lg">About page coming soon!</p>
+        <CardContent className="flex flex-col items-center justify-center py-8 md:py-12">
+          <Image
+            src="https://placehold.co/300x300.png"
+            alt="SolCraft Vision - Our Mission and Team"
+            width={300}
+            height={300}
+            className="rounded-lg shadow-lg mb-6"
+            data-ai-hint="blockchain professional"
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/300x300.png'; (e.target as HTMLImageElement).alt = 'Placeholder SolCraft Vision';}}
+          />
+          <p className="text-lg text-muted-foreground">
+            More details about our mission, team, and technology coming soon!
+          </p>
         </CardContent>
       </Card>
     </>
