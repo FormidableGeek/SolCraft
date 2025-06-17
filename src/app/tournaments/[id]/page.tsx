@@ -7,7 +7,7 @@ import { mockTournaments, mockInvestmentTiers } from "@/lib/mock-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadge, ShieldCheck, Lock, HeartHandshake, BookCheck, LinkIcon, FileText } from "lucide-react";
+import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, Check, ShieldCheck, Lock, HeartHandshake, BookCheck, LinkIcon, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { Tournament } from "@/lib/types";
 import { format, parseISO } from "date-fns";
@@ -61,7 +61,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
               {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
                 <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-md mt-4">
                   <h3 className="font-semibold text-green-700 dark:text-green-400 flex items-center">
-                    <CheckBadge className="h-5 w-5 mr-2" />
+                    <Check className="h-5 w-5 mr-2" />
                     Tournament Completed!
                   </h3>
                   <p className="text-sm text-green-600 dark:text-green-300 mt-1">
@@ -325,4 +325,6 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
+    
+
     

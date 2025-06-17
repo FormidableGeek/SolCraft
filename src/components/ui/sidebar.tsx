@@ -539,14 +539,14 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild = false,
+      asChild = false, // Prop to determine if it should render a Slot
       isActive = false,
       children,
-      ...props 
+      ...props // Remaining props (e.g., href from Link)
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button";
+    const Comp = asChild ? Slot : "button"; // Use 'asChild' to decide the component
     return (
       <Comp
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
@@ -554,7 +554,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...props} 
+        {...props} // Spread remaining props; 'asChild' itself is not spread here
       >
         {children}
       </Comp>

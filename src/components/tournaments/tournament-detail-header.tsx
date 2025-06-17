@@ -2,7 +2,7 @@
 import Image from "next/image";
 import type { Tournament } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Users, DollarSign, ShieldCheck, ShieldAlert, Shield, Info, TrophyIcon as TrophyIconLucide, CheckBadge } from "lucide-react";
+import { CalendarDays, Users, DollarSign, ShieldCheck, ShieldAlert, Shield, Info, TrophyIcon as TrophyIconLucide, Check } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 interface TournamentDetailHeaderProps {
@@ -84,7 +84,7 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
         )}
         {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
            <div className={`flex items-center space-x-2 p-3 rounded-lg border ${getRiskPillClasses('Low')}`}> {/* Assuming 'Low' risk style for prize display */}
-            <CheckBadge className="h-5 w-5 text-green-500" />
+            <Check className="h-5 w-5 text-green-500" />
             <span className="font-medium">Prize Won: ${tournament.prizeWon.toLocaleString()}</span>
           </div>
         )}
@@ -114,3 +114,6 @@ function InfoPill({ Icon, label, value }: InfoPillProps) {
     </div>
   );
 }
+
+
+    
