@@ -531,7 +531,7 @@ export interface SidebarMenuButtonProps
 }
 
 const SidebarMenuButton = React.forwardRef<
-  HTMLElement, // Changed from HTMLButtonElement to HTMLElement to support Link/Slot
+  HTMLElement,
   SidebarMenuButtonProps
 >(
   (
@@ -539,14 +539,16 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild = false,
+      asChild = false, // Destructure asChild, default to false
       isActive = false,
       children,
-      ...props // Destructure all other props
+      ...props // All other props (e.g., href, onClick, disabled)
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"
+    // `asChild` (the variable) now correctly holds the boolean value.
+    // `props` object no longer contains `asChild` property.
+    const Comp = asChild ? Slot : "button";
     return (
       <Comp
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
@@ -554,13 +556,13 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...props} // Spread the rest of the props (which excludes asChild)
+        {...props} // Spread the remaining props. asChild is not in props.
       >
         {children}
       </Comp>
-    )
+    );
   }
-)
+);
 SidebarMenuButton.displayName = "SidebarMenuButton"
 
 
