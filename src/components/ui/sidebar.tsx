@@ -541,6 +541,7 @@ const SidebarMenuButton = React.forwardRef<
       asChild = false, 
       isActive = false,
       children,
+      // Ensure asChild is not passed in ...props
       ...props 
     },
     ref
@@ -732,5 +733,7 @@ export {
   SheetTitle,
   useSidebar,
 }
+
+    
 
     
