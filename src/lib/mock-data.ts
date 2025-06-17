@@ -1,6 +1,6 @@
 
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
-import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity } from 'lucide-react'; // Added Crown, TierTrendingUp, Activity
+import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity, DollarSign, Users, CalendarDays, TrendingUp } from 'lucide-react'; // Added Crown, TierTrendingUp, Activity
 
 const defaultTokenPrice = 1; // Assuming $1 per token for easy calculation
 
@@ -18,6 +18,12 @@ export const mockTournaments: Tournament[] = [
     platform: 'Solana Poker Club',
     averagePlayers: 150,
     historicalData: 'Previous similar tournaments had an average ROI of 25% for top 10% players. Payout structure is typically top 15% get paid.',
+    aiRiskAssessment: { // Added mock AI risk assessment
+      riskLevel: 'Medium',
+      riskFactors: ['Highly competitive field', 'Standard payout structure means many won\'t cash'],
+      investmentRecommendation: 'Consider for a small to medium portion of portfolio if comfortable with medium risk.',
+      potentialReturn: '1.5x - 3x on cashing, potential for 10x+ on winning.',
+    },
     tokenizationDetails: {
       isTokenized: true,
       tokenTicker: 'SSS',
@@ -41,6 +47,12 @@ export const mockTournaments: Tournament[] = [
     platform: 'Decentralized Poker Arena',
     averagePlayers: 80,
     historicalData: 'This is a new high-roller tournament. Similar buy-in events show high variance but potential for large payouts.',
+    aiRiskAssessment: {
+        riskLevel: 'High',
+        riskFactors: ['High buy-in concentrates risk', 'Smaller field can lead to unpredictable results', 'Professional players expected'],
+        investmentRecommendation: 'Suitable for experienced investors with high risk tolerance. Limit exposure.',
+        potentialReturn: '0.5x (loss of portion) to 20x+ for winning.',
+    },
     tokenizationDetails: {
       isTokenized: true,
       tokenTicker: 'CPM',
@@ -81,8 +93,14 @@ export const mockTournaments: Tournament[] = [
     platform: 'Speed Poker Online',
     averagePlayers: 100,
     historicalData: 'Turbo structures favor aggressive play. Player skill variance can be high.',
+    aiRiskAssessment: {
+        riskLevel: 'Medium',
+        riskFactors: ['Turbo format increases variance', 'Wide range of player skills usually present.'],
+        investmentRecommendation: 'Moderate investment if familiar with turbo dynamics.',
+        potentialReturn: '1x - 5x on cashing.',
+    },
     tokenizationDetails: {
-      isTokenized: false,
+      isTokenized: false, // Let's say this one isn't tokenized for variety
       tokenTicker: 'NTC',
       tokenPrice: defaultTokenPrice,
       totalTokenSupply: 0,
@@ -183,7 +201,7 @@ export const mockInvestments: Investment[] = [
     tournamentName: 'Solana Summer Showdown',
     tierName: 'Silver Access',
     investmentValueUSD: 100,
-    tokenAmount: 100, // Assuming $1/token
+    tokenAmount: 100, 
     investmentDate: new Date('2024-07-10').toISOString(),
     status: 'Active',
     currentValue: 115,
@@ -207,10 +225,22 @@ export const mockInvestments: Investment[] = [
     tournamentId: 'old_tourney_123',
     tierName: 'Gold Access',
     investmentValueUSD: 500,
-    tokenAmount: 500, // Assuming $1/token
+    tokenAmount: 500,
     investmentDate: new Date('2024-06-01').toISOString(),
     status: 'Lost',
     returnOnInvestment: -500,
+  },
+   {
+    id: 'inv4',
+    investorId: mockUserProfile.id,
+    tournamentId: '4',
+    tournamentName: 'Nightly Turbo Challenge',
+    tierName: 'Silver Access',
+    investmentValueUSD: 50,
+    tokenAmount: 50,
+    investmentDate: new Date().toISOString(),
+    status: 'Active',
+    currentValue: 50, // No change yet as it's live
   },
 ];
 
@@ -324,13 +354,18 @@ export const mockPortfolioAllocation: PortfolioAllocationItem[] = [
   { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' },
 ];
 
-const pillStyle = "bg-primary/70 text-primary-foreground px-2 py-0.5 rounded text-xs";
-
+// Solcraft specific key metrics
 export const mockKeyMetrics: KeyMetric[] = [
-  { id: '1', label: 'Staking APY:', value: '14.2%', icon: ListChecks, valueClassName: pillStyle },
-  { id: '2', label: 'Gas Saved:', value: '$128.4', icon: Fuel, valueClassName: pillStyle },
-  { id: '3', label: 'Bundle Status:', value: '2m 34s left', icon: Timer, valueClassName: pillStyle },
-  { id: '4', label: 'Network:', value: 'Solana Mainnet', icon: Wifi },
+  { id: 'active-investments', label: 'Active Investments:', value: mockInvestments.filter(inv => inv.status === 'Active').length.toString(), icon: Activity },
+  { id: 'total-invested', label: 'Total Invested:', value: `$${mockUserProfile.totalInvested.toLocaleString()}`, icon: DollarSign },
+  { 
+    id: 'lifetime-roi', 
+    label: 'Lifetime ROI:', 
+    value: `${mockUserProfile.overallReturn.toFixed(1)}%`, 
+    icon: TrendingUp, 
+    valueClassName: mockUserProfile.overallReturn >= 0 ? "text-green-500" : "text-red-500" 
+  },
+  { id: 'current-tier', label: 'Current Tier:', value: mockUserProfile.currentInvestmentTierName || "N/A", icon: Crown },
 ];
 
 
@@ -344,11 +379,11 @@ export const mockTopCryptocurrencies: Cryptocurrency[] = [
 ];
 
 export const mockRecentActivity: RecentActivity[] = [
-  { id: 'act1', type: 'Swap', date: '05.23.2023', time: '21:22', tokenAmount: '0.453 BTC', status: 'Completed', viewLink: '#' },
-  { id: 'act2', type: 'Deposit', date: '05.23.2023', time: '21:22', tokenAmount: '1.2 ETH', status: 'In Progress', viewLink: '#' },
-  { id: 'act3', type: 'Withdrawal', date: '05.22.2023', time: '10:05', tokenAmount: '1000 USDT', status: 'Failed', viewLink: '#' },
-  { id: 'act4', type: 'Investment', date: '05.21.2023', time: '15:30', tokenAmount: 'Solana Summer Showdown', status: 'Completed', viewLink: '#' },
-  { id: 'act5', type: 'Payout', date: '05.20.2023', time: '09:00', tokenAmount: '$250.00', status: 'Completed', viewLink: '#' },
+  { id: 'act1', type: 'Investment', date: '07.28.2024', time: '10:15', tokenAmount: '100 SSS', status: 'Completed', viewLink: '/tournaments/1' },
+  { id: 'act2', type: 'Investment', date: '07.25.2024', time: '14:30', tokenAmount: '50 NTC', status: 'Completed', viewLink: '/tournaments/4' },
+  { id: 'act3', type: 'Payout', date: '07.16.2024', time: '09:00', tokenAmount: '$20.00 (Freeroll)', status: 'Completed', viewLink: '/tournaments/3' },
+  { id: 'act4', type: 'Deposit', date: '07.10.2024', time: '11:00', tokenAmount: '0.5 SOL', status: 'Completed' },
+  { id: 'act5', type: 'Withdrawal', date: '07.05.2024', time: '16:45', tokenAmount: '100 USDC', status: 'Pending' },
 ];
 
 export const mockFigmaPortfolioPerformance = [
@@ -391,3 +426,15 @@ export const roadmapItems: RoadmapItemProps[] = [
   { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
   { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true }
 ];
+
+// Ensure mockTournaments have aiRiskAssessment if it's used by TournamentCard by default
+mockTournaments.forEach(t => {
+  if (!t.aiRiskAssessment && (t.status === 'Upcoming' || t.status === 'Live')) {
+    t.aiRiskAssessment = {
+      riskLevel: 'Medium',
+      riskFactors: ['General market volatility', 'Player skill unknown'],
+      investmentRecommendation: 'Standard due diligence recommended.',
+      potentialReturn: 'Varies'
+    };
+  }
+});
