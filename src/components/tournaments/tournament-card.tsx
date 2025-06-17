@@ -38,6 +38,11 @@ export function TournamentCard({ tournament }: TournamentCardProps) {
             layout="fill"
             objectFit="cover"
             data-ai-hint="poker tournament"
+            onError={(e) => {
+              (e.target as HTMLImageElement).srcset = ""; // Prevent Next.js from trying to use srcset for placeholder
+              (e.target as HTMLImageElement).src = 'https://placehold.co/600x400.png';
+              (e.target as HTMLImageElement).alt = `${tournament.name} Placeholder Image`;
+            }}
           />
            <Badge variant={getStatusVariant(tournament.status)} className="absolute top-2 right-2">
             {tournament.status}

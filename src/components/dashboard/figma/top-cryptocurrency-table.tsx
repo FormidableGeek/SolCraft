@@ -16,7 +16,21 @@ const CryptoIcon = ({ ticker, iconUrl, name }: { ticker: string, iconUrl?: strin
 
   // Fallback to image URL if specific icon isn't set and URL is not a generic placeholder
   if (iconUrl && !iconUrl.startsWith('https://placehold.co')) {
-    return <Image src={iconUrl} alt={name} width={20} height={20} className="rounded-full" data-ai-hint={`${name} logo crypto coin`} />;
+    return (
+      <Image 
+        src={iconUrl} 
+        alt={name} 
+        width={20} 
+        height={20} 
+        className="rounded-full" 
+        data-ai-hint={`${name} logo crypto coin`} 
+        onError={(e) => {
+          (e.target as HTMLImageElement).srcset = ""; // Prevent Next.js from trying to use srcset for placeholder
+          (e.target as HTMLImageElement).src = 'https://placehold.co/20x20.png';
+          (e.target as HTMLImageElement).alt = `${name} Placeholder Icon`;
+        }}
+      />
+    );
   }
   
   // Generic placeholder if no specific icon or valid image URL

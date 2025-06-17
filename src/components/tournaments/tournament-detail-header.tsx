@@ -45,6 +45,11 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
             objectFit="cover"
             priority
             data-ai-hint="poker game"
+            onError={(e) => {
+              (e.target as HTMLImageElement).srcset = ""; // Prevent Next.js from trying to use srcset for placeholder
+              (e.target as HTMLImageElement).src = 'https://placehold.co/800x400.png'; // A large generic placeholder
+              (e.target as HTMLImageElement).alt = `${tournament.name} Placeholder Image`;
+            }}
           />
         ) : (
           <div className="bg-muted w-full h-full flex items-center justify-center">
