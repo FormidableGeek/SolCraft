@@ -33,6 +33,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
   };
 
   const isTokenizedAndDetailsExist = tournament.tokenizationDetails?.isTokenized && tournament.tokenizationDetails;
+  const tokenTicker = tournament.tokenizationDetails?.tokenTicker || "Tokens";
 
   return (
     <div className="container mx-auto py-8">
@@ -71,13 +72,21 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
           <Card>
             <CardHeader>
               <CardTitle className="font-headline">Investment Tiers</CardTitle>
-              <CardDescription>Choose an investment level that matches your risk appetite and goals.</CardDescription>
+              <CardDescription>
+                Choose an investment level that matches your risk appetite and goals. 
+                Platform fees (detailed on each tier) apply to your share of any winnings.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {mockInvestmentTiers.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {mockInvestmentTiers.map((tier) => (
-                    <InvestmentTierCard key={tier.id} tier={tier} onInvest={handleInvestment} />
+                    <InvestmentTierCard 
+                        key={tier.id} 
+                        tier={tier} 
+                        onInvest={handleInvestment}
+                        tokenTicker={tokenTicker} 
+                    />
                   ))}
                 </div>
               ) : (
@@ -99,7 +108,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {isTokenizedAndDetailsExist ? (
+              {isTokenizedAndDetailsExist && tournament.tokenizationDetails ? (
                 <>
                   <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-md">
                     <h3 className="font-semibold text-green-700 dark:text-green-400">This tournament is tokenized!</h3>
@@ -220,6 +229,3 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
-
-
-    

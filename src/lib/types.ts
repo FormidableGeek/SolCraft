@@ -39,10 +39,14 @@ export interface Tournament {
 
 export interface InvestmentTier {
   id: string;
-  name: string; // e.g., Bronze Stake, Silver Share, Gold Backing
-  minInvestment: number;
-  maxInvestment?: number; // Optional, could be a fixed amount tier
-  potentialReturn: string; // e.g., "Est. 1.5x - 3x", "Fixed 10% ROI"
+  name: string;
+  minInvestmentCurrency: number;
+  maxInvestmentCurrency?: number;
+  minInvestmentTokens: number;
+  maxInvestmentTokens?: number;
+  platformFeePercentage: number; // e.g., 5 for 5%
+  priorityDescription?: string;
+  potentialReturn: string;
   riskLevel: 'Low' | 'Medium' | 'High';
   description: string;
   benefits: string[];
@@ -50,8 +54,8 @@ export interface InvestmentTier {
 
 export interface UserProfile {
   id:string;
-  uid: string; // Added from signup page logic
-  email: string; // Added from signup page logic
+  uid: string;
+  email: string;
   name: string;
   username: string;
   avatarUrl?: string;
@@ -61,7 +65,7 @@ export interface UserProfile {
   followingCount: number;
   totalInvested: number;
   overallReturn: number; // percentage or absolute
-  ranking?: number | null; // Allow null from signup
+  ranking?: number | null;
   isWalletConnected?: boolean;
   walletAddress?: string;
   balance?: {
@@ -79,7 +83,7 @@ export interface Investment {
   investmentDate: string; // ISO string
   status: 'Active' | 'Cashed Out' | 'Lost' | 'Pending';
   currentValue?: number;
-  returnOnInvestment?: number; // Can be percentage or absolute
+  returnOnInvestment?: number;
 }
 
 export interface PortfolioData {
@@ -91,15 +95,14 @@ export interface PortfolioData {
 }
 
 export interface SocialPlayer extends UserProfile {
-  recentPerformance: string; // e.g. "Won 2 tournaments last month"
+  recentPerformance: string;
   isFollowed?: boolean;
 }
 
-// Types for the new dashboard UI
 export interface PortfolioAllocationItem {
   name: string;
   value: number;
-  color: string; // hex or css var
+  color: string;
 }
 
 export interface KeyMetric {
@@ -115,9 +118,9 @@ export interface Cryptocurrency {
   rank: number;
   name: string;
   ticker: string;
-  iconUrl?: string; // URL to a small icon
+  iconUrl?: string;
   price: number;
-  change24h: number; // percentage
+  change24h: number;
   volume24h: number;
   marketCap: number;
 }
@@ -125,11 +128,11 @@ export interface Cryptocurrency {
 export interface RecentActivity {
   id: string;
   type: 'Swap' | 'Deposit' | 'Withdrawal' | 'Investment' | 'Payout';
-  date: string; // "MM.DD.YYYY"
-  time: string; // "HH:MM"
-  tokenAmount: string; // e.g., "0.453 BTC"
+  date: string;
+  time: string;
+  tokenAmount: string;
   status: 'Completed' | 'In Progress' | 'Failed' | 'Pending';
-  viewLink?: string; // URL for viewing details
+  viewLink?: string;
 }
 
 export interface RoadmapItemProps {

@@ -1,5 +1,5 @@
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
-import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem } from 'lucide-react'; // Added more icons
 
 const defaultTokenPrice = 1; // Assuming $1 per token for easy calculation
 
@@ -42,10 +42,10 @@ export const mockTournaments: Tournament[] = [
     tokenizationDetails: {
       isTokenized: true,
       tokenTicker: 'CPM',
-      tokenPrice: defaultTokenPrice,
+      tokenPrice: defaultTokenPrice, // Assuming $1 per token for mock
       totalTokenSupply: 500 / defaultTokenPrice,
-      minInvestmentTokens: 50, // $50
-      maxInvestmentTokens: 500 / defaultTokenPrice, // $500 (full backing)
+      minInvestmentTokens: 50 / defaultTokenPrice, // 50 tokens
+      maxInvestmentTokens: 500 / defaultTokenPrice, // 500 tokens (full backing)
     }
   },
   {
@@ -87,37 +87,68 @@ export const mockTournaments: Tournament[] = [
   },
 ];
 
+// Updated mockInvestmentTiers according to document section 3
+const TOKEN_PRICE_FOR_MOCK_TIERS = 1; // Assume $1 per token for calculating token amounts
+
 export const mockInvestmentTiers: InvestmentTier[] = [
   {
-    id: 'tier1',
-    name: 'Bronze Stake',
-    minInvestment: 10,
-    maxInvestment: 50,
-    potentialReturn: 'Est. 1.2x - 1.8x',
+    id: 'tierBronze',
+    name: 'Bronze Access',
+    minInvestmentCurrency: 10,
+    maxInvestmentCurrency: 250,
+    minInvestmentTokens: 10 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    maxInvestmentTokens: 250 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    platformFeePercentage: 5,
+    priorityDescription: 'Basic access to available tournaments.',
+    potentialReturn: 'Est. 1.1x - 1.5x',
     riskLevel: 'Low',
-    description: 'A small stake for newer investors. Lower risk, modest returns.',
-    benefits: ['Smallest capital requirement', 'Good for learning the ropes'],
+    description: 'Standard entry-level investment tier.',
+    benefits: ['Lowest capital requirement', 'Good for exploring tournament investments'],
   },
   {
-    id: 'tier2',
-    name: 'Silver Share',
-    minInvestment: 50,
-    maxInvestment: 200,
-    potentialReturn: 'Est. 1.5x - 2.5x',
+    id: 'tierSilver',
+    name: 'Silver Access',
+    minInvestmentCurrency: 100,
+    maxInvestmentCurrency: 500,
+    minInvestmentTokens: 100 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    maxInvestmentTokens: 500 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    platformFeePercentage: 4,
+    priorityDescription: 'Standard access to a wider range of tournaments.',
+    potentialReturn: 'Est. 1.3x - 2.0x',
     riskLevel: 'Medium',
-    description: 'A balanced option for those looking for better returns with manageable risk.',
-    benefits: ['Access to more promising tournaments', 'Higher potential upside'],
+    description: 'A balanced option for growing your portfolio.',
+    benefits: ['Access to more diverse tournaments', 'Moderate return potential'],
   },
   {
-    id: 'tier3',
-    name: 'Gold Backing',
-    minInvestment: 200,
-    potentialReturn: 'Est. 2x - 5x',
+    id: 'tierGold',
+    name: 'Gold Access',
+    minInvestmentCurrency: 250,
+    maxInvestmentCurrency: 750,
+    minInvestmentTokens: 250 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    maxInvestmentTokens: 750 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    platformFeePercentage: 3,
+    priorityDescription: 'Early access to select tournaments.',
+    potentialReturn: 'Est. 1.5x - 3.0x',
+    riskLevel: 'Medium', // Document says medium, not high here
+    description: 'Preferred access and better fee structure for serious investors.',
+    benefits: ['Early notification for new tournaments', 'Improved fee rates', 'Higher investment caps'],
+  },
+  {
+    id: 'tierPlatinum',
+    name: 'Platinum Access',
+    minInvestmentCurrency: 500,
+    maxInvestmentCurrency: 1000, // Assuming buy-in is max for this tier per document for $1000 example
+    minInvestmentTokens: 500 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    maxInvestmentTokens: 1000 / TOKEN_PRICE_FOR_MOCK_TIERS,
+    platformFeePercentage: 2,
+    priorityDescription: 'First access to high-value tournaments.',
+    potentialReturn: 'Est. 2.0x - 5x+',
     riskLevel: 'High',
-    description: 'For seasoned investors aiming for significant returns, accepting higher risk.',
-    benefits: ['Highest potential returns', 'Exclusive tournament access', 'Priority support'],
+    description: 'Exclusive tier for top investors seeking maximum returns and benefits.',
+    benefits: ['Priority access to all tournaments', 'Lowest platform fees', 'Exclusive insights & support'],
   },
 ];
+
 
 export const mockUserProfile: UserProfile = {
   id: 'user123',
@@ -133,9 +164,9 @@ export const mockUserProfile: UserProfile = {
   totalInvested: 15000,
   overallReturn: 25.5, // percentage
   ranking: 42,
-  isWalletConnected: false,
-  walletAddress: '1aB2c3D4e5F6g7H8i9J0kLmWnO9PqRsTuVwXyZ', // Example, not real
-  balance: { amount: 1000000, currency: 'USD' },
+  isWalletConnected: true,
+  walletAddress: 'sol...4x2z',
+  balance: { amount: 12345.67, currency: 'USD' },
 };
 
 export const mockInvestments: Investment[] = [
@@ -143,7 +174,7 @@ export const mockInvestments: Investment[] = [
     id: 'inv1',
     tournamentId: '1',
     tournamentName: 'Solana Summer Showdown',
-    tierName: 'Silver Share',
+    tierName: 'Silver Access',
     amountInvested: 100,
     investmentDate: new Date('2024-07-10').toISOString(),
     status: 'Active',
@@ -162,7 +193,7 @@ export const mockInvestments: Investment[] = [
     id: 'inv3',
     tournamentName: 'Old Crypto Challenge',
     tournamentId: 'old_tourney_123',
-    tierName: 'Gold Backing',
+    tierName: 'Gold Access',
     amountInvested: 500,
     investmentDate: new Date('2024-06-01').toISOString(),
     status: 'Lost',
@@ -259,6 +290,13 @@ export const riskLevelColorMap = {
   High: 'text-red-500',
 };
 
+export const priorityIconMap = {
+    "First access to high-value tournaments.": Gem, // Platinum
+    "Early access to select tournaments.": Star, // Gold
+    "Standard access to a wider range of tournaments.": Award, // Silver
+    "Basic access to available tournaments.": Zap, // Bronze
+};
+
 export const pageSpinnerStyle = "h-8 w-8 animate-spin text-primary";
 
 // Mock data for the new dashboard UI (Figma design)
@@ -279,11 +317,6 @@ export const mockKeyMetrics: KeyMetric[] = [
   { id: '4', label: 'Network:', value: 'Solana Mainnet', icon: Wifi },
 ];
 
-export const mockBalance = {
-  amount: 1000000,
-  currency: 'USD',
-  walletAddress: 'sol...4x2z',
-};
 
 export const mockTopCryptocurrencies: Cryptocurrency[] = [
   { id: 'btc', rank: 1, name: 'Bitcoin', ticker: 'BTC', iconUrl: 'https://placehold.co/24x24/orange/white?text=B', price: 60344, change24h: -5.0, volume24h: 34040000000, marketCap: 1184940000000 },
