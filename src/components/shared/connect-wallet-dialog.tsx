@@ -22,12 +22,14 @@ interface WalletOption {
   aiHint: string;
 }
 
+// Updated to common Solana wallet options
 const walletOptions: WalletOption[] = [
-  { id: "phantom", name: "Phantom Wallet", iconUrl: "https://placehold.co/48x48/A06FFA/FFFFFF.png?text=P", aiHint: "phantom logo" },
-  { id: "solflare", name: "Solflare Wallet", iconUrl: "https://placehold.co/48x48/F07A00/FFFFFF.png?text=S", aiHint: "solflare logo" },
-  { id: "slope", name: "Slope Wallet", iconUrl: "https://placehold.co/48x48/6C5FF5/FFFFFF.png?text=S", aiHint: "slope logo" },
-  { id: "sollet", name: "Sollet Wallet", iconUrl: "https://placehold.co/48x48/22C55E/FFFFFF.png?text=S", aiHint: "sollet logo" },
-  { id: "ledger", name: "Ledger Wallet", iconUrl: "https://placehold.co/48x48/4A4A4A/FFFFFF.png?text=L", aiHint: "ledger logo" },
+  { id: "phantom", name: "Phantom", iconUrl: "https://placehold.co/48x48/A06FFA/FFFFFF.png?text=P", aiHint: "phantom logo" },
+  { id: "solflare", name: "Solflare", iconUrl: "https://placehold.co/48x48/F07A00/FFFFFF.png?text=S", aiHint: "solflare logo" },
+  { id: "backpack", name: "Backpack", iconUrl: "https://placehold.co/48x48/8A2BE2/FFFFFF.png?text=B", aiHint: "backpack logo" },
+  { id: "torus", name: "Torus", iconUrl: "https://placehold.co/48x48/0074FF/FFFFFF.png?text=T", aiHint: "torus logo" },
+  { id: "ledger", name: "Ledger", iconUrl: "https://placehold.co/48x48/4A4A4A/FFFFFF.png?text=L", aiHint: "ledger logo" },
+  { id: "glow", name: "Glow", iconUrl: "https://placehold.co/48x48/FFA500/000000.png?text=G", aiHint: "glow wallet logo" },
 ];
 
 interface ConnectWalletDialogProps {
@@ -37,7 +39,7 @@ interface ConnectWalletDialogProps {
 }
 
 export function ConnectWalletDialog({ open, onOpenChange, onConnect }: ConnectWalletDialogProps) {
-  const [selectedWallet, setSelectedWallet] = useState<string>("slope"); // Default to Slope as per image
+  const [selectedWallet, setSelectedWallet] = useState<string>(walletOptions[0].id); // Default to Phantom
 
   const handleContinue = () => {
     const wallet = walletOptions.find(w => w.id === selectedWallet);
@@ -68,13 +70,13 @@ export function ConnectWalletDialog({ open, onOpenChange, onConnect }: ConnectWa
         </DialogHeader>
 
         <div className="px-6 py-2 space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {walletOptions.map((wallet) => (
               <button
                 key={wallet.id}
                 onClick={() => setSelectedWallet(wallet.id)}
                 className={cn(
-                  "flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all duration-150 ease-in-out",
+                  "flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg border-2 transition-all duration-150 ease-in-out aspect-square",
                   "bg-muted/30 hover:bg-muted/60",
                   selectedWallet === wallet.id ? "border-primary" : "border-border hover:border-muted-foreground/50"
                 )}
@@ -82,12 +84,12 @@ export function ConnectWalletDialog({ open, onOpenChange, onConnect }: ConnectWa
                 <Image
                   src={wallet.iconUrl}
                   alt={`${wallet.name} icon`}
-                  width={40}
-                  height={40}
-                  className="mb-2 rounded-md"
+                  width={32}
+                  height={32}
+                  className="mb-1 sm:mb-2 rounded-md h-8 w-8 sm:h-10 sm:w-10"
                   data-ai-hint={wallet.aiHint}
                 />
-                <span className="text-sm font-medium text-foreground">{wallet.name}</span>
+                <span className="text-xs sm:text-sm font-medium text-foreground text-center">{wallet.name}</span>
               </button>
             ))}
           </div>
