@@ -88,6 +88,12 @@ export function ConnectWalletDialog({ open, onOpenChange, onConnect }: ConnectWa
                   height={32}
                   className="mb-1 sm:mb-2 rounded-md h-8 w-8 sm:h-10 sm:w-10"
                   data-ai-hint={wallet.aiHint}
+                  onError={(e) => { 
+                    const target = e.target as HTMLImageElement;
+                    target.srcset = ""; // Prevent Next.js from trying to use srcset for placeholder
+                    target.src = 'https://placehold.co/48x48.png?text=W'; 
+                    target.alt = `${wallet.name} Placeholder Icon`;
+                  }}
                 />
                 <span className="text-xs sm:text-sm font-medium text-foreground text-center">{wallet.name}</span>
               </button>
