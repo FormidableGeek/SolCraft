@@ -1,3 +1,4 @@
+import Image from "next/image"; // Added
 import { PageHeader } from "@/components/shared/page-header";
 import { TournamentCard } from "@/components/tournaments/tournament-card";
 import { mockTournaments } from "@/lib/mock-data";
@@ -16,6 +17,19 @@ export default function TournamentsPage() {
         title="Browse Tournaments"
         description="Find exciting poker tournaments to invest in."
       />
+
+      {/* Thematic Banner Image */}
+      <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
+        <Image
+          src="https://placehold.co/800x400.png" // Replace with your actual image path
+          alt="SolCraft Poker Tournament"
+          width={800}
+          height={400}
+          className="w-full h-auto object-cover"
+          priority // Optional: if this is a hero image
+          data-ai-hint="poker tournament game"
+        />
+      </div>
 
       <div className="mb-6 p-4 border rounded-lg bg-card shadow">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
