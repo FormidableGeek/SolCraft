@@ -539,15 +539,13 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild = false, // Destructure asChild, default to false
+      asChild = false,
       isActive = false,
       children,
-      ...props // All other props (e.g., href, onClick, disabled)
+      ...props 
     },
     ref
   ) => {
-    // `asChild` (the variable) now correctly holds the boolean value.
-    // `props` object no longer contains `asChild` property.
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
@@ -556,7 +554,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...props} // Spread the remaining props. asChild is not in props.
+        {...props} 
       >
         {children}
       </Comp>
