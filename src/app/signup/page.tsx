@@ -9,26 +9,55 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useState, type FormEvent } from 'react';
 import { UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      toast({
+        title: 'Signup Failed',
+        description: "Passwords don't match!",
+        variant: 'destructive',
+      });
       return;
     }
     setIsLoading(true);
-    // Placeholder for actual signup logic
-    console.log('Signup attempt with:', { email, password });
-    alert(`Signup attempt with Email: ${email}. Check console for details.\nThis is a placeholder and does not perform real authentication.`);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      toast({
+        title: 'Signup Successful!',
+        description: 'Your account has been created. Welcome to SolCraft!',
+      });
+      router.push('/dashboard'); // Or redirect to login page: router.push('/login');
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      let errorMessage = 'Failed to create account. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password should be at least 6 characters.';
+      }
+      toast({
+        title: 'Signup Failed',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
