@@ -1,3 +1,4 @@
+
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
 import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem } from 'lucide-react'; // Added more icons
 
@@ -24,7 +25,8 @@ export const mockTournaments: Tournament[] = [
       totalTokenSupply: 100 / defaultTokenPrice, // 100 tokens
       minInvestmentTokens: 10, // $10
       maxInvestmentTokens: 100 / defaultTokenPrice, // $100 (full backing)
-    }
+    },
+    isCompleted: false,
   },
   {
     id: '2',
@@ -42,11 +44,12 @@ export const mockTournaments: Tournament[] = [
     tokenizationDetails: {
       isTokenized: true,
       tokenTicker: 'CPM',
-      tokenPrice: defaultTokenPrice, // Assuming $1 per token for mock
+      tokenPrice: defaultTokenPrice, 
       totalTokenSupply: 500 / defaultTokenPrice,
-      minInvestmentTokens: 50 / defaultTokenPrice, // 50 tokens
-      maxInvestmentTokens: 500 / defaultTokenPrice, // 500 tokens (full backing)
-    }
+      minInvestmentTokens: 50 / defaultTokenPrice, 
+      maxInvestmentTokens: 500 / defaultTokenPrice, 
+    },
+    isCompleted: false,
   },
   {
     id: '3',
@@ -61,6 +64,8 @@ export const mockTournaments: Tournament[] = [
     platform: 'Community Poker Platform',
     averagePlayers: 250,
     historicalData: 'Freerolls attract a wide range of skill levels. Payouts are small but frequent for top finishers.',
+    isCompleted: true,
+    prizeWon: 1000,
     // No tokenization for freeroll
   },
   {
@@ -77,18 +82,18 @@ export const mockTournaments: Tournament[] = [
     averagePlayers: 100,
     historicalData: 'Turbo structures favor aggressive play. Player skill variance can be high.',
     tokenizationDetails: {
-      isTokenized: false, // Example of a non-tokenized tournament
+      isTokenized: false, 
       tokenTicker: 'NTC',
       tokenPrice: defaultTokenPrice,
       totalTokenSupply: 0,
       minInvestmentTokens: 0,
       maxInvestmentTokens: 0,
-    }
+    },
+    isCompleted: false,
   },
 ];
 
-// Updated mockInvestmentTiers according to document section 3
-const TOKEN_PRICE_FOR_MOCK_TIERS = 1; // Assume $1 per token for calculating token amounts
+const TOKEN_PRICE_FOR_MOCK_TIERS = 1; 
 
 export const mockInvestmentTiers: InvestmentTier[] = [
   {
@@ -129,7 +134,7 @@ export const mockInvestmentTiers: InvestmentTier[] = [
     platformFeePercentage: 3,
     priorityDescription: 'Early access to select tournaments.',
     potentialReturn: 'Est. 1.5x - 3.0x',
-    riskLevel: 'Medium', // Document says medium, not high here
+    riskLevel: 'Medium', 
     description: 'Preferred access and better fee structure for serious investors.',
     benefits: ['Early notification for new tournaments', 'Improved fee rates', 'Higher investment caps'],
   },
@@ -137,7 +142,7 @@ export const mockInvestmentTiers: InvestmentTier[] = [
     id: 'tierPlatinum',
     name: 'Platinum Access',
     minInvestmentCurrency: 500,
-    maxInvestmentCurrency: 1000, // Assuming buy-in is max for this tier per document for $1000 example
+    maxInvestmentCurrency: 1000, 
     minInvestmentTokens: 500 / TOKEN_PRICE_FOR_MOCK_TIERS,
     maxInvestmentTokens: 1000 / TOKEN_PRICE_FOR_MOCK_TIERS,
     platformFeePercentage: 2,
@@ -172,29 +177,35 @@ export const mockUserProfile: UserProfile = {
 export const mockInvestments: Investment[] = [
   {
     id: 'inv1',
+    investorId: mockUserProfile.id,
     tournamentId: '1',
     tournamentName: 'Solana Summer Showdown',
     tierName: 'Silver Access',
-    amountInvested: 100,
+    investmentValueUSD: 100,
+    tokenAmount: 100, // Assuming $1/token
     investmentDate: new Date('2024-07-10').toISOString(),
     status: 'Active',
     currentValue: 115,
   },
   {
     id: 'inv2',
+    investorId: mockUserProfile.id,
     tournamentId: '3',
     tournamentName: 'Weekly Wednesday Freeroll',
-    amountInvested: 0, 
+    investmentValueUSD: 0,
+    tokenAmount: 0, 
     investmentDate: new Date('2024-07-15').toISOString(),
     status: 'Cashed Out',
     returnOnInvestment: 20, 
   },
   {
     id: 'inv3',
+    investorId: mockUserProfile.id,
     tournamentName: 'Old Crypto Challenge',
     tournamentId: 'old_tourney_123',
     tierName: 'Gold Access',
-    amountInvested: 500,
+    investmentValueUSD: 500,
+    tokenAmount: 500, // Assuming $1/token
     investmentDate: new Date('2024-06-01').toISOString(),
     status: 'Lost',
     returnOnInvestment: -500,
@@ -375,3 +386,4 @@ export const roadmapItems: RoadmapItemProps[] = [
   { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
   { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true }
 ];
+

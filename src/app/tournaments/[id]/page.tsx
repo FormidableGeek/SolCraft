@@ -1,4 +1,5 @@
 
+
 import { notFound } from "next/navigation";
 import { TournamentDetailHeader } from "@/components/tournaments/tournament-detail-header";
 import { InvestmentTierCard } from "@/components/tournaments/investment-tier-card";
@@ -7,9 +8,10 @@ import { mockTournaments, mockInvestmentTiers } from "@/lib/mock-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig } from "lucide-react"; // Added Layers3, BarChartHorizontalBig
+import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadgeIcon } from "lucide-react"; // Added Layers3, BarChartHorizontalBig
 import { Separator } from "@/components/ui/separator";
 import type { Tournament } from "@/lib/types";
+import { format, parseISO } from "date-fns";
 
 // This function would typically fetch data from a DB or API
 async function getTournamentData(id: string) {
@@ -55,6 +57,19 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">{tournament.description || "Detailed description not available."}</p>
+              
+              {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
+                <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-md mt-4">
+                  <h3 className="font-semibold text-green-700 dark:text-green-400 flex items-center">
+                    <CheckBadgeIcon className="h-5 w-5 mr-2" /> {/* Using a generic check badge icon */}
+                    Tournament Completed!
+                  </h3>
+                  <p className="text-sm text-green-600 dark:text-green-300 mt-1">
+                    Total Prize Awarded: ${tournament.prizeWon.toLocaleString()}
+                  </p>
+                </div>
+              )}
+
               <Separator />
               <h3 className="font-semibold text-lg">Key Details</h3>
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
@@ -62,6 +77,12 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                 <li><span className="font-medium text-foreground">Game Type:</span> Texas Hold'em (Assumed)</li>
                 <li><span className="font-medium text-foreground">Structure:</span> Standard Payout (Assumed)</li>
                 {tournament.participants?.max && <li><span className="font-medium text-foreground">Max Participants:</span> {tournament.participants.max}</li>}
+                 <li>
+                  <span className="font-medium text-foreground">Start Time:</span> {format(parseISO(tournament.startTime), "MMM d, yyyy 'at' p")}
+                </li>
+                <li>
+                  <span className="font-medium text-foreground">Status:</span> {tournament.status}
+                </li>
               </ul>
               <Button variant="outline" disabled>View Full Rules (Coming Soon)</Button>
             </CardContent>
@@ -229,4 +250,3 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
-

@@ -1,3 +1,4 @@
+
 import type { TournamentRiskAssessmentOutput } from '@/ai/flows/tournament-risk-assessment';
 import type { LucideIcon } from 'lucide-react';
 
@@ -35,6 +36,8 @@ export interface Tournament {
   historicalData?: string; // For AI input, can be a longer text
   aiRiskAssessment?: TournamentRiskAssessmentOutput; // Store pre-computed or on-demand
   tokenizationDetails?: TournamentTokenizationDetails;
+  prizeWon?: number;
+  isCompleted?: boolean;
 }
 
 export interface InvestmentTier {
@@ -76,10 +79,12 @@ export interface UserProfile {
 
 export interface Investment {
   id: string;
+  investorId: string;
   tournamentId: string;
   tournamentName: string;
   tierName?: string;
-  amountInvested: number;
+  investmentValueUSD: number;
+  tokenAmount: number;
   investmentDate: string; // ISO string
   status: 'Active' | 'Cashed Out' | 'Lost' | 'Pending';
   currentValue?: number;

@@ -1,7 +1,8 @@
+
 import Image from "next/image";
 import type { Tournament } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Users, DollarSign, ShieldCheck, ShieldAlert, Shield, Info } from "lucide-react";
+import { CalendarDays, Users, DollarSign, ShieldCheck, ShieldAlert, Shield, Info, TrophyIcon as TrophyIconLucide, CheckBadgeIcon } from "lucide-react"; // Changed TrophyIcon import
 import { format, parseISO } from "date-fns";
 
 interface TournamentDetailHeaderProps {
@@ -12,20 +13,20 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
   
   const getStatusPillClasses = (status: Tournament['status']) => {
     switch (status) {
-      case 'Upcoming': return "bg-blue-100 text-blue-700 border-blue-300";
-      case 'Live': return "bg-green-100 text-green-700 border-green-300";
-      case 'Finished': return "bg-gray-100 text-gray-700 border-gray-300";
-      default: return "bg-gray-100 text-gray-700 border-gray-300";
+      case 'Upcoming': return "bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700";
+      case 'Live': return "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700"; // Changed Live to yellow
+      case 'Finished': return "bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700"; // Changed Finished to green
+      default: return "bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-700/30 dark:text-gray-300 dark:border-gray-500";
     }
   };
 
   const getRiskPillClasses = (riskLevel?: string) => {
-    if (!riskLevel) return "bg-gray-100 text-gray-700 border-gray-300";
+    if (!riskLevel) return "bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-700/30 dark:text-gray-300 dark:border-gray-500";
     switch (riskLevel) {
-      case 'Low': return "bg-green-100 text-green-700 border-green-300";
-      case 'Medium': return "bg-yellow-100 text-yellow-700 border-yellow-300";
-      case 'High': return "bg-red-100 text-red-700 border-red-300";
-      default: return "bg-gray-100 text-gray-700 border-gray-300";
+      case 'Low': return "bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700";
+      case 'Medium': return "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700";
+      case 'High': return "bg-red-100 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700";
+      default: return "bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-700/30 dark:text-gray-300 dark:border-gray-500";
     }
   };
   
@@ -46,14 +47,14 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
             priority
             data-ai-hint="poker game"
             onError={(e) => {
-              (e.target as HTMLImageElement).srcset = ""; // Prevent Next.js from trying to use srcset for placeholder
-              (e.target as HTMLImageElement).src = 'https://placehold.co/800x400.png'; // A large generic placeholder
+              (e.target as HTMLImageElement).srcset = ""; 
+              (e.target as HTMLImageElement).src = 'https://placehold.co/800x400.png'; 
               (e.target as HTMLImageElement).alt = `${tournament.name} Placeholder Image`;
             }}
           />
         ) : (
           <div className="bg-muted w-full h-full flex items-center justify-center">
-            <TrophyIcon className="w-24 h-24 text-muted-foreground" />
+            <TrophyIconLucide className="w-24 h-24 text-muted-foreground" /> {/* Using imported Lucide icon */}
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -79,6 +80,12 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
            <div className={`flex items-center space-x-2 p-3 rounded-lg border ${getRiskPillClasses(tournament.aiRiskAssessment.riskLevel)}`}>
             <RiskIcon className="h-5 w-5" />
             <span className="font-medium">AI Risk: {tournament.aiRiskAssessment.riskLevel}</span>
+          </div>
+        )}
+        {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
+           <div className={`flex items-center space-x-2 p-3 rounded-lg border ${getRiskPillClasses('Low')}`}> {/* Assuming 'Low' risk style for prize display */}
+            <CheckBadgeIcon className="h-5 w-5 text-green-500" />
+            <span className="font-medium">Prize Won: ${tournament.prizeWon.toLocaleString()}</span>
           </div>
         )}
       </div>
@@ -108,26 +115,4 @@ function InfoPill({ Icon, label, value }: InfoPillProps) {
   );
 }
 
-function TrophyIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-      <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-      <path d="M4 22h16" />
-      <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-      <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-      <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-    </svg>
-  )
-}
+// Removed local TrophyIcon as we import from lucide-react now
