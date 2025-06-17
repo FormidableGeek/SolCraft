@@ -377,11 +377,10 @@ export default function LandingPage() {
               <p className="text-xs">Trading Infrastructure for the Next Era of Solana. Supercharging Solana with an innovative Layer 2.</p>
             </div>
             <div>
-              <h5 className="font-semibold text-white mb-3 font-headline">Contact Us</h5>
+              <h5 className="font-semibold text-white mb-3 font-headline">Legal</h5>
               <ul className="space-y-1 text-xs">
-                <li><a href="mailto:info@solcraftl2.com" className="hover:text-purple-400 transition-colors">info@solcraftl2.com</a></li>
-                <li><a href="mailto:marketing@solcraftl2.com" className="hover:text-purple-400 transition-colors">marketing@solcraftl2.com</a></li>
-                <li><a href="mailto:team@solcraftl2.com" className="hover:text-purple-400 transition-colors">team@solcraftl2.com</a></li>
+                <li><Link href="/terms-of-service" className="hover:text-purple-400 transition-colors">Terms of Service</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link></li>
               </ul>
             </div>
             <div>
@@ -398,6 +397,11 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-gray-700 pt-8 text-center">
             <p>&copy; {new Date().getFullYear()} SolCraft. All rights reserved.</p>
+            <p className="text-xs mt-2">
+              Contact: <a href="mailto:info@solcraftl2.com" className="hover:text-purple-400 transition-colors">info@solcraftl2.com</a> | 
+              <a href="mailto:marketing@solcraftl2.com" className="ml-1 hover:text-purple-400 transition-colors">marketing@solcraftl2.com</a> | 
+              <a href="mailto:team@solcraftl2.com" className="ml-1 hover:text-purple-400 transition-colors">team@solcraftl2.com</a>
+            </p>
           </div>
         </div>
       </footer>
