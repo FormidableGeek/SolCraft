@@ -1,5 +1,4 @@
 
-
 import { notFound } from "next/navigation";
 import { TournamentDetailHeader } from "@/components/tournaments/tournament-detail-header";
 import { InvestmentTierCard } from "@/components/tournaments/investment-tier-card";
@@ -8,7 +7,7 @@ import { mockTournaments, mockInvestmentTiers } from "@/lib/mock-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadge } from "lucide-react";
+import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadge, ShieldCheck, Lock, HeartHandshake } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { Tournament } from "@/lib/types";
 import { format, parseISO } from "date-fns";
@@ -42,11 +41,12 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
       <TournamentDetailHeader tournament={tournament} />
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 mb-6">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-6 mb-6">
           <TabsTrigger value="overview"><Info className="mr-2 h-4 w-4 sm:inline hidden"/>Overview</TabsTrigger>
           <TabsTrigger value="invest"><DollarSign className="mr-2 h-4 w-4 sm:inline hidden"/>Invest</TabsTrigger>
           <TabsTrigger value="tokenization"><Layers3 className="mr-2 h-4 w-4 sm:inline hidden"/>Tokenization</TabsTrigger>
           <TabsTrigger value="ai-risk"><Trophy className="mr-2 h-4 w-4 sm:inline hidden"/>AI Risk</TabsTrigger>
+          <TabsTrigger value="security-trust"><ShieldCheck className="mr-2 h-4 w-4 sm:inline hidden"/>Security</TabsTrigger>
           <TabsTrigger value="community"><MessageCircle className="mr-2 h-4 w-4 sm:inline hidden"/>Community</TabsTrigger>
         </TabsList>
 
@@ -196,7 +196,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                             </p>
                         </div>
                     </div>
-                    <p className="text-xs text-muted-foreground italic">
+                     <p className="text-xs text-muted-foreground italic">
                         Note: The initial token price is fixed. During live tournaments, token valuation may fluctuate based on player performance and market dynamics on potential future secondary markets. Post-tournament, the final value per token will be determined by actual prize winnings, net of platform fees.
                     </p>
                   </div>
@@ -232,6 +232,61 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
         <TabsContent value="ai-risk">
           <AiRiskAssessmentSection tournament={tournament} initialAssessment={tournament.aiRiskAssessment} />
         </TabsContent>
+
+        <TabsContent value="security-trust">
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-headline flex items-center">
+                <ShieldCheck className="mr-2 h-6 w-6 text-primary" />
+                Security & Trust Mechanisms
+              </CardTitle>
+              <CardDescription>
+                SolCraft employs robust systems to ensure the security of investments and player accountability.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg text-foreground flex items-center">
+                  <Lock className="mr-2 h-5 w-5 text-primary" />
+                  Escrow System
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Investor funds are securely held in a multi-signature smart contract escrow. Funds for the tournament buy-in are released to the player only upon verification of tournament registration. Winnings are distributed automatically to token holders based on proportional ownership after the tournament concludes and results are verified.
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-xs text-muted-foreground pl-4">
+                  <li>Multi-signature contracts for enhanced security.</li>
+                  <li>Time-locked features for dispute resolution (future).</li>
+                  <li>Transparent audit trail of all transactions.</li>
+                </ul>
+              </div>
+              <Separator />
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg text-foreground flex items-center">
+                  <Users className="mr-2 h-5 w-5 text-primary" />
+                  Player Guarantee & Deposit System
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  To ensure accountability, players may be required to provide a guarantee deposit. The deposit amount can vary based on the player's ranking and historical performance on the platform. This system helps protect investors in case of a player failing to deliver winnings or engaging in misconduct.
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-xs text-muted-foreground pl-4">
+                  <li>Deposit requirements are higher for new or unverified players.</li>
+                  <li>Deposits may be partially or fully forfeited under specific conditions (e.g., non-delivery of prize, cheating).</li>
+                  <li>Successful prize delivery leads to deposit return and potential ranking improvement for the player.</li>
+                </ul>
+              </div>
+              <Separator />
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg text-foreground flex items-center">
+                  <HeartHandshake className="mr-2 h-5 w-5 text-primary" />
+                  Optional Investment Insurance (Future Feature)
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  SolCraft plans to integrate optional insurance for investments. For a small premium, investors may be able to protect their stake against certain risks, such as player disqualification or unforeseen technical issues affecting the tournament. This feature aims to provide an additional layer of security for investors.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         
         <TabsContent value="community">
            <Card>
@@ -250,3 +305,5 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
+
+    
