@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { mockInvestments, initialMockUserProfile } from "@/lib/mock-data"; // Keep initialMockUserProfile for fallback/structure
+import { mockInvestments, mockUserProfile } from "@/lib/mock-data"; // Keep mockUserProfile for fallback/structure
 import { InvestmentHistoryCard } from "@/components/dashboard/investment-history-card";
 import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
@@ -38,17 +38,17 @@ export default function ProfilePage() {
             setUserProfile(userDocSnap.data() as UserProfile);
           } else {
             // If no profile exists, create a basic one (e.g., if user signed up via a different method)
-            // Or use parts of initialMockUserProfile as a template for missing fields.
+            // Or use parts of mockUserProfile as a template for missing fields.
             // For now, we'll set a minimal profile and let user edit.
             const username = currentUser.email?.split('@')[0] || 'new_user';
             const basicProfile: UserProfile = {
-              ...initialMockUserProfile, // Spread to get structure and default stats
+              ...mockUserProfile, // Spread to get structure and default stats
               uid: currentUser.uid,
               email: currentUser.email || '',
               username: username,
               name: currentUser.displayName || username,
               joinedDate: currentUser.metadata.creationTime || new Date().toISOString(),
-              avatarUrl: currentUser.photoURL || initialMockUserProfile.avatarUrl,
+              avatarUrl: currentUser.photoURL || mockUserProfile.avatarUrl,
               // Reset stats for a new/empty profile unless specifically fetched
               followersCount: 0,
               followingCount: 0,
@@ -64,7 +64,7 @@ export default function ProfilePage() {
         } catch (error) {
           console.error("Error fetching user profile:", error);
           toast({ title: "Error", description: "Could not load user profile.", variant: "destructive" });
-          setUserProfile(initialMockUserProfile); // Fallback to mock on error
+          setUserProfile(mockUserProfile); // Fallback to mock on error
         }
       } else {
         setAuthUser(null);
@@ -82,7 +82,7 @@ export default function ProfilePage() {
     const newWalletAddress = `0xConnected...${selectedWalletName.substring(0,3)}`; // Placeholder
     
     setUserProfile(prevUser => ({
-      ...(prevUser || initialMockUserProfile), // Ensure prevUser is not null
+      ...(prevUser || mockUserProfile), // Ensure prevUser is not null
       isWalletConnected: true,
       walletAddress: newWalletAddress
     }));
@@ -103,12 +103,12 @@ export default function ProfilePage() {
   const handleDisconnectWallet = async () => {
     if (!authUser || !userProfile) return;
     setUserProfile(prevUser => ({
-        ...(prevUser || initialMockUserProfile),
+        ...(prevUser || mockUserProfile),
         isWalletConnected: false,
-        walletAddress: initialMockUserProfile.walletAddress // Reset to placeholder or clear
+        walletAddress: mockUserProfile.walletAddress // Reset to placeholder or clear
     }));
     try {
-        await setDoc(doc(db, "users", authUser.uid), { walletAddress: initialMockUserProfile.walletAddress, isWalletConnected: false }, { merge: true });
+        await setDoc(doc(db, "users", authUser.uid), { walletAddress: mockUserProfile.walletAddress, isWalletConnected: false }, { merge: true });
         toast({ title: "Wallet Disconnected", description: "Wallet has been disconnected and saved.", variant: "default"});
     } catch (error) {
         console.error("Error saving wallet disconnection to Firestore:", error);
@@ -149,7 +149,7 @@ export default function ProfilePage() {
   // Fallback for potentially undefined fields from Firestore
   const profileName = userProfile.name || userProfile.username || "User";
   const profileUsername = userProfile.username || "username";
-  const profileAvatarUrl = userProfile.avatarUrl || initialMockUserProfile.avatarUrl; // Fallback to placeholder image
+  const profileAvatarUrl = userProfile.avatarUrl || mockUserProfile.avatarUrl; // Fallback to placeholder image
   const profileBio = userProfile.bio || "No bio available.";
   const profileJoinedDate = userProfile.joinedDate ? format(parseISO(userProfile.joinedDate), "MMMM d, yyyy") : "N/A";
   const profileEmail = userProfile.email || "No email available";
