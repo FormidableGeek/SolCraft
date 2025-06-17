@@ -229,3 +229,4 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
+
