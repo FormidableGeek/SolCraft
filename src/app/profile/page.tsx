@@ -2,14 +2,14 @@
 // @ts-nocheck
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { mockInvestments, mockUserProfile } from "@/lib/mock-data"; // Keep mockUserProfile for fallback/structure
+import { mockInvestments, mockUserProfile } from "@/lib/mock-data";
 import { InvestmentHistoryCard } from "@/components/dashboard/investment-history-card";
-import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2 } from "lucide-react";
+import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2, Save } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ConnectWalletDialog } from "@/components/shared/connect-wallet-dialog";
 import type { UserProfile } from "@/lib/types";
@@ -18,12 +18,22 @@ import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 export default function ProfilePage() {
   const [authUser, setAuthUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isConnectWalletOpen, setIsConnectWalletOpen] = useState(false);
+  
+  // Editable fields state
+  const [editableName, setEditableName] = useState("");
+  const [editableBio, setEditableBio] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingBio, setIsEditingBio] = useState(false);
+
   const { toast } = useToast();
   const router = useRouter();
 
@@ -35,41 +45,44 @@ export default function ProfilePage() {
           const userDocRef = doc(db, "users", currentUser.uid);
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
-            setUserProfile(userDocSnap.data() as UserProfile);
+            const profileData = userDocSnap.data() as UserProfile;
+            setUserProfile(profileData);
+            setEditableName(profileData.name || profileData.username || "");
+            setEditableBio(profileData.bio || "");
           } else {
-            // If no profile exists, create a basic one (e.g., if user signed up via a different method)
-            // Or use parts of mockUserProfile as a template for missing fields.
-            // For now, we'll set a minimal profile and let user edit.
             const username = currentUser.email?.split('@')[0] || 'new_user';
             const basicProfile: UserProfile = {
-              ...mockUserProfile, // Spread to get structure and default stats
+              ...mockUserProfile, 
               uid: currentUser.uid,
               email: currentUser.email || '',
               username: username,
               name: currentUser.displayName || username,
               joinedDate: currentUser.metadata.creationTime || new Date().toISOString(),
               avatarUrl: currentUser.photoURL || mockUserProfile.avatarUrl,
-              // Reset stats for a new/empty profile unless specifically fetched
               followersCount: 0,
               followingCount: 0,
               totalInvested: 0,
               overallReturn: 0,
               ranking: undefined,
+              bio: "",
             };
-            // Optionally save this basic profile back to Firestore
-            // await setDoc(userDocRef, basicProfile); 
             setUserProfile(basicProfile);
-            toast({ title: "Profile Incomplete", description: "Please complete your profile information."});
+            setEditableName(basicProfile.name);
+            setEditableBio(basicProfile.bio || "");
+            // await setDoc(userDocRef, basicProfile); // Optionally save this basic profile back
+            // toast({ title: "Profile Incomplete", description: "Please complete your profile information."});
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
           toast({ title: "Error", description: "Could not load user profile.", variant: "destructive" });
-          setUserProfile(mockUserProfile); // Fallback to mock on error
+          setUserProfile(mockUserProfile); 
+          setEditableName(mockUserProfile.name);
+          setEditableBio(mockUserProfile.bio || "");
         }
       } else {
         setAuthUser(null);
         setUserProfile(null);
-        router.push('/login'); // Redirect to login if not authenticated
+        router.push('/login'); 
       }
       setIsLoading(false);
     });
@@ -78,14 +91,14 @@ export default function ProfilePage() {
 
   const handleConnectWallet = async (selectedWalletName: string) => {
     if (!authUser || !userProfile) return;
-    // Simulate wallet connection
-    const newWalletAddress = `0xConnected...${selectedWalletName.substring(0,3)}`; // Placeholder
+    const newWalletAddress = `0xConnected...${selectedWalletName.substring(0,3)}`; 
     
-    setUserProfile(prevUser => ({
-      ...(prevUser || mockUserProfile), // Ensure prevUser is not null
+    const updatedProfile = {
+      ...userProfile,
       isWalletConnected: true,
       walletAddress: newWalletAddress
-    }));
+    };
+    setUserProfile(updatedProfile);
 
     try {
       await setDoc(doc(db, "users", authUser.uid), { walletAddress: newWalletAddress, isWalletConnected: true }, { merge: true });
@@ -102,11 +115,12 @@ export default function ProfilePage() {
 
   const handleDisconnectWallet = async () => {
     if (!authUser || !userProfile) return;
-    setUserProfile(prevUser => ({
-        ...(prevUser || mockUserProfile),
-        isWalletConnected: false,
-        walletAddress: mockUserProfile.walletAddress // Reset to placeholder or clear
-    }));
+    const updatedProfile = {
+      ...userProfile,
+      isWalletConnected: false,
+      walletAddress: mockUserProfile.walletAddress 
+    };
+    setUserProfile(updatedProfile);
     try {
         await setDoc(doc(db, "users", authUser.uid), { walletAddress: mockUserProfile.walletAddress, isWalletConnected: false }, { merge: true });
         toast({ title: "Wallet Disconnected", description: "Wallet has been disconnected and saved.", variant: "default"});
@@ -127,6 +141,38 @@ export default function ProfilePage() {
         });
     }
   };
+  
+  const handleSaveName = async () => {
+    if (!authUser || !userProfile) return;
+    setIsSavingProfile(true);
+    try {
+      await setDoc(doc(db, "users", authUser.uid), { name: editableName }, { merge: true });
+      setUserProfile(prev => prev ? {...prev, name: editableName} : null);
+      toast({ title: "Name Updated", description: "Your name has been saved." });
+      setIsEditingName(false);
+    } catch (error) {
+      console.error("Error updating name:", error);
+      toast({ title: "Error", description: "Could not update name.", variant: "destructive" });
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  const handleSaveBio = async () => {
+    if (!authUser || !userProfile) return;
+    setIsSavingProfile(true);
+    try {
+      await setDoc(doc(db, "users", authUser.uid), { bio: editableBio }, { merge: true });
+      setUserProfile(prev => prev ? {...prev, bio: editableBio} : null);
+      toast({ title: "Bio Updated", description: "Your bio has been saved." });
+      setIsEditingBio(false);
+    } catch (error) {
+      console.error("Error updating bio:", error);
+      toast({ title: "Error", description: "Could not update bio.", variant: "destructive" });
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -138,7 +184,6 @@ export default function ProfilePage() {
   }
 
   if (!userProfile) {
-    // This case should ideally be handled by the auth redirect or a more specific "profile not found" UI
     return (
          <div className="flex justify-center items-center h-screen">
             <p className="text-lg text-muted-foreground">User profile not available. You might be logged out.</p>
@@ -146,11 +191,10 @@ export default function ProfilePage() {
     );
   }
 
-  // Fallback for potentially undefined fields from Firestore
-  const profileName = userProfile.name || userProfile.username || "User";
+  const profileNameDisplay = userProfile.name || userProfile.username || "User";
   const profileUsername = userProfile.username || "username";
-  const profileAvatarUrl = userProfile.avatarUrl || mockUserProfile.avatarUrl; // Fallback to placeholder image
-  const profileBio = userProfile.bio || "No bio available.";
+  const profileAvatarUrl = userProfile.avatarUrl || mockUserProfile.avatarUrl; 
+  const profileBioDisplay = userProfile.bio || "No bio available. Click to edit.";
   const profileJoinedDate = userProfile.joinedDate ? format(parseISO(userProfile.joinedDate), "MMMM d, yyyy") : "N/A";
   const profileEmail = userProfile.email || "No email available";
 
@@ -160,26 +204,74 @@ export default function ProfilePage() {
       <PageHeader
         title="My Profile"
         description="Manage your account details and view your investment portfolio."
-      >
-        <Button variant="outline">
-          <Edit3 className="mr-2 h-4 w-4" /> Edit Profile (Coming Soon)
-        </Button>
-      </PageHeader>
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 space-y-6">
           <Card>
             <CardHeader className="items-center text-center">
               <Avatar className="h-24 w-24 mb-4 border-4 border-primary">
-                <AvatarImage src={profileAvatarUrl} alt={profileName} data-ai-hint="profile picture" />
-                <AvatarFallback>{profileName.substring(0, 2).toUpperCase()}</AvatarFallback>
+                <AvatarImage src={profileAvatarUrl} alt={profileNameDisplay} data-ai-hint="profile picture" />
+                <AvatarFallback>{profileNameDisplay.substring(0, 2).toUpperCase()}</AvatarFallback>
               </Avatar>
-              <CardTitle className="font-headline text-2xl">{profileName}</CardTitle>
+              {isEditingName ? (
+                <div className="flex items-center gap-2 w-full max-w-xs mx-auto">
+                  <Input 
+                    value={editableName} 
+                    onChange={(e) => setEditableName(e.target.value)} 
+                    className="text-center text-2xl font-headline"
+                    disabled={isSavingProfile}
+                  />
+                  <Button onClick={handleSaveName} size="icon" disabled={isSavingProfile}>
+                    {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                  </Button>
+                  <Button onClick={() => { setIsEditingName(false); setEditableName(userProfile.name || ""); }} variant="ghost" size="icon" disabled={isSavingProfile}>
+                     X
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 justify-center">
+                  <CardTitle className="font-headline text-2xl">{profileNameDisplay}</CardTitle>
+                  <Button variant="ghost" size="icon" onClick={() => setIsEditingName(true)} className="h-6 w-6">
+                    <Edit3 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
               <CardDescription>@{profileUsername}</CardDescription>
             </CardHeader>
-            <CardContent className="text-sm space-y-2">
-              {userProfile.bio && <p className="text-muted-foreground text-center italic">{profileBio}</p>}
-              <div className="flex items-center">
+            <CardContent className="text-sm space-y-3">
+               <div>
+                {isEditingBio ? (
+                  <div className="space-y-2">
+                    <Textarea
+                      value={editableBio}
+                      onChange={(e) => setEditableBio(e.target.value)}
+                      placeholder="Tell us about yourself..."
+                      rows={3}
+                      disabled={isSavingProfile}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <Button onClick={handleSaveBio} size="sm" disabled={isSavingProfile}>
+                        {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Save className="h-4 w-4 mr-1" />} Save Bio
+                      </Button>
+                      <Button onClick={() => { setIsEditingBio(false); setEditableBio(userProfile.bio || ""); }} variant="ghost" size="sm" disabled={isSavingProfile}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-start gap-2 group">
+                    <p className="text-muted-foreground italic flex-grow cursor-pointer group-hover:text-foreground" onClick={() => setIsEditingBio(true)}>
+                      {editableBio || "No bio available. Click to edit."}
+                    </p>
+                    <Button variant="ghost" size="icon" onClick={() => setIsEditingBio(true)} className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                       <Edit3 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center pt-2">
                 <Mail className="h-4 w-4 mr-2 text-muted-foreground" />
                 <span>{profileEmail}</span>
               </div>
@@ -255,7 +347,6 @@ export default function ProfilePage() {
 
         <div className="lg:col-span-2">
           <InvestmentHistoryCard investments={mockInvestments} limit={10} />
-           {/* Could add more cards here: e.g., Achievements, Watchlist, Settings */}
         </div>
       </div>
       <ConnectWalletDialog
@@ -266,3 +357,5 @@ export default function ProfilePage() {
     </>
   );
 }
+
+    
