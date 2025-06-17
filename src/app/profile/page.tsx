@@ -2,14 +2,14 @@
 // @ts-nocheck
 'use client';
 
-import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent, useRef } from "react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { mockInvestments, mockUserProfile } from "@/lib/mock-data";
 import { InvestmentHistoryCard } from "@/components/dashboard/investment-history-card";
-import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2, Save, Upload } from "lucide-react";
+import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2, Save, Upload, X } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ConnectWalletDialog } from "@/components/shared/connect-wallet-dialog";
 import type { UserProfile } from "@/lib/types";
@@ -35,7 +35,7 @@ export default function ProfilePage() {
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
 
-  const avatarInputRef = React.useRef<HTMLInputElement>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
   const router = useRouter();
@@ -145,10 +145,29 @@ export default function ProfilePage() {
   
   const handleSaveName = async () => {
     if (!authUser || !userProfile) return;
+
+    const trimmedName = editableName.trim();
+    if (!trimmedName) {
+      toast({
+        title: "Validation Error",
+        description: "Name cannot be empty.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (trimmedName.length > 50) {
+      toast({
+        title: "Validation Error",
+        description: "Name cannot exceed 50 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSavingProfile(true);
     try {
-      await setDoc(doc(db, "users", authUser.uid), { name: editableName }, { merge: true });
-      setUserProfile(prev => prev ? {...prev, name: editableName} : null);
+      await setDoc(doc(db, "users", authUser.uid), { name: trimmedName }, { merge: true });
+      setUserProfile(prev => prev ? {...prev, name: trimmedName} : null);
       toast({ title: "Name Updated", description: "Your name has been saved." });
       setIsEditingName(false);
     } catch (error) {
@@ -161,6 +180,16 @@ export default function ProfilePage() {
 
   const handleSaveBio = async () => {
     if (!authUser || !userProfile) return;
+
+    if (editableBio.length > 500) {
+      toast({
+        title: "Validation Error",
+        description: "Bio cannot exceed 500 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSavingProfile(true);
     try {
       await setDoc(doc(db, "users", authUser.uid), { bio: editableBio }, { merge: true });
@@ -284,7 +313,7 @@ export default function ProfilePage() {
                     {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                   </Button>
                   <Button onClick={() => { setIsEditingName(false); setEditableName(userProfile.name || ""); }} variant="ghost" size="icon" disabled={isSavingProfile}>
-                     X
+                     <X className="h-4 w-4"/>
                   </Button>
                 </div>
               ) : (
@@ -309,20 +338,20 @@ export default function ProfilePage() {
                       disabled={isSavingProfile}
                     />
                     <div className="flex justify-end gap-2">
+                       <Button onClick={() => { setIsEditingBio(false); setEditableBio(userProfile.bio || ""); }} variant="ghost" size="sm" disabled={isSavingProfile}>
+                        Cancel
+                      </Button>
                       <Button onClick={handleSaveBio} size="sm" disabled={isSavingProfile}>
                         {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Save className="h-4 w-4 mr-1" />} Save Bio
-                      </Button>
-                      <Button onClick={() => { setIsEditingBio(false); setEditableBio(userProfile.bio || ""); }} variant="ghost" size="sm" disabled={isSavingProfile}>
-                        Cancel
                       </Button>
                     </div>
                   </div>
                 ) : (
                   <div className="flex items-start gap-2 group">
-                    <p className="text-muted-foreground italic flex-grow cursor-pointer group-hover:text-foreground" onClick={() => setIsEditingBio(true)}>
+                    <p className="text-muted-foreground italic flex-grow cursor-pointer group-hover:text-foreground whitespace-pre-wrap min-h-[40px]" onClick={() => setIsEditingBio(true)}>
                       {profileBioDisplay}
                     </p>
-                    <Button variant="ghost" size="icon" onClick={() => setIsEditingBio(true)} className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="icon" onClick={() => setIsEditingBio(true)} className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                        <Edit3 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -415,3 +444,5 @@ export default function ProfilePage() {
     </>
   );
 }
+
+    
