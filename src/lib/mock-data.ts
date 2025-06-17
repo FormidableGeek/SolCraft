@@ -1,5 +1,6 @@
 
-import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
+import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails, PoolState, TournamentAllocation, PlayerDeposit, SubPoolState } from './types';
+import { PlayerRank } from './types'; // Import PlayerRank
 import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity, DollarSign, Users, CalendarDays, TrendingUp } from 'lucide-react';
 
 const defaultTokenPrice = 1; // Assuming $1 per token for easy calculation
@@ -432,3 +433,134 @@ mockTournaments.forEach(t => {
     };
   }
 });
+
+
+// ---- Mock Data for Pool Architecture ----
+
+export const mockPoolState: PoolState = {
+  totalDeposits: 500000,
+  activeTournamentsFunded: 15,
+  availableLiquidity: 150000,
+  pendingWithdrawals: 5000,
+  totalReturnsGenerated: 75000,
+};
+
+export const mockTournamentAllocations: TournamentAllocation[] = [
+  {
+    id: 'alloc1',
+    tournamentId: mockTournaments[0].id, // Solana Summer Showdown
+    tournamentName: mockTournaments[0].name,
+    allocatedAmount: mockTournaments[0].buyIn * (mockTournaments[0].participants?.current || 0), // Example: current players fully funded
+    status: 'Funding',
+    expectedReturnRate: 25, // 25%
+    numberOfInvestors: (mockTournaments[0].participants?.current || 0) / 2, // Example
+  },
+  {
+    id: 'alloc2',
+    tournamentId: mockTournaments[1].id, // Crypto Poker Masters
+    tournamentName: mockTournaments[1].name,
+    allocatedAmount: mockTournaments[1].buyIn * (mockTournaments[1].participants?.current || 0),
+    status: 'Active',
+    expectedReturnRate: 50, // 50%
+    numberOfInvestors: (mockTournaments[1].participants?.current || 0) / 3, // Example
+  },
+  {
+    id: 'alloc3',
+    tournamentId: mockTournaments[2].id, // Weekly Wednesday Freeroll
+    tournamentName: mockTournaments[2].name,
+    allocatedAmount: 0, // Freeroll
+    status: 'Completed',
+    actualReturnAmount: 50, // Example net return to pool after distribution
+    numberOfInvestors: (mockTournaments[2].participants?.current || 0),
+  },
+];
+
+export const mockPlayerDeposits: PlayerDeposit[] = [
+  {
+    id: 'deposit1',
+    playerId: mockSocialPlayers[0].uid, // Ace High
+    playerName: mockSocialPlayers[0].name,
+    playerRank: PlayerRank.PLATINUM,
+    depositAmount: 500, // Platinum might deposit for a high-stakes game
+    currency: 'USD',
+    tournamentId: mockTournaments[1].id, // Crypto Poker Masters
+    status: 'Locked',
+    depositDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+  },
+  {
+    id: 'deposit2',
+    playerId: mockSocialPlayers[1].uid, // Bluff Queen
+    playerName: mockSocialPlayers[1].name,
+    playerRank: PlayerRank.GOLD,
+    depositAmount: 100,
+    currency: 'USD',
+    tournamentId: mockTournaments[0].id, // Solana Summer Showdown
+    status: 'Locked',
+    depositDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+  },
+  {
+    id: 'deposit3',
+    playerId: mockSocialPlayers[2].uid, // Grind Master
+    playerName: mockSocialPlayers[2].name,
+    playerRank: PlayerRank.SILVER,
+    depositAmount: 50,
+    currency: 'USD',
+    tournamentId: mockTournaments[3].id, // Nightly Turbo Challenge
+    status: 'Locked',
+    depositDate: new Date().toISOString(), // Today
+  },
+  {
+    id: 'deposit4',
+    playerId: 'newPlayerUID',
+    playerName: 'New Player',
+    playerRank: PlayerRank.UNVERIFIED,
+    depositAmount: 75, // Unverified might have higher relative deposit
+    currency: 'USD',
+    tournamentId: mockTournaments[3].id,
+    status: 'Pending', // Pending verification
+    depositDate: new Date().toISOString(),
+  },
+];
+
+export const mockSubPoolStates: SubPoolState[] = [
+  {
+    rankCategory: PlayerRank.PLATINUM,
+    totalDeposits: 10000,
+    totalLockedFunds: mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.PLATINUM && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    availableForWithdrawal: 10000 - mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.PLATINUM && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    totalPenaltyFundsCollected: 50,
+    numberOfPlayers: mockSocialPlayers.filter(p => p.currentInvestmentTierName === "Platinum Access").length + 1, // Example
+  },
+  {
+    rankCategory: PlayerRank.GOLD,
+    totalDeposits: 25000,
+    totalLockedFunds: mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.GOLD && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    availableForWithdrawal: 25000 - mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.GOLD && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    totalPenaltyFundsCollected: 200,
+    numberOfPlayers: mockSocialPlayers.filter(p => p.currentInvestmentTierName === "Gold Access").length + 5, // Example
+  },
+  {
+    rankCategory: PlayerRank.SILVER,
+    totalDeposits: 50000,
+    totalLockedFunds: mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.SILVER && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    availableForWithdrawal: 50000 - mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.SILVER && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    totalPenaltyFundsCollected: 500,
+    numberOfPlayers: mockSocialPlayers.filter(p => p.currentInvestmentTierName === "Silver Access").length + 10, // Example
+  },
+  {
+    rankCategory: PlayerRank.BRONZE,
+    totalDeposits: 30000,
+    totalLockedFunds: 0, // No mock deposits for Bronze yet
+    availableForWithdrawal: 30000,
+    totalPenaltyFundsCollected: 300,
+    numberOfPlayers: 20, // Example
+  },
+  {
+    rankCategory: PlayerRank.UNVERIFIED,
+    totalDeposits: 5000,
+    totalLockedFunds: mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.UNVERIFIED && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    availableForWithdrawal: 5000 - mockPlayerDeposits.filter(d => d.playerRank === PlayerRank.UNVERIFIED && d.status === 'Locked').reduce((sum, d) => sum + d.depositAmount, 0),
+    totalPenaltyFundsCollected: 100,
+    numberOfPlayers: 5, // Example
+  },
+];
