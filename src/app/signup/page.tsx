@@ -14,6 +14,7 @@ import { createUserWithEmailAndPassword, type User } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase'; // Import db
 import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import { useToast } from '@/hooks/use-toast';
+import type { UserProfile } from '@/lib/types';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -34,22 +35,24 @@ export default function SignupPage() {
       return;
     }
     const username = firebaseUser.email.split('@')[0];
-    const userProfileData = {
+    const userProfileData: UserProfile = {
       uid: firebaseUser.uid,
       email: firebaseUser.email,
       username: username,
-      name: username, // Default name to username
-      joinedDate: new Date().toISOString(),
-      avatarUrl: '', // Initialize with empty or default avatar
+      name: firebaseUser.displayName || username,
+      joinedDate: firebaseUser.metadata.creationTime || new Date().toISOString(),
+      avatarUrl: firebaseUser.photoURL || '',
       bio: '',
       isWalletConnected: false,
       walletAddress: '',
-      balance: { amount: 0, currency: 'USD' }, // Initial balance
+      balance: { amount: 0, currency: 'USD' },
       followersCount: 0,
       followingCount: 0,
       totalInvested: 0,
       overallReturn: 0,
-      ranking: null,
+      ranking: null, // Or undefined, based on how you want to handle "no rank"
+      currentInvestmentTierName: "Bronze Access", // Default tier
+      id: firebaseUser.uid, // Ensure id is set, often same as uid for users collection
     };
 
     try {

@@ -1,6 +1,6 @@
 
 import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails } from './types';
-import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity, DollarSign, Users, CalendarDays, TrendingUp } from 'lucide-react'; // Added Crown, TierTrendingUp, Activity
+import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity, DollarSign, Users, CalendarDays, TrendingUp } from 'lucide-react';
 
 const defaultTokenPrice = 1; // Assuming $1 per token for easy calculation
 
@@ -18,7 +18,7 @@ export const mockTournaments: Tournament[] = [
     platform: 'Solana Poker Club',
     averagePlayers: 150,
     historicalData: 'Previous similar tournaments had an average ROI of 25% for top 10% players. Payout structure is typically top 15% get paid.',
-    aiRiskAssessment: { // Added mock AI risk assessment
+    aiRiskAssessment: { 
       riskLevel: 'Medium',
       riskFactors: ['Highly competitive field', 'Standard payout structure means many won\'t cash'],
       investmentRecommendation: 'Consider for a small to medium portion of portfolio if comfortable with medium risk.',
@@ -28,9 +28,9 @@ export const mockTournaments: Tournament[] = [
       isTokenized: true,
       tokenTicker: 'SSS',
       tokenPrice: defaultTokenPrice,
-      totalTokenSupply: 100 / defaultTokenPrice, // 100 tokens
-      minInvestmentTokens: 10, // $10
-      maxInvestmentTokens: 100 / defaultTokenPrice, // $100 (full backing)
+      totalTokenSupply: 100 / defaultTokenPrice, 
+      minInvestmentTokens: 10, 
+      maxInvestmentTokens: 100 / defaultTokenPrice, 
     },
     isCompleted: false,
   },
@@ -78,7 +78,6 @@ export const mockTournaments: Tournament[] = [
     historicalData: 'Freerolls attract a wide range of skill levels. Payouts are small but frequent for top finishers.',
     isCompleted: true,
     prizeWon: 1000,
-    // No tokenization for freeroll
   },
   {
     id: '4',
@@ -100,7 +99,7 @@ export const mockTournaments: Tournament[] = [
         potentialReturn: '1x - 5x on cashing.',
     },
     tokenizationDetails: {
-      isTokenized: false, // Let's say this one isn't tokenized for variety
+      isTokenized: false, 
       tokenTicker: 'NTC',
       tokenPrice: defaultTokenPrice,
       totalTokenSupply: 0,
@@ -174,8 +173,8 @@ export const mockInvestmentTiers: InvestmentTier[] = [
 
 
 export const mockUserProfile: UserProfile = {
-  id: 'user123',
-  uid: 'user123',
+  id: 'user123', // Usually matches uid
+  uid: 'user123', // Firebase Auth UID
   email: 'stakeoshi@example.com',
   name: 'Satoshi Stakeoshi',
   username: 'Stakeoshi',
@@ -184,8 +183,8 @@ export const mockUserProfile: UserProfile = {
   joinedDate: new Date('2023-01-15').toISOString(),
   followersCount: 1250,
   followingCount: 300,
-  totalInvested: 15000,
-  overallReturn: 25.5, // percentage
+  totalInvested: 650, // Sum of inv1 (100) + inv3 (500) + inv4 (50)
+  overallReturn: 25.5, // Example percentage
   ranking: 42,
   isWalletConnected: true,
   walletAddress: 'sol...4x2z',
@@ -196,7 +195,7 @@ export const mockUserProfile: UserProfile = {
 export const mockInvestments: Investment[] = [
   {
     id: 'inv1',
-    investorId: mockUserProfile.id,
+    investorId: mockUserProfile.id, // Link to the mock user
     tournamentId: '1',
     tournamentName: 'Solana Summer Showdown',
     tierName: 'Silver Access',
@@ -208,37 +207,37 @@ export const mockInvestments: Investment[] = [
   },
   {
     id: 'inv2',
-    investorId: mockUserProfile.id,
+    investorId: mockUserProfile.id, // Link to the mock user
     tournamentId: '3',
     tournamentName: 'Weekly Wednesday Freeroll',
     tierName: 'Bronze Access',
-    investmentValueUSD: 0,
+    investmentValueUSD: 0, // Freeroll
     tokenAmount: 0,
     investmentDate: new Date('2024-07-15').toISOString(),
     status: 'Cashed Out',
-    returnOnInvestment: 20,
+    returnOnInvestment: 20, // Won $20
   },
   {
     id: 'inv3',
-    investorId: mockUserProfile.id,
+    investorId: mockUserProfile.id, // Link to the mock user
     tournamentName: 'Old Crypto Challenge',
-    tournamentId: 'old_tourney_123',
+    tournamentId: 'old_tourney_123', // A made-up ID for an older tournament
     tierName: 'Gold Access',
     investmentValueUSD: 500,
     tokenAmount: 500,
     investmentDate: new Date('2024-06-01').toISOString(),
     status: 'Lost',
-    returnOnInvestment: -500,
+    returnOnInvestment: -500, // Lost the full amount
   },
    {
     id: 'inv4',
-    investorId: mockUserProfile.id,
+    investorId: mockUserProfile.id, // Link to the mock user
     tournamentId: '4',
     tournamentName: 'Nightly Turbo Challenge',
     tierName: 'Silver Access',
     investmentValueUSD: 50,
     tokenAmount: 50,
-    investmentDate: new Date().toISOString(),
+    investmentDate: new Date().toISOString(), // Today
     status: 'Active',
     currentValue: 50, // No change yet as it's live
   },
@@ -337,15 +336,15 @@ export const riskLevelColorMap = {
 };
 
 export const priorityIconMap = {
-    "First access to high-value tournaments.": Gem, // Platinum
-    "Early access to select tournaments.": Star, // Gold
-    "Standard access to a wider range of tournaments.": Award, // Silver
-    "Basic access to available tournaments.": Zap, // Bronze
+    "First access to high-value tournaments.": Gem, 
+    "Early access to select tournaments.": Star, 
+    "Standard access to a wider range of tournaments.": Award, 
+    "Basic access to available tournaments.": Zap, 
 };
 
 export const pageSpinnerStyle = "h-8 w-8 animate-spin text-primary";
 
-// Mock data for the new dashboard UI (Figma design)
+
 export const mockPortfolioAllocation: PortfolioAllocationItem[] = [
   { name: 'Bitcoin', value: 40, color: 'hsl(var(--chart-1))' },
   { name: 'Tether', value: 20, color: 'hsl(var(--chart-2))' },
@@ -354,18 +353,34 @@ export const mockPortfolioAllocation: PortfolioAllocationItem[] = [
   { name: 'Doge', value: 5, color: 'hsl(var(--chart-5))' },
 ];
 
-// Solcraft specific key metrics
+
+// This is now a fallback/default structure. The dashboard page will generate its own metrics.
 export const mockKeyMetrics: KeyMetric[] = [
-  { id: 'active-investments', label: 'Active Investments:', value: mockInvestments.filter(inv => inv.status === 'Active').length.toString(), icon: Activity },
-  { id: 'total-invested', label: 'Total Invested:', value: `$${mockUserProfile.totalInvested.toLocaleString()}`, icon: DollarSign },
+  { 
+    id: 'active-investments', 
+    label: 'Active Investments:', 
+    value: '0', // Default, will be updated dynamically
+    icon: Activity 
+  },
+  { 
+    id: 'total-invested', 
+    label: 'Total Invested:', 
+    value: '$0', // Default
+    icon: Award // Changed from DollarSign to Award
+  },
   { 
     id: 'lifetime-roi', 
     label: 'Lifetime ROI:', 
-    value: `${mockUserProfile.overallReturn.toFixed(1)}%`, 
+    value: '0.0%', // Default
     icon: TrendingUp, 
-    valueClassName: mockUserProfile.overallReturn >= 0 ? "text-green-500" : "text-red-500" 
+    valueClassName: "text-foreground" // Default color
   },
-  { id: 'current-tier', label: 'Current Tier:', value: mockUserProfile.currentInvestmentTierName || "N/A", icon: Crown },
+  { 
+    id: 'current-tier', 
+    label: 'Current Tier:', 
+    value: "N/A", // Default
+    icon: Crown 
+  },
 ];
 
 
@@ -387,36 +402,16 @@ export const mockRecentActivity: RecentActivity[] = [
 ];
 
 export const mockFigmaPortfolioPerformance = [
-  { name: 'Day 1', value: 300 },
-  { name: 'Day 2', value: 450 },
-  { name: 'Day 3', value: 280 },
-  { name: 'Day 4', value: 600 },
-  { name: 'Day 5', value: 400 },
-  { name: 'Day 6', value: 750 },
-  { name: 'Day 7', value: 500 },
-  { name: 'Day 8', value: 550 },
-  { name: 'Day 9', value: 620 },
-  { name: 'Day 10', value: 480 },
-  { name: 'Day 11', value: 700 },
-  { name: 'Day 12', value: 650 },
-  { name: 'Day 13', value: 800 },
-  { name: 'Day 14', value: 720 },
-  { name: 'Day 15', value: 600 },
-  { name: 'Day 16', value: 680 },
-  { name: 'Day 17', value: 750 },
-  { name: 'Day 18', value: 820 },
-  { name: 'Day 19', value: 780 },
-  { name: 'Day 20', value: 850 },
-  { name: 'Day 21', value: 900 },
-  { name: 'Day 22', value: 800 },
-  { name: 'Day 23', value: 880 },
-  { name: 'Day 24', value: 920 },
-  { name: 'Day 25', value: 850 },
-  { name: 'Day 26', value: 950 },
-  { name: 'Day 27', value: 1000 },
-  { name: 'Day 28', value: 930 },
-  { name: 'Day 29', value: 980 },
-  { name: 'Day 30', value: 1050 },
+  { name: 'Day 1', value: 300 }, { name: 'Day 2', value: 450 }, { name: 'Day 3', value: 280 },
+  { name: 'Day 4', value: 600 }, { name: 'Day 5', value: 400 }, { name: 'Day 6', value: 750 },
+  { name: 'Day 7', value: 500 }, { name: 'Day 8', value: 550 }, { name: 'Day 9', value: 620 },
+  { name: 'Day 10', value: 480 }, { name: 'Day 11', value: 700 }, { name: 'Day 12', value: 650 },
+  { name: 'Day 13', value: 800 }, { name: 'Day 14', value: 720 }, { name: 'Day 15', value: 600 },
+  { name: 'Day 16', value: 680 }, { name: 'Day 17', value: 750 }, { name: 'Day 18', value: 820 },
+  { name: 'Day 19', value: 780 }, { name: 'Day 20', value: 850 }, { name: 'Day 21', value: 900 },
+  { name: 'Day 22', value: 800 }, { name: 'Day 23', value: 880 }, { name: 'Day 24', value: 920 },
+  { name: 'Day 25', value: 850 }, { name: 'Day 26', value: 950 }, { name: 'Day 27', value: 1000 },
+  { name: 'Day 28', value: 930 }, { name: 'Day 29', value: 980 }, { name: 'Day 30', value: 1050 },
 ];
 
 export const roadmapItems: RoadmapItemProps[] = [
@@ -427,7 +422,6 @@ export const roadmapItems: RoadmapItemProps[] = [
   { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true }
 ];
 
-// Ensure mockTournaments have aiRiskAssessment if it's used by TournamentCard by default
 mockTournaments.forEach(t => {
   if (!t.aiRiskAssessment && (t.status === 'Upcoming' || t.status === 'Live')) {
     t.aiRiskAssessment = {
