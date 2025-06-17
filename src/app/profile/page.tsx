@@ -2,21 +2,22 @@
 // @ts-nocheck
 'use client';
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { mockInvestments, mockUserProfile } from "@/lib/mock-data";
 import { InvestmentHistoryCard } from "@/components/dashboard/investment-history-card";
-import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2, Save } from "lucide-react";
+import { Edit3, Mail, CalendarDays, DollarSign, TrendingUp, Wallet, CheckCircle, Copy, Loader2, Save, Upload } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ConnectWalletDialog } from "@/components/shared/connect-wallet-dialog";
 import type { UserProfile } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
-import { auth, db } from "@/lib/firebase";
+import { auth, db, storage } from "@/lib/firebase"; // Import storage
 import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage"; // Import storage functions
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -26,13 +27,15 @@ export default function ProfilePage() {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [isConnectWalletOpen, setIsConnectWalletOpen] = useState(false);
   
-  // Editable fields state
   const [editableName, setEditableName] = useState("");
   const [editableBio, setEditableBio] = useState("");
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
+
+  const avatarInputRef = React.useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
   const router = useRouter();
@@ -69,8 +72,6 @@ export default function ProfilePage() {
             setUserProfile(basicProfile);
             setEditableName(basicProfile.name);
             setEditableBio(basicProfile.bio || "");
-            // await setDoc(userDocRef, basicProfile); // Optionally save this basic profile back
-            // toast({ title: "Profile Incomplete", description: "Please complete your profile information."});
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
@@ -174,6 +175,42 @@ export default function ProfilePage() {
     }
   };
 
+  const handleAvatarFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+    const file = event.target.files[0];
+    if (!authUser) {
+      toast({ title: "Not Authenticated", description: "You must be logged in to upload an avatar.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      toast({ title: "File too large", description: "Avatar image must be less than 5MB.", variant: "destructive" });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const avatarFilePath = `avatars/${authUser.uid}/${file.name}`;
+      const fileRef = storageRef(storage, avatarFilePath);
+      await uploadBytes(fileRef, file);
+      const downloadURL = await getDownloadURL(fileRef);
+
+      await setDoc(doc(db, "users", authUser.uid), { avatarUrl: downloadURL }, { merge: true });
+      setUserProfile(prev => prev ? { ...prev, avatarUrl: downloadURL } : null);
+      toast({ title: "Avatar Updated", description: "Your new avatar has been saved." });
+    } catch (error) {
+      console.error("Error uploading avatar:", error);
+      toast({ title: "Upload Failed", description: "Could not upload your avatar. Please try again.", variant: "destructive" });
+    } finally {
+      setIsUploadingAvatar(false);
+      if(avatarInputRef.current) {
+        avatarInputRef.current.value = ""; // Reset file input
+      }
+    }
+  };
+
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -193,7 +230,7 @@ export default function ProfilePage() {
 
   const profileNameDisplay = userProfile.name || userProfile.username || "User";
   const profileUsername = userProfile.username || "username";
-  const profileAvatarUrl = userProfile.avatarUrl || mockUserProfile.avatarUrl; 
+  const profileAvatarUrl = userProfile.avatarUrl || `https://placehold.co/100x100.png?text=${profileNameDisplay.substring(0,1).toUpperCase()}`; 
   const profileBioDisplay = userProfile.bio || "No bio available. Click to edit.";
   const profileJoinedDate = userProfile.joinedDate ? format(parseISO(userProfile.joinedDate), "MMMM d, yyyy") : "N/A";
   const profileEmail = userProfile.email || "No email available";
@@ -210,10 +247,31 @@ export default function ProfilePage() {
         <div className="lg:col-span-1 space-y-6">
           <Card>
             <CardHeader className="items-center text-center">
-              <Avatar className="h-24 w-24 mb-4 border-4 border-primary">
-                <AvatarImage src={profileAvatarUrl} alt={profileNameDisplay} data-ai-hint="profile picture" />
-                <AvatarFallback>{profileNameDisplay.substring(0, 2).toUpperCase()}</AvatarFallback>
-              </Avatar>
+              <div className="relative group">
+                <Avatar className="h-24 w-24 mb-2 border-4 border-primary group-hover:opacity-75 transition-opacity">
+                  <AvatarImage src={profileAvatarUrl} alt={profileNameDisplay} data-ai-hint="profile picture" />
+                  <AvatarFallback>{profileNameDisplay.substring(0, 2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="absolute bottom-2 right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background"
+                  onClick={() => avatarInputRef.current?.click()}
+                  disabled={isUploadingAvatar}
+                  aria-label="Upload new avatar"
+                >
+                  {isUploadingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                </Button>
+                <input 
+                  type="file" 
+                  ref={avatarInputRef} 
+                  onChange={handleAvatarFileChange} 
+                  accept="image/png, image/jpeg, image/gif" 
+                  className="hidden" 
+                  disabled={isUploadingAvatar}
+                />
+              </div>
+
               {isEditingName ? (
                 <div className="flex items-center gap-2 w-full max-w-xs mx-auto">
                   <Input 
@@ -230,9 +288,9 @@ export default function ProfilePage() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 justify-center">
-                  <CardTitle className="font-headline text-2xl">{profileNameDisplay}</CardTitle>
-                  <Button variant="ghost" size="icon" onClick={() => setIsEditingName(true)} className="h-6 w-6">
+                <div className="flex items-center gap-2 justify-center group">
+                  <CardTitle className="font-headline text-2xl cursor-pointer group-hover:text-primary" onClick={() => setIsEditingName(true)}>{profileNameDisplay}</CardTitle>
+                  <Button variant="ghost" size="icon" onClick={() => setIsEditingName(true)} className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Edit3 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -262,7 +320,7 @@ export default function ProfilePage() {
                 ) : (
                   <div className="flex items-start gap-2 group">
                     <p className="text-muted-foreground italic flex-grow cursor-pointer group-hover:text-foreground" onClick={() => setIsEditingBio(true)}>
-                      {editableBio || "No bio available. Click to edit."}
+                      {profileBioDisplay}
                     </p>
                     <Button variant="ghost" size="icon" onClick={() => setIsEditingBio(true)} className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
                        <Edit3 className="h-4 w-4" />
@@ -357,5 +415,3 @@ export default function ProfilePage() {
     </>
   );
 }
-
-    

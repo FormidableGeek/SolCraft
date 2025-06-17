@@ -523,18 +523,17 @@ const sidebarMenuButtonVariants = cva(
 )
 
 export interface SidebarMenuButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, // For when it's a button
-    React.AnchorHTMLAttributes<HTMLAnchorElement>, // For when it's an anchor (via Link asChild)
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof sidebarMenuButtonVariants> {
   asChild?: boolean;
   isActive?: boolean;
 }
 
 const SidebarMenuButton = React.forwardRef<HTMLElement, SidebarMenuButtonProps>(
-  ({ className, variant, size, asChild = false, isActive = false, children, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, isActive = false, children, ...rest }, ref) => {
     const Comp = asChild ? Slot : "button";
-    // If it's a button and type is not provided, default to "button"
-    const buttonType = Comp === "button" && !props.type ? { type: "button" } : {};
+    const buttonTypeProps = Comp === "button" && !rest.type ? { type: "button" as "button" } : {};
 
     return (
       <Comp
@@ -543,8 +542,8 @@ const SidebarMenuButton = React.forwardRef<HTMLElement, SidebarMenuButtonProps>(
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...buttonType} // Spread buttonType only if it's a button
-        {...props} // Spread the rest of the props
+        {...buttonTypeProps}
+        {...rest}
       >
         {children}
       </Comp>
