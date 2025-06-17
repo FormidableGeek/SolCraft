@@ -8,7 +8,7 @@ import { mockTournaments, mockInvestmentTiers } from "@/lib/mock-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadgeIcon } from "lucide-react"; // Added Layers3, BarChartHorizontalBig
+import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadge } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { Tournament } from "@/lib/types";
 import { format, parseISO } from "date-fns";
@@ -61,7 +61,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
               {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
                 <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-md mt-4">
                   <h3 className="font-semibold text-green-700 dark:text-green-400 flex items-center">
-                    <CheckBadgeIcon className="h-5 w-5 mr-2" /> {/* Using a generic check badge icon */}
+                    <CheckBadge className="h-5 w-5 mr-2" />
                     Tournament Completed!
                   </h3>
                   <p className="text-sm text-green-600 dark:text-green-300 mt-1">
@@ -238,7 +238,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
             <CardHeader>
               <CardTitle className="font-headline">Community Discussion</CardTitle>
                <CardDescription>See what others are saying about this tournament.</CardDescription>
-            </Header>
+            </CardHeader>
             <CardContent className="text-center py-12">
               <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground" />
               <p className="mt-4 text-lg font-medium text-muted-foreground">Community features coming soon!</p>
@@ -250,3 +250,4 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
+

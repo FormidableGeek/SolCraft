@@ -2,7 +2,7 @@
 import Image from "next/image";
 import type { Tournament } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Users, DollarSign, ShieldCheck, ShieldAlert, Shield, Info, TrophyIcon as TrophyIconLucide, CheckBadgeIcon } from "lucide-react"; // Changed TrophyIcon import
+import { CalendarDays, Users, DollarSign, ShieldCheck, ShieldAlert, Shield, Info, TrophyIcon as TrophyIconLucide, CheckBadge } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 interface TournamentDetailHeaderProps {
@@ -14,8 +14,8 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
   const getStatusPillClasses = (status: Tournament['status']) => {
     switch (status) {
       case 'Upcoming': return "bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700";
-      case 'Live': return "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700"; // Changed Live to yellow
-      case 'Finished': return "bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700"; // Changed Finished to green
+      case 'Live': return "bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700";
+      case 'Finished': return "bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700";
       default: return "bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-700/30 dark:text-gray-300 dark:border-gray-500";
     }
   };
@@ -54,7 +54,7 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
           />
         ) : (
           <div className="bg-muted w-full h-full flex items-center justify-center">
-            <TrophyIconLucide className="w-24 h-24 text-muted-foreground" /> {/* Using imported Lucide icon */}
+            <TrophyIconLucide className="w-24 h-24 text-muted-foreground" />
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -84,7 +84,7 @@ export function TournamentDetailHeader({ tournament }: TournamentDetailHeaderPro
         )}
         {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
            <div className={`flex items-center space-x-2 p-3 rounded-lg border ${getRiskPillClasses('Low')}`}> {/* Assuming 'Low' risk style for prize display */}
-            <CheckBadgeIcon className="h-5 w-5 text-green-500" />
+            <CheckBadge className="h-5 w-5 text-green-500" />
             <span className="font-medium">Prize Won: ${tournament.prizeWon.toLocaleString()}</span>
           </div>
         )}
@@ -114,5 +114,3 @@ function InfoPill({ Icon, label, value }: InfoPillProps) {
     </div>
   );
 }
-
-// Removed local TrophyIcon as we import from lucide-react now
