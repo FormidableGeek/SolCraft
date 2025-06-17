@@ -106,6 +106,7 @@ export const mockUserProfile: UserProfile = {
   ranking: 42,
   isWalletConnected: false,
   walletAddress: '1aB2c3D4e5F6g7H8i9J0kLmWnO9PqRsTuVwXyZ', // Example, not real
+  balance: { amount: 1000000, currency: 'USD' }, // Added based on mockBalance
 };
 
 export const mockInvestments: Investment[] = [

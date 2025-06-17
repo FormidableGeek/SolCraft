@@ -44,7 +44,7 @@ export default function SignupPage() {
       bio: '',
       isWalletConnected: false,
       walletAddress: '',
-      // Stats fields will be absent initially or can be defaulted to 0/null if needed
+      balance: { amount: 0, currency: 'USD' }, // Initial balance
       followersCount: 0,
       followingCount: 0,
       totalInvested: 0,

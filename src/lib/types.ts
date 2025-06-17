@@ -52,6 +52,10 @@ export interface UserProfile {
   ranking?: number;
   isWalletConnected?: boolean;
   walletAddress?: string;
+  balance?: { // Added balance field
+    amount: number;
+    currency: string;
+  };
 }
 
 export interface Investment {
