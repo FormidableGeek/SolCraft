@@ -1,4 +1,6 @@
 
+'use client';
+
 import Image from "next/image";
 import type { Tournament } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
@@ -114,6 +116,4 @@ function InfoPill({ Icon, label, value }: InfoPillProps) {
     </div>
   );
 }
-
-
     
