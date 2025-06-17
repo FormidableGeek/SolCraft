@@ -7,7 +7,7 @@ import { mockTournaments, mockInvestmentTiers } from "@/lib/mock-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadge, ShieldCheck, Lock, HeartHandshake } from "lucide-react";
+import { Users, Trophy, Info, DollarSign, MessageCircle, Layers3, AlertCircle, TrendingUp, BarChartHorizontalBig, CheckBadge, ShieldCheck, Lock, HeartHandshake, BookCheck, LinkIcon, FileText } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { Tournament } from "@/lib/types";
 import { format, parseISO } from "date-fns";
@@ -238,10 +238,10 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
             <CardHeader>
               <CardTitle className="font-headline flex items-center">
                 <ShieldCheck className="mr-2 h-6 w-6 text-primary" />
-                Security & Trust Mechanisms
+                Security, Trust & Compliance
               </CardTitle>
               <CardDescription>
-                SolCraft employs robust systems to ensure the security of investments and player accountability.
+                SolCraft employs robust systems to ensure fair play, security of investments, and regulatory adherence.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -284,6 +284,26 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                   SolCraft plans to integrate optional insurance for investments. For a small premium, investors may be able to protect their stake against certain risks, such as player disqualification or unforeseen technical issues affecting the tournament. This feature aims to provide an additional layer of security for investors.
                 </p>
               </div>
+              <Separator />
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg text-foreground flex items-center">
+                  <BookCheck className="mr-2 h-5 w-5 text-primary" />
+                  Tournament Result Verification
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Tournament outcomes are verified through multiple independent data sources and, where possible, on-chain data. We utilize oracle services to ensure the integrity and accuracy of reported results, forming the basis for transparent prize distribution. A dispute resolution mechanism is planned for addressing any discrepancies.
+                </p>
+              </div>
+              <Separator />
+              <div className="space-y-3">
+                <h3 className="font-semibold text-lg text-foreground flex items-center">
+                  <FileText className="mr-2 h-5 w-5 text-primary" />
+                  Regulatory Compliance
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  SolCraft is committed to operating in compliance with applicable regulations. This may include KYC/AML (Know Your Customer/Anti-Money Laundering) procedures for users engaging in significant financial activities, verification for accredited investors for certain high-tier investment opportunities, and adherence to geographic restrictions. We aim to provide tools to assist with tax reporting where feasible.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -305,5 +325,4 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
-
     
