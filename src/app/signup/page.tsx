@@ -10,8 +10,9 @@ import { Label } from '@/components/ui/label';
 import { useState, type FormEvent } from 'react';
 import { UserPlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, type User } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase'; // Import db
+import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import { useToast } from '@/hooks/use-toast';
 
 export default function SignupPage() {
@@ -21,6 +22,48 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+
+  const createInitialUserProfile = async (firebaseUser: User) => {
+    if (!firebaseUser.email) {
+      console.error("User email is null, cannot create profile.");
+      toast({
+        title: 'Profile Creation Issue',
+        description: 'Could not create user profile due to missing email.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    const username = firebaseUser.email.split('@')[0];
+    const userProfileData = {
+      uid: firebaseUser.uid,
+      email: firebaseUser.email,
+      username: username,
+      name: username, // Default name to username
+      joinedDate: new Date().toISOString(),
+      avatarUrl: '', // Initialize with empty or default avatar
+      bio: '',
+      isWalletConnected: false,
+      walletAddress: '',
+      // Stats fields will be absent initially or can be defaulted to 0/null if needed
+      followersCount: 0,
+      followingCount: 0,
+      totalInvested: 0,
+      overallReturn: 0,
+      ranking: null,
+    };
+
+    try {
+      await setDoc(doc(db, "users", firebaseUser.uid), userProfileData);
+      console.log("User profile created in Firestore for UID:", firebaseUser.uid);
+    } catch (error) {
+      console.error("Error creating user profile in Firestore:", error);
+      toast({
+        title: 'Profile Creation Failed',
+        description: 'Your account was created, but we failed to save your profile information. Please try updating it later.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -34,12 +77,13 @@ export default function SignupPage() {
     }
     setIsLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await createInitialUserProfile(userCredential.user);
       toast({
         title: 'Signup Successful!',
         description: 'Your account has been created. Welcome to SolCraft!',
       });
-      router.push('/dashboard'); // Or redirect to login page: router.push('/login');
+      router.push('/dashboard');
     } catch (error: any) {
       console.error('Signup error:', error);
       let errorMessage = 'Failed to create account. Please try again.';
