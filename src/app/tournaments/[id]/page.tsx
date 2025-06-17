@@ -197,7 +197,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                         </div>
                     </div>
                     <p className="text-xs text-muted-foreground italic">
-                        Note: The token value is fixed pre-tournament. Post-tournament, the value per token will be recalculated based on actual prize winnings minus platform fees. Dynamic pricing may apply on secondary markets during the tournament.
+                        Note: The initial token price is fixed. During live tournaments, token valuation may fluctuate based on player performance and market dynamics on potential future secondary markets. Post-tournament, the final value per token will be determined by actual prize winnings, net of platform fees.
                     </p>
                   </div>
 
@@ -250,4 +250,3 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
-
