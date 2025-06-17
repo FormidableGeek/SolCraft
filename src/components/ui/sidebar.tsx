@@ -530,9 +530,23 @@ export interface SidebarMenuButtonProps
   isActive?: boolean;
 }
 
-const SidebarMenuButton = React.forwardRef<HTMLElement, SidebarMenuButtonProps>(
-  ({ className, variant, size, asChild = false, isActive = false, children, ...buttonProps }, ref) => {
-    const Comp = asChild ? Slot : "button";
+const SidebarMenuButton = React.forwardRef<
+  HTMLElement, // Changed from HTMLButtonElement to HTMLElement to support Link/Slot
+  SidebarMenuButtonProps
+>(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isActive = false,
+      children,
+      ...props // Destructure all other props
+    },
+    ref
+  ) => {
+    const Comp = asChild ? Slot : "button"
     return (
       <Comp
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
@@ -540,14 +554,14 @@ const SidebarMenuButton = React.forwardRef<HTMLElement, SidebarMenuButtonProps>(
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...buttonProps} 
+        {...props} // Spread the rest of the props (which excludes asChild)
       >
         {children}
       </Comp>
-    );
+    )
   }
-);
-SidebarMenuButton.displayName = "SidebarMenuButton";
+)
+SidebarMenuButton.displayName = "SidebarMenuButton"
 
 
 const SidebarMenuAction = React.forwardRef<
