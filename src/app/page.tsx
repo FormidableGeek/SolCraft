@@ -3,14 +3,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Network, ShieldCheck, ArrowRightLeft, Coins, ListChecks, LockKeyhole, Rocket, Bot, Award, FileScan, PieChart, Users, GitFork, BarChart, Layers, Zap, Smile, Linkedin, Twitter, LogIn } from 'lucide-react';
 import Image from 'next/image';
-
-interface RoadmapItemProps {
-  quarter: string;
-  year: string;
-  milestones: string[];
-  isOffset?: boolean;
-  isLast?: boolean;
-}
+import type { RoadmapItemProps } from '@/lib/types'; // Import type
+import { roadmapItems } from '@/lib/mock-data'; // Import data
 
 const RoadmapItem: React.FC<RoadmapItemProps> = ({ quarter, year, milestones, isOffset, isLast }) => {
   return (
@@ -77,14 +71,6 @@ const TokenomicsChart = () => {
     </div>
   );
 };
-
-const roadmapItems: RoadmapItemProps[] = [
-  { quarter: 'Q2', year: '2025', milestones: ["Token Development + Deployment", "Cross Chain Bridge Launch", "Community Building", "Presale Launch"] },
-  { quarter: 'Q3', year: '2025', milestones: ["Strategic Partnerships", "Layer 2 Core Infrastructure Deployment", "Web3 Interface Release", "Developer Documentation", "Initial Liquidity"], isOffset: true },
-  { quarter: 'Q4', year: '2025', milestones: ["Anti-Rug System Display", "Bundle Engine Testnet", "Lock Liquidity Module (V1)", "Swap Optimizer Launch", "Security Dashboard"] },
-  { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
-  { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true }
-];
 
 
 export default function LandingPage() {
@@ -173,13 +159,28 @@ export default function LandingPage() {
         <section id="about-section" className="py-16 md:py-24 bg-gray-900/30">
           <div className="container mx-auto px-4 md:px-6 grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-headline text-3xl font-bold mb-6 text-purple-400">About Us</h2>
-              <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                We are blockchain innovators dedicated to unlocking Solana's full potential through our cutting-edge Layer 2 solution. We deliver lightning-fast transactions, near-zero fees, and robust security, creating a superior experience for users and developers building dApps, games, and more on the Solana blockchain.
-              </p>
+              <h2 className="font-headline text-3xl font-bold mb-6 text-purple-400">About Us – SolCraft</h2>
+              <div className="text-gray-300 text-base sm:text-lg leading-relaxed space-y-4">
+                <p>
+                  SolCraft is an innovative Layer 2 solution built on the Solana blockchain, designed to unlock the full potential of DeFi, NFTs, and cross-chain interoperability. Our mission is to simplify access to blockchain technology while ensuring speed, scalability, and security for developers and users alike.
+                </p>
+                <p>
+                  We are focused on creating powerful tools, launching scalable infrastructure, and supporting the next generation of decentralized applications. With a strong roadmap, transparent development, and community-driven governance, SolCraft is setting new standards for blockchain usability and performance.
+                </p>
+                <p>
+                  Whether you're a builder, investor, or enthusiast — SolCraft is your gateway to a faster, smarter decentralized future.
+                </p>
+              </div>
             </div>
             <div className="hidden md:flex justify-center items-center">
-              <div className="w-4 h-64 bg-gradient-to-b from-cyan-400 via-teal-500 to-purple-600 rounded-full shadow-2xl shadow-purple-500/30"></div>
+               <Image 
+                src="https://placehold.co/400x400.png" 
+                alt="Solcraft Layer Structure" 
+                width={300} 
+                height={300} 
+                className="rounded-lg shadow-2xl opacity-70"
+                data-ai-hint="blockchain layer structure"
+              />
             </div>
           </div>
         </section>

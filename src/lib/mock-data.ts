@@ -1,4 +1,4 @@
-import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity } from './types';
+import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps } from './types';
 import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi } from 'lucide-react';
 
 export const mockTournaments: Tournament[] = [
@@ -94,6 +94,8 @@ export const mockInvestmentTiers: InvestmentTier[] = [
 
 export const mockUserProfile: UserProfile = {
   id: 'user123',
+  uid: 'user123',
+  email: 'stakeoshi@example.com',
   name: 'Satoshi Stakeoshi',
   username: 'Stakeoshi',
   avatarUrl: 'https://placehold.co/100x100.png',
@@ -106,7 +108,7 @@ export const mockUserProfile: UserProfile = {
   ranking: 42,
   isWalletConnected: false,
   walletAddress: '1aB2c3D4e5F6g7H8i9J0kLmWnO9PqRsTuVwXyZ', // Example, not real
-  balance: { amount: 1000000, currency: 'USD' }, // Added based on mockBalance
+  balance: { amount: 1000000, currency: 'USD' },
 };
 
 export const mockInvestments: Investment[] = [
@@ -153,6 +155,8 @@ export const mockPortfolioData: PortfolioData = {
 export const mockSocialPlayers: SocialPlayer[] = [
   {
     id: 'player1',
+    uid: 'player1',
+    email: 'ace@example.com',
     name: 'Ace High',
     username: 'AceHighRoller',
     avatarUrl: 'https://placehold.co/80x80.png',
@@ -165,9 +169,12 @@ export const mockSocialPlayers: SocialPlayer[] = [
     ranking: 1,
     recentPerformance: 'Won the Monthly Major ($50k prize)',
     isFollowed: true,
+    balance: { amount: 250000, currency: 'USD' },
   },
   {
     id: 'player2',
+    uid: 'player2',
+    email: 'bluff@example.com',
     name: 'Bluff Queen',
     username: 'TheBluffQueen',
     avatarUrl: 'https://placehold.co/80x80.png',
@@ -180,9 +187,12 @@ export const mockSocialPlayers: SocialPlayer[] = [
     ranking: 5,
     recentPerformance: 'Final tabled 3 events this month',
     isFollowed: false,
+    balance: { amount: 120000, currency: 'USD' },
   },
   {
     id: 'player3',
+    uid: 'player3',
+    email: 'grinder@example.com',
     name: 'Grind Master',
     username: 'SteadyGrinder',
     avatarUrl: 'https://placehold.co/80x80.png',
@@ -195,6 +205,7 @@ export const mockSocialPlayers: SocialPlayer[] = [
     ranking: 12,
     recentPerformance: 'Consistently in the money',
     isFollowed: true,
+    balance: { amount: 80000, currency: 'USD' },
   },
 ];
 
@@ -295,4 +306,12 @@ export const mockFigmaPortfolioPerformance = [
   { name: 'Day 28', value: 930 },
   { name: 'Day 29', value: 980 },
   { name: 'Day 30', value: 1050 },
+];
+
+export const roadmapItems: RoadmapItemProps[] = [
+  { quarter: 'Q2', year: '2025', milestones: ["Token Development + Deployment", "Cross Chain Bridge Launch", "Community Building", "Presale Launch"] },
+  { quarter: 'Q3', year: '2025', milestones: ["Strategic Partnerships", "Layer 2 Core Infrastructure Deployment", "Web3 Interface Release", "Developer Documentation", "Initial Liquidity"], isOffset: true },
+  { quarter: 'Q4', year: '2025', milestones: ["Anti-Rug System Display", "Bundle Engine Testnet", "Lock Liquidity Module (V1)", "Swap Optimizer Launch", "Security Dashboard"] },
+  { quarter: 'Q1', year: '2026', milestones: ["Advanced DEX Integration", "Launchpad Platform", "Governance Implementation", "Mobile Application Release", "Ecosystem Grants Program"], isOffset: true },
+  { quarter: 'Q2', year: '2026', milestones: ["Layer 2 Scaling Solutions", "Cross-Chain Interoperability", "Advanced DeFi Primitives", "Enterprise Solutions", "DAO Transition"], isLast: true }
 ];

@@ -40,6 +40,8 @@ export interface InvestmentTier {
 
 export interface UserProfile {
   id:string;
+  uid: string; // Added from signup page logic
+  email: string; // Added from signup page logic
   name: string;
   username: string;
   avatarUrl?: string;
@@ -49,10 +51,10 @@ export interface UserProfile {
   followingCount: number;
   totalInvested: number;
   overallReturn: number; // percentage or absolute
-  ranking?: number;
+  ranking?: number | null; // Allow null from signup
   isWalletConnected?: boolean;
   walletAddress?: string;
-  balance?: { // Added balance field
+  balance?: {
     amount: number;
     currency: string;
   };
@@ -118,4 +120,12 @@ export interface RecentActivity {
   tokenAmount: string; // e.g., "0.453 BTC"
   status: 'Completed' | 'In Progress' | 'Failed' | 'Pending';
   viewLink?: string; // URL for viewing details
+}
+
+export interface RoadmapItemProps {
+  quarter: string;
+  year: string;
+  milestones: string[];
+  isOffset?: boolean;
+  isLast?: boolean;
 }
