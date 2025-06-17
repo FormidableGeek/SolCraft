@@ -148,3 +148,71 @@ export interface RoadmapItemProps {
   isOffset?: boolean;
   isLast?: boolean;
 }
+
+// Types from pool-architecture.md
+
+// ---- Tournament Investment Pool Types ----
+export interface PoolState {
+  totalDeposits: number;
+  activeTournamentsFunded: number; // Number of tournaments currently being funded
+  availableLiquidity: number;
+  pendingWithdrawals: number;
+  totalReturnsGenerated: number; // From completed tournaments
+}
+
+export interface TournamentAllocation {
+  id: string; // Unique ID for this allocation instance
+  tournamentId: string; // Refers to Tournament.id
+  tournamentName: string; // For display convenience
+  allocatedAmount: number;
+  status: 'Funding' | 'Active' | 'Completed' | 'Cancelled' | 'Refunding';
+  expectedReturnRate?: number; // Percentage
+  actualReturnAmount?: number;
+  numberOfInvestors?: number; // Number of distinct investors in this allocation
+}
+
+// ---- Player Deposit Pool Types ----
+export enum PlayerRank {
+  PLATINUM = "Platinum",
+  GOLD = "Gold",
+  SILVER = "Silver",
+  BRONZE = "Bronze",
+  UNVERIFIED = "Unverified",
+}
+
+export interface SubPoolState {
+  rankCategory: PlayerRank;
+  totalDeposits: number;
+  totalLockedFunds: number;
+  availableForWithdrawal: number;
+  totalPenaltyFundsCollected: number;
+  numberOfPlayers: number;
+}
+
+export interface PlayerDeposit {
+  id: string; // Unique ID for this deposit
+  playerId: string; // Refers to UserProfile.uid
+  playerName?: string; // For display convenience
+  playerRank: PlayerRank;
+  depositAmount: number;
+  currency: string; // e.g., 'USD', 'SOL'
+  tournamentId?: string; // Optional, if deposit is for a specific tournament
+  status: 'Pending' | 'Locked' | 'PartiallyRefunded' | 'FullyRefunded' | 'Penalized' | 'ForfeitedToCompensation';
+  depositDate: string; // ISO string
+  resolutionDate?: string; // ISO string, when the deposit status was finalized
+  notes?: string;
+}
+
+// Placeholder for other pool types if needed later
+// export enum PoolType {
+//   TOURNAMENT_INVESTMENT,
+//   PLAYER_DEPOSIT,
+//   COMPENSATION,
+//   INSURANCE,
+//   PLATFORM_FEE,
+//   LIQUIDITY_PROVIDER,
+//   GOVERNANCE,
+//   DEVELOPMENT
+// }
+
+// Could also add types for CompensationPool, InsurancePool etc. as we build them out.
