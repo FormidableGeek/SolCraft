@@ -1,5 +1,6 @@
+
 // Import the functions you need from the SDKs you need
-import { initializeApp, type FirebaseApp } from "firebase/app";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAnalytics, type Analytics } from "firebase/analytics";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
@@ -17,29 +18,30 @@ const firebaseConfig = {
   measurementId: "G-97SYRDPN33"
 };
 
-// Initialize Firebase
+// Initialize Firebase App
 let app: FirebaseApp;
-let auth: Auth;
-let db: Firestore;
-let storage: FirebaseStorage;
-let analytics: Analytics | null = null;
-
-// Ensure Firebase is initialized only on the client side for services like Analytics
-if (typeof window !== 'undefined') {
+if (!getApps().length) {
   app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-  analytics = getAnalytics(app);
 } else {
-  // On the server side, initialize app for other services if needed,
-  // but Analytics should only be on client.
-  // Note: For server-side rendering or API routes, you might initialize app differently
-  // or use the Firebase Admin SDK. This setup is primarily for client-side usage.
-  app = initializeApp(firebaseConfig); // Initialize app for server contexts if needed
-  auth = getAuth(app); // Auth can be used on server for some operations
-  db = getFirestore(app); // Firestore can be used on server
-  storage = getStorage(app); // Storage can be used on server
+  app = getApp(); // Use the existing app if already initialized
+}
+
+// Initialize Firebase services
+const auth: Auth = getAuth(app);
+const db: Firestore = getFirestore(app);
+const storage: FirebaseStorage = getStorage(app);
+
+// Analytics is client-side only
+let analytics: Analytics | null = null;
+if (typeof window !== 'undefined') {
+  // Check if Analytics is already initialized for this app instance
+  // This check might be more complex depending on specific Firebase SDK patterns for Analytics re-initialization
+  // For simplicity, we assume getAnalytics can be called if window is defined.
+  try {
+    analytics = getAnalytics(app);
+  } catch (error) {
+    console.error("Failed to initialize Firebase Analytics", error);
+  }
 }
 
 export { app, auth, db, storage, analytics, firebaseConfig };
