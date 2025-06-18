@@ -585,9 +585,15 @@ const SidebarMenuButton = React.forwardRef<
     const Comp = renderAsSlot ? Slot : "button";
 
     const finalProps: Record<string, any> = { ...otherProps };
-    if (finalProps.asChild !== undefined) {
-      delete finalProps.asChild;
+    if ((otherProps as any).asChild && Comp === Slot) {
+      delete finalProps.asChild; 
     }
+    
+    if (finalProps.asChild !== undefined && Comp !== Slot) {
+        // If Comp is not Slot, but asChild was still in otherProps, remove it for DOM elements
+        delete finalProps.asChild;
+    }
+
 
     return (
       <Comp
