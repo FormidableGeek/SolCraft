@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import type { TokenLaunch } from '@/lib/types';
 import { ExternalLink, Info, TrendingUp, CheckCircle, PlayCircle, CalendarClock, Tag, Coins, Target } from 'lucide-react';
 import { formatDistanceToNowStrict, format, parseISO } from 'date-fns';
+import { cn } from "@/lib/utils"; // Added missing import
 
 interface TokenLaunchCardProps {
   launch: TokenLaunch;
