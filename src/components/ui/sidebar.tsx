@@ -567,33 +567,27 @@ export interface SidebarMenuButtonProps
 }
 
 const SidebarMenuButton = React.forwardRef<
-  HTMLElement,
+  HTMLElement, 
   SidebarMenuButtonProps
 >(
-  (
-    {
+  (props, ref) => {
+    const {
       className,
       variant,
       size,
-      asChild: propAsChild, // Renamed to avoid conflict with potential asChild from ...rest
+      asChild: explicitAsChild, 
       isActive = false,
       children,
-      ...rest // Contains all other props, potentially including asChild from Link
-    },
-    ref
-  ) => {
-    // Determine if the component should render as a Slot
-    // True if propAsChild is explicitly true OR if asChild is passed via ...rest
-    const renderAsSlot = propAsChild || (rest as any).asChild;
+      ...otherProps 
+    } = props;
 
-    // Create a new object for props to be spread, ensuring asChild is not in it.
-    // If 'asChild' was in 'rest', it's removed here before spreading.
-    const compProps = { ...rest };
-    if ((rest as any).asChild !== undefined) {
-      delete (compProps as any).asChild;
-    }
-
+    const renderAsSlot = explicitAsChild || (otherProps as any).asChild;
     const Comp = renderAsSlot ? Slot : "button";
+
+    const finalProps: Record<string, any> = { ...otherProps };
+    if (finalProps.asChild !== undefined) {
+      delete finalProps.asChild;
+    }
 
     return (
       <Comp
@@ -602,7 +596,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...compProps} // Spread compProps, which should not contain 'asChild'
+        {...finalProps}
       >
         {children}
       </Comp>
