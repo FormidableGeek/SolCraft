@@ -575,26 +575,21 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild: explicitAsChild, 
+      asChild: explicitAsChild,
       isActive = false,
       children,
-      ...otherProps 
+      ...otherProps
     } = props;
 
-    const renderAsSlot = explicitAsChild || (otherProps as any).asChild;
-    const Comp = renderAsSlot ? Slot : "button";
+    const shouldRenderAsSlot = explicitAsChild || (otherProps as any).asChild;
+    const Comp = shouldRenderAsSlot ? Slot : "button";
 
-    const finalProps: Record<string, any> = { ...otherProps };
-    if ((otherProps as any).asChild && Comp === Slot) {
-      delete finalProps.asChild; 
+    const finalElementProps = { ...otherProps };
+
+    if (finalElementProps.asChild !== undefined) {
+      delete finalElementProps.asChild;
     }
     
-    if (finalProps.asChild !== undefined && Comp !== Slot) {
-        // If Comp is not Slot, but asChild was still in otherProps, remove it for DOM elements
-        delete finalProps.asChild;
-    }
-
-
     return (
       <Comp
         className={cn(sidebarMenuButtonVariants({ variant, size, className }))}
@@ -602,7 +597,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...finalProps}
+        {...finalElementProps}
       >
         {children}
       </Comp>
