@@ -6,30 +6,31 @@ import { KeyMetricsCard } from "@/components/dashboard/figma/key-metrics-card";
 import { MyBalanceCard } from "@/components/dashboard/figma/my-balance-card";
 import { RecentActivityTable } from "@/components/dashboard/figma/recent-activity-table";
 import { FigmaPortfolioPerformanceChart } from "@/components/dashboard/figma/figma-portfolio-performance-chart";
-import { PortfolioAllocationCard } from "@/components/dashboard/figma/portfolio-allocation-card"; // New
-import { TopCryptocurrencyTable } from "@/components/dashboard/figma/top-cryptocurrency-table"; // New
+import { PortfolioAllocationCard } from "@/components/dashboard/figma/portfolio-allocation-card";
+import { TopCryptocurrencyTable } from "@/components/dashboard/figma/top-cryptocurrency-table";
+import { TournamentInvestmentPoolCard } from "@/components/dashboard/tournament-investment-pool-card"; // New Import
 
 import {
   mockTournaments,
   mockRecentActivity,
   mockFigmaPortfolioPerformance,
   mockKeyMetrics as defaultMockKeyMetrics,
-  mockPortfolioAllocation,      // New
-  mockTopCryptocurrencies,    // New
-  mockInvestments // Existing, used for calculations if profile data is missing
+  mockPortfolioAllocation,
+  mockTopCryptocurrencies,
+  mockInvestments,
+  mockPoolState // New Import
 } from "@/lib/mock-data";
 import { TournamentCard } from "@/components/tournaments/tournament-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore'; // collection, query, where, getDocs removed as not directly used for user investments
+import { doc, getDoc } from 'firebase/firestore';
 import type { UserProfile, Investment, KeyMetric, Tournament } from '@/lib/types';
-import { Loader2, Activity, Award, TrendingUp, Crown } from 'lucide-react';
+import { Loader2, Activity, Award, TrendingUp, Crown, Landmark } from 'lucide-react';
 
 export default function DashboardPage() {
   const [authUser, setAuthUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  // const [userInvestments, setUserInvestments] = useState<Investment[]>([]); // Not directly used for display, calculations are from profile or mock
   const [dynamicKeyMetrics, setDynamicKeyMetrics] = useState<KeyMetric[]>(defaultMockKeyMetrics);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -46,9 +47,6 @@ export default function DashboardPage() {
             const profileData = userDocSnap.data() as UserProfile;
             setUserProfile(profileData);
 
-            // Calculate dynamic key metrics based on profileData
-            // Note: mockInvestments is used below if profileData.totalInvested is not available for activeInvestmentsCount
-            // This behavior is kept from original code. For a real app, user investments would be fetched.
             const activeInvestmentsCount = mockInvestments.filter(
               (inv) => inv.investorId === profileData.uid && inv.status === 'Active'
             ).length;
@@ -94,7 +92,6 @@ export default function DashboardPage() {
       } else {
         setAuthUser(null);
         setUserProfile(null);
-        // setUserInvestments([]); // Not directly used
         setDynamicKeyMetrics(defaultMockKeyMetrics); 
       }
       setIsLoading(false);
@@ -123,6 +120,23 @@ export default function DashboardPage() {
 
       {/* Top Cryptocurrency Table */}
       <TopCryptocurrencyTable cryptocurrencies={mockTopCryptocurrencies} />
+
+      {/* Platform Pool States Section - New */}
+      <Card>
+        <CardHeader>
+            <CardTitle className="font-headline text-xl flex items-center">
+                <Landmark className="mr-2 h-6 w-6 text-primary"/>
+                Platform Pool States
+            </CardTitle>
+        </CardHeader>
+        <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <TournamentInvestmentPoolCard poolState={mockPoolState} />
+                {/* We can add PlayerDepositPoolSummaryCard here later */}
+            </div>
+        </CardContent>
+      </Card>
+
 
       {/* Featured Tournaments Section */}
       {featuredTournaments.length > 0 && (
