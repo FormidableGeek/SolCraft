@@ -575,22 +575,18 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild: explicitAsChild, // This is SidebarMenuButton's own asChild prop
+      asChild: explicitAsChild, 
       isActive = false,
       children,
-      ...otherProps // These come from the parent, e.g., Link, and might include an 'asChild'
+      ...otherProps 
     } = props;
 
-    // Determine if SidebarMenuButton should render as a Slot.
-    // This happens if its own asChild prop is true OR if asChild is passed via otherProps.
     const compShouldBeSlot = explicitAsChild || (otherProps as any).asChild;
     const Comp = compShouldBeSlot ? Slot : "button";
-
-    // Prepare props for Comp: Start with otherProps and remove 'asChild' if it was in otherProps.
-    // explicitAsChild is handled because it's not part of otherProps.
-    const propsForComp = { ...otherProps };
-    if ((propsForComp as any).asChild !== undefined) {
-      delete (propsForComp as any).asChild;
+    
+    const finalProps = { ...otherProps };
+    if ((otherProps as any).asChild && compShouldBeSlot) {
+      delete (finalProps as any).asChild;
     }
     
     return (
@@ -600,7 +596,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...propsForComp} // Spread the cleaned propsForComp
+        {...finalProps} 
       >
         {children}
       </Comp>
