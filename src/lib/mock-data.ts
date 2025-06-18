@@ -28,7 +28,7 @@ export const mockTournaments: Tournament[] = [
     tokenizationDetails: {
       isTokenized: true,
       tokenTicker: 'SSS',
-      tokenPrice: defaultTokenPrice,
+      tokenPrice: defaultTokenPrice, 
       totalTokenSupply: 100 / defaultTokenPrice, 
       minInvestmentTokens: 10, 
       maxInvestmentTokens: 100 / defaultTokenPrice, 
@@ -742,5 +742,3 @@ export const mockStakingPools: StakingPool[] = [
     availableToStake: false, // Example of a pool not currently open
   },
 ];
-
-    
