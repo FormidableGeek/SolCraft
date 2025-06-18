@@ -203,6 +203,60 @@ export interface PlayerDeposit {
   notes?: string;
 }
 
+// ---- Launchtoken Page Types ----
+export interface TokenLaunch {
+  id: string;
+  name: string;
+  ticker: string;
+  logoUrl: string;
+  description: string;
+  stage: 'Upcoming' | 'Live' | 'Ended' | 'TBA'; // TBA: To Be Announced
+  targetRaise: number; // In currency
+  raisedAmount: number; // In currency
+  tokenPrice: number; // Price per token in currency
+  currency: string; // e.g., USDC, SOL
+  startDate?: string; // ISO string
+  endDate?: string; // ISO string
+  projectWebsite?: string;
+  whitepaperLink?: string;
+  detailsLink: string; // Link to a detailed page for this launch within SolCraft
+  category?: string; // e.g., DeFi, GameFi, Infra, Meme
+  isFeatured?: boolean;
+  tags?: string[]; // e.g., ["AI", "Layer 2", "Gaming"]
+  vestingSchedule?: string; // "10% TGE, 6 month linear"
+  totalSupply?: number;
+  circulatingSupplyOnLaunch?: number;
+}
+
+// ---- Staking Page Types ----
+export interface StakingSummary {
+  totalStakedUSD: number;
+  totalRewardsEarnedUSD: number;
+  averageAPY: number; // percentage
+  activeStakesCount: number;
+}
+
+export interface StakingPool {
+  id: string;
+  assetName: string;
+  assetTicker: string;
+  assetLogoUrl: string;
+  apy: number; // percentage, could be a range string like "5-7%" or a number
+  lockUpPeriod: string; // e.g., "Flexible", "30 Days", "90 Days", "1 Year"
+  minStake?: number; // in asset's own unit (e.g, 100 SOL)
+  maxStake?: number; // in asset's own unit
+  totalStakedInPoolUSD: number; // Total value staked by all users in this pool
+  userStakedAmount?: number; // Amount user has staked in this pool (in asset's unit)
+  userRewardsEarned?: number; // Rewards user earned from this pool (in asset's unit)
+  platform: string; // e.g., SolCraft Native, Lido, Marinade
+  riskLevel: 'Low' | 'Medium' | 'High';
+  detailsLink: string; // Link to a detailed page for this staking option
+  type: 'Native' | 'Liquid' | 'LP Farming'; // Staking type
+  isFeatured?: boolean;
+  availableToStake: boolean; // Is the pool currently open for new stakes
+}
+
+
 // Placeholder for other pool types if needed later
 // export enum PoolType {
 //   TOURNAMENT_INVESTMENT,
@@ -216,3 +270,5 @@ export interface PlayerDeposit {
 // }
 
 // Could also add types for CompensationPool, InsurancePool etc. as we build them out.
+
+    

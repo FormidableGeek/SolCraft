@@ -1,5 +1,5 @@
 
-import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails, PoolState, TournamentAllocation, PlayerDeposit, SubPoolState } from './types';
+import type { Tournament, InvestmentTier, UserProfile, Investment, PortfolioData, SocialPlayer, PortfolioAllocationItem, KeyMetric, Cryptocurrency, RecentActivity, RoadmapItemProps, TournamentTokenizationDetails, PoolState, TournamentAllocation, PlayerDeposit, SubPoolState, TokenLaunch, StakingSummary, StakingPool } from './types';
 import { PlayerRank } from './types'; // Import PlayerRank
 import { ShieldAlert, ShieldCheck, Shield, ListChecks, Fuel, Timer, Wifi, Award, Star, Zap, Gem, Crown, TrendingUp as TierTrendingUp, Activity, DollarSign, Users, CalendarDays, TrendingUp } from 'lucide-react';
 
@@ -564,3 +564,183 @@ export const mockSubPoolStates: SubPoolState[] = [
     numberOfPlayers: 5, // Example
   },
 ];
+
+
+// ---- New Mock Data for Launchtoken and Staking ----
+
+export const mockTokenLaunches: TokenLaunch[] = [
+  {
+    id: 'launch1',
+    name: 'NovaNet AI',
+    ticker: 'NNAI',
+    logoUrl: 'https://placehold.co/64x64/3498DB/FFFFFF.png?text=AI',
+    description: 'Decentralized AI computation network built on Solana, leveraging community-driven data validation.',
+    stage: 'Live',
+    targetRaise: 500000,
+    raisedAmount: 350000,
+    tokenPrice: 0.10,
+    currency: 'USDC',
+    startDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+    endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
+    projectWebsite: '#',
+    whitepaperLink: '#',
+    detailsLink: '/launchtoken/novanet-ai',
+    category: 'AI / DePIN',
+    isFeatured: true,
+    tags: ["AI", "DePIN", "Solana"],
+    vestingSchedule: "15% TGE, 6 months linear vesting",
+    totalSupply: 1000000000,
+    circulatingSupplyOnLaunch: 150000000,
+  },
+  {
+    id: 'launch2',
+    name: 'PixelPioneers',
+    ticker: 'PIXO',
+    logoUrl: 'https://placehold.co/64x64/E67E22/FFFFFF.png?text=PX',
+    description: 'A community-driven pixel art NFT marketplace and collaborative metaverse experience.',
+    stage: 'Upcoming',
+    targetRaise: 200000,
+    raisedAmount: 0,
+    tokenPrice: 0.05,
+    currency: 'USDC',
+    startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week from now
+    endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks from now
+    projectWebsite: '#',
+    whitepaperLink: '#',
+    detailsLink: '/launchtoken/pixel-pioneers',
+    category: 'GameFi / NFT',
+    tags: ["NFT", "Metaverse", "Gaming"],
+    vestingSchedule: "10% TGE, 12 months cliff, then linear",
+  },
+  {
+    id: 'launch3',
+    name: 'DeFiGuard',
+    ticker: 'DFG',
+    logoUrl: 'https://placehold.co/64x64/2ECC71/FFFFFF.png?text=DG',
+    description: 'Automated security and auditing solutions for DeFi protocols, ensuring safer investments.',
+    stage: 'Ended',
+    targetRaise: 300000,
+    raisedAmount: 320000, // Slightly overfunded
+    tokenPrice: 0.20,
+    currency: 'USDC',
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+    projectWebsite: '#',
+    whitepaperLink: '#',
+    detailsLink: '/launchtoken/defiguard',
+    category: 'DeFi / Security',
+    tags: ["Security", "Audit", "DeFi"],
+  },
+  {
+    id: 'launch4',
+    name: 'SolStream',
+    ticker: 'STRM',
+    logoUrl: 'https://placehold.co/64x64/9B59B6/FFFFFF.png?text=ST',
+    description: 'Decentralized video streaming platform with tokenized content monetization and creator rewards.',
+    stage: 'Upcoming',
+    targetRaise: 1000000,
+    raisedAmount: 10000, // Small amount already pledged
+    tokenPrice: 0.02,
+    currency: 'USDC',
+    startDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+    projectWebsite: '#',
+    whitepaperLink: '#',
+    detailsLink: '/launchtoken/solstream',
+    category: 'Media / DePIN',
+    isFeatured: true,
+    tags: ["Streaming", "Web3", "Creator Economy"],
+    vestingSchedule: "5% TGE, 3 month cliff, 24 months linear",
+    totalSupply: 5000000000,
+  },
+];
+
+export const mockStakingSummary: StakingSummary = {
+  totalStakedUSD: 12500.75,
+  totalRewardsEarnedUSD: 875.30,
+  averageAPY: 8.25,
+  activeStakesCount: 3,
+};
+
+export const mockStakingPools: StakingPool[] = [
+  {
+    id: 'pool1',
+    assetName: 'Solana',
+    assetTicker: 'SOL',
+    assetLogoUrl: 'https://placehold.co/40x40/8A2BE2/FFFFFF.png?text=S', // Purple for Solana
+    apy: 7.5,
+    lockUpPeriod: 'Flexible',
+    totalStakedInPoolUSD: 15000000,
+    userStakedAmount: 50.25, // In SOL
+    userRewardsEarned: 3.51, // In SOL
+    platform: 'SolCraft Native',
+    riskLevel: 'Low',
+    detailsLink: '/staking/sol-native',
+    type: 'Liquid',
+    isFeatured: true,
+    availableToStake: true,
+  },
+  {
+    id: 'pool2',
+    assetName: 'USDC',
+    assetTicker: 'USDC',
+    assetLogoUrl: 'https://placehold.co/40x40/2775CA/FFFFFF.png?text=U', // Blue for USDC
+    apy: 5.2,
+    lockUpPeriod: '30 Days',
+    minStake: 100,
+    totalStakedInPoolUSD: 25000000,
+    platform: 'Yield Aggregator X',
+    riskLevel: 'Low',
+    detailsLink: '/staking/usdc-30d',
+    type: 'Native',
+    availableToStake: true,
+  },
+  {
+    id: 'pool3',
+    assetName: 'SolCraft Token',
+    assetTicker: 'SCT',
+    assetLogoUrl: 'https://placehold.co/40x40/E573A5/FFFFFF.png?text=SC', // Solcraft Pink
+    apy: 15.0,
+    lockUpPeriod: '90 Days',
+    minStake: 1000, // In SCT
+    totalStakedInPoolUSD: 5000000,
+    userStakedAmount: 2500, // In SCT
+    userRewardsEarned: 150.75, // In SCT
+    platform: 'SolCraft Native',
+    riskLevel: 'Medium',
+    detailsLink: '/staking/sct-90d',
+    type: 'Native',
+    isFeatured: true,
+    availableToStake: true,
+  },
+  {
+    id: 'pool4',
+    assetName: 'Jupiter Liquidity Pool',
+    assetTicker: 'JUP-USDC LP',
+    assetLogoUrl: 'https://placehold.co/40x40/FFA500/000000.png?text=LP',
+    apy: 22.5, // APY for LP farming can be higher
+    lockUpPeriod: 'Flexible (with unbonding)',
+    totalStakedInPoolUSD: 8000000,
+    platform: 'Jupiter Exchange',
+    riskLevel: 'High', // LP farming has impermanent loss risk
+    detailsLink: '/staking/jup-usdc-lp',
+    type: 'LP Farming',
+    availableToStake: true,
+  },
+  {
+    id: 'pool5',
+    assetName: 'mSOL (Marinade Staked SOL)',
+    assetTicker: 'mSOL',
+    assetLogoUrl: 'https://placehold.co/40x40/F26A3D/FFFFFF.png?text=mS', // Marinade Orange
+    apy: 6.8,
+    lockUpPeriod: 'Liquid',
+    totalStakedInPoolUSD: 120000000,
+    platform: 'Marinade Finance',
+    riskLevel: 'Low',
+    detailsLink: '/staking/msol-liquid',
+    type: 'Liquid',
+    availableToStake: false, // Example of a pool not currently open
+  },
+];
+
+    
