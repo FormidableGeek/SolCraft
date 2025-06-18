@@ -11,7 +11,7 @@ import { StakingPoolCard } from "@/components/staking/staking-pool-card";
 import { mockStakingSummary, mockStakingPools } from "@/lib/mock-data";
 import type { StakingPool } from '@/lib/types';
 import { ListFilter, Search, Database, AlertTriangle, BarChart } from "lucide-react";
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function StakingPage() {
   const [searchTerm, setSearchTerm] = useState('');
