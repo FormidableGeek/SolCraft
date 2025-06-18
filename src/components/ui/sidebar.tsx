@@ -575,31 +575,25 @@ const SidebarMenuButton = React.forwardRef<
       className,
       variant,
       size,
-      asChild: propAsChild, // asChild specifically for SidebarMenuButton's own behavior
+      asChild: propAsChild, // Renamed to avoid conflict with potential asChild from ...rest
       isActive = false,
       children,
-      ...restIncomingProps // All other props from parent (e.g., Link component)
+      ...rest // Contains all other props, potentially including asChild from Link
     },
     ref
   ) => {
-    // Determine if SidebarMenuButton itself should render as a Slot.
-    // This is true if its own `asChild` prop (propAsChild) is true,
-    // OR if it received `asChild: true` from its parent (e.g., Link) via `restIncomingProps`.
-    const shouldRenderAsSlot = propAsChild || (restIncomingProps as any).asChild;
+    // Determine if the component should render as a Slot
+    // True if propAsChild is explicitly true OR if asChild is passed via ...rest
+    const renderAsSlot = propAsChild || (rest as any).asChild;
 
-    // Create a mutable copy of the incoming props to safely manipulate.
-    // These are the props that will be spread onto the underlying Comp (Slot or button).
-    const finalSpreadProps = { ...restIncomingProps };
-
-    // If `asChild` was present in `restIncomingProps` (meaning the parent, like Link, passed it),
-    // it needs to be removed from `finalSpreadProps` because the `Slot` primitive
-    // (if Comp becomes Slot) should not receive an `asChild` prop.
-    // The `asChild` from the parent has already served its purpose by making `shouldRenderAsSlot` true.
-    if ((restIncomingProps as any).asChild !== undefined) {
-      delete (finalSpreadProps as any).asChild;
+    // Create a new object for props to be spread, ensuring asChild is not in it.
+    // If 'asChild' was in 'rest', it's removed here before spreading.
+    const compProps = { ...rest };
+    if ((rest as any).asChild !== undefined) {
+      delete (compProps as any).asChild;
     }
 
-    const Comp = shouldRenderAsSlot ? Slot : "button";
+    const Comp = renderAsSlot ? Slot : "button";
 
     return (
       <Comp
@@ -608,7 +602,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        {...finalSpreadProps} // Spread the props that definitely don't include the `asChild` meant for Slot.
+        {...compProps} // Spread compProps, which should not contain 'asChild'
       >
         {children}
       </Comp>
