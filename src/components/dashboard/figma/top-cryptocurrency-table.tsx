@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button"; 
 import { Bitcoin, Coins } from "lucide-react"; // Coins can represent ETH, CircleDollarSign for others
 
+
 const CryptoIcon = ({ ticker, iconUrl, name }: { ticker: string, iconUrl?: string, name: string }) => {
   // Prioritize specific icons for well-known cryptos
   if (ticker === 'BTC') return <Bitcoin className="h-5 w-5 text-orange-400" />;
@@ -37,6 +38,10 @@ const CryptoIcon = ({ ticker, iconUrl, name }: { ticker: string, iconUrl?: strin
   return <CircleDollarSign className="h-5 w-5 text-muted-foreground" />;
 };
 
+type TopCryptocurrencyTableProps = {
+  cryptocurrencies: Cryptocurrency[];
+  className?: string;
+};
 
 export function TopCryptocurrencyTable({ cryptocurrencies, className }: TopCryptocurrencyTableProps) {
   return (

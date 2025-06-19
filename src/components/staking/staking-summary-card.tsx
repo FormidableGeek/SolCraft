@@ -1,15 +1,28 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { StakingSummary } from "@/lib/types";
-import { DollarSign, TrendingUp, Layers, Percent, BarChart } from "lucide-react"; // Added BarChart for average APY
+import { DollarSign, TrendingUp, Layers, Percent, BarChart } from "lucide-react";
+import type { LucideIcon } from "lucide-react"; // Add this import
 
 interface StakingSummaryCardProps {
   summary: StakingSummary;
 }
 
-const MetricDisplay = ({ icon: Icon, label, value, unit, valueClass }: { icon: LucideIcon, label: string, value: string | number, unit?: string, valueClass?: string }) => (
+// FIX: Import LucideIcon type and use it for icon prop
+const MetricDisplay = ({ 
+  icon: Icon, 
+  label, 
+  value, 
+  unit, 
+  valueClass 
+}: { 
+  icon: LucideIcon; 
+  label: string; 
+  value: string | number; 
+  unit?: string; 
+  valueClass?: string 
+}) => (
   <div className="flex-1 p-3 bg-muted/30 rounded-md border border-border/60 text-center min-w-[120px]">
     <Icon className="h-6 w-6 text-primary mx-auto mb-1.5" />
     <div className="text-xs text-muted-foreground uppercase tracking-wider">{label}</div>
@@ -20,7 +33,6 @@ const MetricDisplay = ({ icon: Icon, label, value, unit, valueClass }: { icon: L
     </div>
   </div>
 );
-
 
 export function StakingSummaryCard({ summary }: StakingSummaryCardProps) {
   return (
@@ -54,7 +66,7 @@ export function StakingSummaryCard({ summary }: StakingSummaryCardProps) {
             unit="%"
           />
            <MetricDisplay
-            icon={BarChart} // Using BarChart as a generic icon for "Active Stakes" count
+            icon={BarChart}
             label="Active Stakes"
             value={summary.activeStakesCount}
           />
@@ -63,5 +75,3 @@ export function StakingSummaryCard({ summary }: StakingSummaryCardProps) {
     </Card>
   );
 }
-
-    

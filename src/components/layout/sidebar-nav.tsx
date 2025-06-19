@@ -1,4 +1,3 @@
-
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,7 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  useSidebar, // Import useSidebar
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { 
   Tooltip,
@@ -41,35 +40,57 @@ const navItems: NavItem[] = [
 
 export function SidebarNav() {
   const pathname = usePathname();
-  const { state: sidebarState, isMobile } = useSidebar(); // Get sidebar state and isMobile
+  const { state: sidebarState, isMobile } = useSidebar();
 
   return (
     <SidebarMenu>
-      {navItems.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href={item.href} asChild>
-                <SidebarMenuButton
-                  isActive={pathname === item.href || (item.href !== "/dashboard" && item.href !== "/" && pathname.startsWith(item.href))}
-                  disabled={item.disabled}
-                  className={cn(item.disabled && "cursor-not-allowed opacity-50")}
+      {navItems.map((item) => {
+        const isActive = pathname === item.href || 
+                         (item.href !== "/dashboard" && 
+                          item.href !== "/" && 
+                          pathname.startsWith(item.href));
+        
+        return (
+          <SidebarMenuItem key={item.href}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link 
+                  href={item.disabled ? "#" : item.href} 
+                  legacyBehavior
+                  passHref
                 >
-                  <item.icon />
-                  {/* Conditionally render text based on sidebar state for non-mobile, or always on mobile */}
-                  { (sidebarState === "expanded" || isMobile) && <span>{item.title}</span> }
-                </SidebarMenuButton>
-              </Link>
-            </TooltipTrigger>
-            {/* Show tooltip only when sidebar is collapsed AND not on mobile */}
-            { sidebarState === "collapsed" && !isMobile && (
-              <TooltipContent side="right" align="center">
-                {item.title}
-              </TooltipContent>
-            )}
-          </Tooltip>
-        </SidebarMenuItem>
-      ))}
+                  <a className="w-full">
+                    <SidebarMenuButton
+                      isActive={isActive}
+                      disabled={item.disabled}
+                      className={cn(
+                        item.disabled && "cursor-not-allowed opacity-50",
+                        "w-full"
+                      )}
+                      onClick={(e) => {
+                        if (item.disabled) {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }
+                      }}
+                    >
+                      <item.icon className="shrink-0" />
+                      {(sidebarState === "expanded" || isMobile) && (
+                        <span className="truncate">{item.title}</span>
+                      )}
+                    </SidebarMenuButton>
+                  </a>
+                </Link>
+              </TooltipTrigger>
+              {sidebarState === "collapsed" && !isMobile && (
+                <TooltipContent side="right" align="center">
+                  {item.title}
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </SidebarMenuItem>
+        );
+      })}
     </SidebarMenu>
   );
 }

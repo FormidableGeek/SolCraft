@@ -12,6 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import type { Tournament } from "@/lib/types";
 import { format, parseISO } from "date-fns";
 
+
+
 // This function would typically fetch data from a DB or API
 async function getTournamentData(id: string) {
   const tournament = mockTournaments.find((t) => t.id === id);
@@ -19,8 +21,8 @@ async function getTournamentData(id: string) {
 }
 
 
-export default async function TournamentDetailPage({ params }: { params: { id: string } }) {
-  const tournament = await getTournamentData(params.id);
+export default async function TournamentDetailPage({params}: {params: Promise<{ id: string }>}) {
+  const tournament = await getTournamentData((await params).id);
 
   if (!tournament) {
     notFound();
@@ -42,12 +44,12 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
 
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-6 mb-6">
-          <TabsTrigger value="overview"><Info className="mr-2 h-4 w-4 sm:inline hidden"/>Overview</TabsTrigger>
-          <TabsTrigger value="invest"><DollarSign className="mr-2 h-4 w-4 sm:inline hidden"/>Invest</TabsTrigger>
-          <TabsTrigger value="tokenization"><Layers3 className="mr-2 h-4 w-4 sm:inline hidden"/>Tokenization</TabsTrigger>
-          <TabsTrigger value="ai-risk"><Trophy className="mr-2 h-4 w-4 sm:inline hidden"/>AI Risk</TabsTrigger>
-          <TabsTrigger value="security-trust"><ShieldCheck className="mr-2 h-4 w-4 sm:inline hidden"/>Security</TabsTrigger>
-          <TabsTrigger value="community"><MessageCircle className="mr-2 h-4 w-4 sm:inline hidden"/>Community</TabsTrigger>
+          <TabsTrigger value="overview"><Info className="mr-2 h-4 w-4 sm:inline hidden" />Overview</TabsTrigger>
+          <TabsTrigger value="invest"><DollarSign className="mr-2 h-4 w-4 sm:inline hidden" />Invest</TabsTrigger>
+          <TabsTrigger value="tokenization"><Layers3 className="mr-2 h-4 w-4 sm:inline hidden" />Tokenization</TabsTrigger>
+          <TabsTrigger value="ai-risk"><Trophy className="mr-2 h-4 w-4 sm:inline hidden" />AI Risk</TabsTrigger>
+          <TabsTrigger value="security-trust"><ShieldCheck className="mr-2 h-4 w-4 sm:inline hidden" />Security</TabsTrigger>
+          <TabsTrigger value="community"><MessageCircle className="mr-2 h-4 w-4 sm:inline hidden" />Community</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -57,7 +59,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">{tournament.description || "Detailed description not available."}</p>
-              
+
               {tournament.isCompleted && typeof tournament.prizeWon !== 'undefined' && (
                 <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-md mt-4">
                   <h3 className="font-semibold text-green-700 dark:text-green-400 flex items-center">
@@ -77,7 +79,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                 <li><span className="font-medium text-foreground">Game Type:</span> Texas Hold'em (Assumed)</li>
                 <li><span className="font-medium text-foreground">Structure:</span> Standard Payout (Assumed)</li>
                 {tournament.participants?.max && <li><span className="font-medium text-foreground">Max Participants:</span> {tournament.participants.max}</li>}
-                 <li>
+                <li>
                   <span className="font-medium text-foreground">Start Time:</span> {format(parseISO(tournament.startTime), "MMM d, yyyy 'at' p")}
                 </li>
                 <li>
@@ -94,7 +96,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
             <CardHeader>
               <CardTitle className="font-headline">Investment Tiers</CardTitle>
               <CardDescription>
-                Choose an investment level that matches your risk appetite and goals. 
+                Choose an investment level that matches your risk appetite and goals.
                 Platform fees (detailed on each tier) apply to your share of any winnings.
               </CardDescription>
             </CardHeader>
@@ -102,11 +104,11 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
               {mockInvestmentTiers.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {mockInvestmentTiers.map((tier) => (
-                    <InvestmentTierCard 
-                        key={tier.id} 
-                        tier={tier} 
-                        onInvest={handleInvestment}
-                        tokenTicker={tokenTicker} 
+                    <InvestmentTierCard
+                      key={tier.id}
+                      tier={tier}
+                      onInvest={handleInvestment}
+                      tokenTicker={tokenTicker}
                     />
                   ))}
                 </div>
@@ -137,7 +139,7 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                       You can invest in fractions of the player's buy-in by purchasing tournament tokens.
                     </p>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h4 className="font-semibold text-lg text-foreground flex items-center">
                       <BarChartHorizontalBig className="mr-2 h-5 w-5 text-primary" />
@@ -148,68 +150,68 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
                         <p className="text-muted-foreground">Token Ticker:</p>
                         <p className="font-semibold text-foreground">{tournament.tokenizationDetails.tokenTicker}</p>
                       </div>
-                       <div className="space-y-1">
+                      <div className="space-y-1">
                         <p className="text-muted-foreground">Total Token Supply:</p>
                         <p className="font-semibold text-foreground">{tournament.tokenizationDetails.totalTokenSupply.toLocaleString()} tokens</p>
                       </div>
-                       <div className="space-y-1">
+                      <div className="space-y-1">
                         <p className="text-muted-foreground">Equivalent Total Buy-in (Tokenized):</p>
                         <p className="font-semibold text-foreground">${(tournament.tokenizationDetails.totalTokenSupply * tournament.tokenizationDetails.tokenPrice).toLocaleString()}</p>
                       </div>
-                       <div className="space-y-1">
+                      <div className="space-y-1">
                         <p className="text-muted-foreground">Original Tournament Buy-in:</p>
                         <p className="font-semibold text-foreground">${tournament.buyIn.toLocaleString()}</p>
                       </div>
                       <div className="space-y-1">
                         <p className="text-muted-foreground">Minimum Investment:</p>
                         <p className="font-semibold text-foreground">
-                          {tournament.tokenizationDetails.minInvestmentTokens.toLocaleString()} tokens 
+                          {tournament.tokenizationDetails.minInvestmentTokens.toLocaleString()} tokens
                           (${(tournament.tokenizationDetails.minInvestmentTokens * tournament.tokenizationDetails.tokenPrice).toLocaleString()})
                         </p>
                       </div>
                       <div className="space-y-1">
                         <p className="text-muted-foreground">Maximum Investment (per investor):</p>
                         <p className="font-semibold text-foreground">
-                          {tournament.tokenizationDetails.maxInvestmentTokens.toLocaleString()} tokens 
+                          {tournament.tokenizationDetails.maxInvestmentTokens.toLocaleString()} tokens
                           (${(tournament.tokenizationDetails.maxInvestmentTokens * tournament.tokenizationDetails.tokenPrice).toLocaleString()})
                         </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   <Separator />
 
                   <div className="space-y-4">
                     <h4 className="font-semibold text-lg text-foreground flex items-center">
-                        <TrendingUp className="mr-2 h-5 w-5 text-primary" />
-                        Token Economics
+                      <TrendingUp className="mr-2 h-5 w-5 text-primary" />
+                      Token Economics
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div className="space-y-1">
-                            <p className="text-muted-foreground">Initial Token Price:</p>
-                            <p className="font-semibold text-foreground">${tournament.tokenizationDetails.tokenPrice.toFixed(2)} per {tournament.tokenizationDetails.tokenTicker}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-muted-foreground">Valuation Basis:</p>
-                            <p className="font-semibold text-foreground">
-                                {`$${tournament.buyIn.toLocaleString()} (Buy-in) / ${tournament.tokenizationDetails.totalTokenSupply.toLocaleString()} ${tournament.tokenizationDetails.tokenTicker} (Supply)`}
-                            </p>
-                        </div>
+                      <div className="space-y-1">
+                        <p className="text-muted-foreground">Initial Token Price:</p>
+                        <p className="font-semibold text-foreground">${tournament.tokenizationDetails.tokenPrice.toFixed(2)} per {tournament.tokenizationDetails.tokenTicker}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-muted-foreground">Valuation Basis:</p>
+                        <p className="font-semibold text-foreground">
+                          {`$${tournament.buyIn.toLocaleString()} (Buy-in) / ${tournament.tokenizationDetails.totalTokenSupply.toLocaleString()} ${tournament.tokenizationDetails.tokenTicker} (Supply)`}
+                        </p>
+                      </div>
                     </div>
-                     <p className="text-xs text-muted-foreground italic">
-                        Note: The initial token price is fixed. During live tournaments, token valuation may fluctuate based on player performance and market dynamics on potential future secondary markets. Post-tournament, the final value per token will be determined by actual prize winnings, net of platform fees.
+                    <p className="text-xs text-muted-foreground italic">
+                      Note: The initial token price is fixed. During live tournaments, token valuation may fluctuate based on player performance and market dynamics on potential future secondary markets. Post-tournament, the final value per token will be determined by actual prize winnings, net of platform fees.
                     </p>
                   </div>
 
                   <Separator />
-                   <div>
+                  <div>
                     <h4 className="font-semibold text-md mb-2">How Tokenization Works:</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                        <li>Each tournament buy-in can be represented by a set number of tokens.</li>
-                        <li>Investors purchase these tokens to collectively fund a player's entry.</li>
-                        <li>If the player wins, profits (after platform fees) are distributed proportionally to token holders.</li>
-                        <li>If the tournament is not fully funded via tokens, investments may be refunded (specific logic TBD).</li>
-                        <li>Tokens may become tradable on a secondary market, allowing for dynamic valuation during the tournament (feature TBD).</li>
+                      <li>Each tournament buy-in can be represented by a set number of tokens.</li>
+                      <li>Investors purchase these tokens to collectively fund a player's entry.</li>
+                      <li>If the player wins, profits (after platform fees) are distributed proportionally to token holders.</li>
+                      <li>If the tournament is not fully funded via tokens, investments may be refunded (specific logic TBD).</li>
+                      <li>Tokens may become tradable on a secondary market, allowing for dynamic valuation during the tournament (feature TBD).</li>
                     </ul>
                   </div>
                 </>
@@ -307,12 +309,12 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="community">
-           <Card>
+          <Card>
             <CardHeader>
               <CardTitle className="font-headline">Community Discussion</CardTitle>
-               <CardDescription>See what others are saying about this tournament.</CardDescription>
+              <CardDescription>See what others are saying about this tournament.</CardDescription>
             </CardHeader>
             <CardContent className="text-center py-12">
               <MessageCircle className="mx-auto h-12 w-12 text-muted-foreground" />
@@ -325,6 +327,5 @@ export default async function TournamentDetailPage({ params }: { params: { id: s
     </div>
   );
 }
-    
 
-    
+
