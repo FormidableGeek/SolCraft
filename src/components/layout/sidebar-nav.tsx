@@ -67,7 +67,7 @@ export function SidebarNav() {
                         item.disabled && "cursor-not-allowed opacity-50",
                         "w-full"
                       )}
-                      onClick={(e) => {
+                      onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                         if (item.disabled) {
                           e.preventDefault();
                           e.stopPropagation();

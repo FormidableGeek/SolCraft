@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image"; // Added
 import { PageHeader } from "@/components/shared/page-header";
 import { TournamentCard } from "@/components/tournaments/tournament-card";
@@ -21,12 +22,12 @@ export default function TournamentsPage() {
       {/* Thematic Banner Image */}
       <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
         <Image
-          src="https://placehold.co/800x400.png" // Replace with your actual image path
+          src="https://placehold.co/800x400.png"
           alt="SolCraft Poker Tournament"
           width={800}
           height={400}
           className="w-full h-auto object-cover"
-          priority // Optional: if this is a hero image
+          priority
           data-ai-hint="poker tournament game"
         />
       </div>
@@ -72,6 +73,8 @@ export default function TournamentsPage() {
       </div>
 
       {tournaments.length > 0 ? (
+        // Replace this with your new client component if needed
+        // <ClientTournamentsGrid tournaments={tournaments} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tournaments.map((tournament) => (
             <TournamentCard key={tournament.id} tournament={tournament} />
